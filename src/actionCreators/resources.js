@@ -1,20 +1,11 @@
 import { addTemplateHistory } from 'actions/templates'
 import { clearErrors, addError } from 'actions/errors'
-import { updateRDFResource, loadRDFResource, publishRDFResource } from 'sinopiaServer'
-<<<<<<< HEAD
-import { rdfDatasetFromN3, findRootResourceTemplateId, jsonldFromDataset } from 'utilities/Utilities'
+import { rdfDatasetFromN3, findRootResourceTemplateId } from 'utilities/Utilities'
 import {
   addResourceFromDataset, addEmptyResource, newSubject,
   newSubjectCopy, newPropertiesFromTemplates, chooseURI,
-  fetchResource
-=======
-import { rdfDatasetFromN3, findRootResourceTemplateId, jsonldFromDataset, datasetFromJsonld } from 'utilities/Utilities'
-import {
-  addResourceFromDataset, addEmptyResource, newSubject,
-  newSubjectCopy, newPropertiesFromTemplates, chooseURI
->>>>>>> d37f7a06... Replaced Trellis with Sinopia API / mongo
 } from './resourceHelpers'
-import GraphBuilder from 'GraphBuilder'
+import { fetchResource, putResource, postResource } from 'sinopiaApi'
 import {
   selectProperty, selectValue, selectFullSubject,
 } from 'selectors/resources'
@@ -22,11 +13,9 @@ import {
   addProperty as addPropertyAction,
   addValue as addValueAction, addSubject as addSubjectAction,
   showProperty, setBaseURL, setCurrentResource, saveResourceFinished,
-  setUnusedRDF, loadResourceFinished, setResourceGroup
+  setUnusedRDF, loadResourceFinished, setResourceGroup,
 } from 'actions/resources'
 import { newValueSubject } from 'utilities/valueFactory'
-import rdf from 'rdf-ext'
-import CognitoUtils from 'utilities/CognitoUtils'
 
 /**
  * A thunk that loads an existing resource from Trellis and adds to state.
@@ -34,57 +23,32 @@ import CognitoUtils from 'utilities/CognitoUtils'
  */
 export const loadResource = (currentUser, uri, errorKey, asNewResource) => (dispatch) => {
   dispatch(clearErrors(errorKey))
-<<<<<<< HEAD
-  return dispatch(fetchResource(uri, errorKey))
-          .then(([dataset, response]) => {
-            if(!dataset) return false
-=======
-  return fetch(uri, {
-    headers: { 'Accept': 'application/json' }
-  })
-  .then((resp) => {
-    if(! resp.ok) {
-      dispatch(addError(errorKey, `Error retrieving resource: ${resp.statusText}`))
-      return false
-    }
-    return resp.json()
-      .then((response) => {
-        return datasetFromJsonld(response.data)
-          .then((dataset) => {
->>>>>>> d37f7a06... Replaced Trellis with Sinopia API / mongo
-            const resourceTemplateId = resourceTemplateIdFromDataset(chooseURI(dataset, uri), dataset)
-            return dispatch(addResourceFromDataset(dataset, uri, resourceTemplateId, errorKey, asNewResource, response.group))
-              .then(([resource, usedDataset]) => {
-                const unusedDataset = dataset.difference(usedDataset)
-                dispatch(setUnusedRDF(resource.key, unusedDataset.size > 0 ? unusedDataset.toCanonical() : null))
-                dispatch(setCurrentResource(resource.key))
-                if (!asNewResource) dispatch(loadResourceFinished(resource.key))
-                return true
-              })
-              .catch((err) => {
-                // ResourceTemplateErrors have already been dispatched.
-                if (err.name !== 'ResourceTemplateError') {
-                  console.error(err)
-                  dispatch(addError(errorKey, `Error retrieving ${resourceTemplateId}: ${err.toString()}`))
-                }
-                return false
-              })
-          })
-<<<<<<< HEAD
-=======
-          .catch((err) => {
+  return fetchResource(uri)
+    .then(([dataset, response]) => {
+      if (!dataset) return false
+      const resourceTemplateId = resourceTemplateIdFromDataset(chooseURI(dataset, uri), dataset)
+      return dispatch(addResourceFromDataset(dataset, uri, resourceTemplateId, errorKey, asNewResource, response.group))
+        .then(([resource, usedDataset]) => {
+          const unusedDataset = dataset.difference(usedDataset)
+          dispatch(setUnusedRDF(resource.key, unusedDataset.size > 0 ? unusedDataset.toCanonical() : null))
+          dispatch(setCurrentResource(resource.key))
+          if (!asNewResource) dispatch(loadResourceFinished(resource.key))
+          return true
+        })
+        .catch((err) => {
+          // ResourceTemplateErrors have already been dispatched.
+          if (err.name !== 'ResourceTemplateError') {
             console.error(err)
-            dispatch(addError(errorKey, `Error parsing resource: ${err.toString()}`))
-            return false
-          })
-      })
-  })
-  .catch((err) => {
-    console.error(err)
-    dispatch(addError(errorKey, `Error retrieving resource: ${err.toString()}`))
-    return false
-  })
->>>>>>> d37f7a06... Replaced Trellis with Sinopia API / mongo
+            dispatch(addError(errorKey, `Error retrieving ${uri}: ${err.message}`))
+          }
+          return false
+        })
+    })
+    .catch((err) => {
+      console.error(err)
+      dispatch(addError(errorKey, `Error retrieving ${uri}: ${err.message}`))
+      return false
+    })
 }
 
 /**
@@ -106,7 +70,7 @@ export const newResource = (resourceTemplateId, errorKey) => (dispatch) => {
       // ResourceTemplateErrors have already been dispatched.
       if (err.name !== 'ResourceTemplateError') {
         console.error(err)
-        dispatch(addError(errorKey, `Error creating new resource: ${err.toString()}`))
+        dispatch(addError(errorKey, `Error creating new resource: ${err.message}`))
       }
       return false
     })
@@ -136,7 +100,8 @@ export const newResourceCopy = (resourceKey) => (dispatch) => dispatch(newSubjec
  */
 export const newResourceFromN3 = (data, uri, resourceTemplateId, errorKey, asNewResource) => (dispatch) => rdfDatasetFromN3(data)
   .then((dataset) => {
-    return dispatch(addResourceFromDataset(dataset, uri, resourceTemplateId || resourceTemplateIdFromDataset(newUri, dataset), errorKey, asNewResource))
+    const newResourceTemplateId = resourceTemplateId || resourceTemplateIdFromDataset(chooseURI(dataset, uri), dataset)
+    return dispatch(addResourceFromDataset(dataset, uri, newResourceTemplateId, errorKey, asNewResource))
       .then(([resource, usedDataset]) => {
         const unusedDataset = dataset.difference(usedDataset)
         dispatch(setUnusedRDF(resource.key, unusedDataset.size > 0 ? unusedDataset.toCanonical() : null))
@@ -148,60 +113,36 @@ export const newResourceFromN3 = (data, uri, resourceTemplateId, errorKey, asNew
         // ResourceTemplateErrors have already been dispatched.
         if (err.name !== 'ResourceTemplateError') {
           console.error(err)
-          dispatch(addError(errorKey, `Error retrieving ${resourceTemplateId}: ${err.toString()}`))
+          dispatch(addError(errorKey, `Error retrieving ${resourceTemplateId}: ${err.message}`))
         }
         return false
       })
   })
   .catch((err) => {
     console.error(err)
-    dispatch(addError(errorKey, `Error parsing: ${err.toString()}`))
+    dispatch(addError(errorKey, `Error parsing: ${err.message}`))
     return false
   })
 
 const resourceTemplateIdFromDataset = (uri, dataset) => {
   const resourceTemplateId = findRootResourceTemplateId(uri, dataset)
-  if (!resourceTemplateId) throw 'A single resource template must be included as a triple (http://sinopia.io/vocabulary/hasResourceTemplate)'
+  if (!resourceTemplateId) throw new Error('A single resource template must be included as a triple (http://sinopia.io/vocabulary/hasResourceTemplate)')
   return resourceTemplateId
 }
 
 // A thunk that publishes (saves) a new resource in Trellis
 export const saveNewResource = (resourceKey, currentUser, group, errorKey) => (dispatch, getState) => {
   const resource = selectFullSubject(getState(), resourceKey)
-  const dataset = new GraphBuilder(resource).graph
 
-  saveBodyForResource(resource, currentUser.username, group)
-    .then((body) => {
-      return CognitoUtils.getIdTokenString(currentUser)
-        .then((jwt) => {
-          return fetch('http://localhost:3000/repository', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${jwt}`
-            },
-            body
-          })
-            .then((resp) => {
-              if(! resp.ok) {
-                dispatch(addError(errorKey, `Error saving: ${resp.statusText}`))
-                return
-              }
-
-              const resourceUrl = resp.headers.get('Location')
-              dispatch(setBaseURL(resourceKey, resourceUrl))
-              dispatch(setResourceGroup(resourceKey, group))
-              dispatch(saveResourceFinished(resourceKey))
-            })
-            .catch((err) => {
-              console.error(err)
-              dispatch(addError(errorKey, `Error saving: ${err.toString()}`))
-            })
-        })
+  postResource(resource, currentUser, group)
+    .then((resourceUrl) => {
+      dispatch(setBaseURL(resourceKey, resourceUrl))
+      dispatch(setResourceGroup(resourceKey, group))
+      dispatch(saveResourceFinished(resourceKey))
     })
     .catch((err) => {
       console.error(err)
-      dispatch(addError(errorKey, `Error saving: ${err.toString()}`))
+      dispatch(addError(errorKey, `Error saving: ${err.message}`))
     })
 }
 
@@ -209,46 +150,12 @@ export const saveNewResource = (resourceKey, currentUser, group, errorKey) => (d
 export const saveResource = (resourceKey, currentUser, errorKey) => (dispatch, getState) => {
   const resource = selectFullSubject(getState(), resourceKey)
 
-  saveBodyForResource(resource, currentUser.username, resource.group)
-    .then((body) => {
-      return CognitoUtils.getIdTokenString(currentUser)
-        .then((jwt) => {
-          return fetch(resource.uri, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${jwt}`
-            },
-            body
-          })
-            .then((resp) => {
-              if(! resp.ok) {
-                dispatch(addError(errorKey, `Error saving: ${resp.statusText}`))
-                return
-              }
-              dispatch(saveResourceFinished(resourceKey))
-            })
-            .catch((err) => {
-              console.error(err)
-              dispatch(addError(errorKey, `Error saving: ${err.toString()}`))
-            })
-        })
-    })
+  putResource(resource, currentUser)
+    .then(() => dispatch(saveResourceFinished(resourceKey)))
     .catch((err) => {
       console.error(err)
-      dispatch(addError(errorKey, `Error saving: ${err.toString()}`))
+      dispatch(addError(errorKey, `Error saving: ${err.message}`))
     })
-}
-
-const saveBodyForResource = (resource, user, group) => {
-  const dataset = new GraphBuilder(resource).graph
-
-  return jsonldFromDataset(dataset)
-    .then((jsonld) => JSON.stringify({
-      data: jsonld,
-      user,
-      group
-    }))
 }
 
 /**

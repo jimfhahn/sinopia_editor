@@ -52,6 +52,6 @@ describe('<RDFDisplay />', () => {
   it('displays errors', async () => {
     render(<RDFDisplay rdf={`${rdf}x`} />)
 
-    await screen.findByText(/Error: Unexpected "x"/)
+    await screen.findByText(/Unexpected "x"/)
   })
 })

@@ -1,7 +1,9 @@
 // Copyright 2019 Stanford University see LICENSE for license
 import Config from './Config'
 /* eslint-disable node/no-unpublished-import */
-import { resourceTemplateSearchResults, hasFixtureResource, resourceSearchResults } from '../__tests__/testUtilities/fixtureLoaderHelper'
+import {
+  getFixtureTemplateSearchResults, hasFixtureResource, resourceSearchResults,
+} from '../__tests__/testUtilities/fixtureLoaderHelper'
 import _ from 'lodash'
 
 /* eslint-enable node/no-unpublished-import */
@@ -118,12 +120,14 @@ const aggregationsToResult = (aggs) => {
 }
 
 export const getTemplateSearchResults = async (query, options = {}) => {
-  // When using fixtures, always return all RTs.
-  if (Config.useResourceTemplateFixtures) { return {
-    totalHits: resourceTemplateSearchResults.length,
-    results: resourceTemplateSearchResults,
-    error: undefined,
-  } }
+  if (Config.useResourceTemplateFixtures) {
+    const results = await getFixtureTemplateSearchResults()
+    return {
+      totalHits: results.length,
+      results,
+      error: undefined,
+    }
+  }
 
   const fields = ['id', 'resourceLabel', 'resourceURI', 'remark', 'author']
   const should = fields.map((field) => ({ wildcard: { [field]: { value: `*${query}*` } } }))
@@ -191,3 +195,40 @@ export const getLookupResults = (query, lookupConfigs) => lookupConfigs.map(
       return result
     }),
 )
+
+export const getTemplateUri = (resourceTemplateId) => {
+  const body = {
+    query: {
+      bool: {
+        must: {
+          term: { id: resourceTemplateId },
+        },
+      },
+    },
+  }
+
+  const url = `${Config.searchHost}${Config.templateSearchPath}`
+  return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    .then((resp) => {
+      if (resp.status !== 200) {
+        console.error(`Fetching template uri for ${resourceTemplateId} returned ${resp.status}: ${resp.statusText}`)
+        return null
+      }
+      return resp.json()
+        .then((json) => {
+          if (json.error) {
+            console.error(`Fetching template uri for ${resourceTemplateId} returned ${json.error.reason || json.error}`)
+            return null
+          }
+          if (json.hits.total.value !== 1) {
+            console.error(`Fetching template uri for ${resourceTemplateId} did not return a single hit`)
+            return null
+          }
+          return json.hits.hits[0]._source.uri
+        })
+    })
+    .catch((err) => {
+      console.error(err)
+      return null
+    })
+}

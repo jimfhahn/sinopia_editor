@@ -21,7 +21,7 @@ export default class GraphBuilder {
    */
   get graph() {
     if (this.resource) {
-      const resourceTerm = rdf.namedNode('')
+      const resourceTerm = rdf.namedNode(this.resource.uri || '')
       this.addGeneratedByTriple(resourceTerm, this.resource.subjectTemplate.id)
       this.buildSubject(this.resource, resourceTerm)
     }

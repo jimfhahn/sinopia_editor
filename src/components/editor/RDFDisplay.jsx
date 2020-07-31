@@ -13,7 +13,7 @@ const RDFDisplay = (props) => {
     setError(false)
     rdfDatasetFromN3(props.rdf)
       .then((dataset) => setDataset(dataset))
-      .catch((err) => setError(err.toString()))
+      .catch((err) => setError(err.message))
   }, [props.rdf])
 
   const [format, setFormat] = useState('table')
@@ -25,7 +25,7 @@ const RDFDisplay = (props) => {
     writer.addQuads(dataset.toArray())
     writer.end((error, result) => {
       if (error) {
-        setError(error.toString())
+        setError(error.message)
       } else {
         setFormattedRDF(result.replace(/<null>/g, '<>'))
       }

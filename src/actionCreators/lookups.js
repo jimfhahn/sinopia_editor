@@ -9,24 +9,15 @@ export const fetchLookup = (uri) => (dispatch, getState) => {
     return existingLookup
   }
 
-  if(uri.startsWith('file:')) return dispatch(fetchFileLookup(uri))
+  if (uri.startsWith('file:')) return dispatch(fetchFileLookup(uri))
 
   return dispatch(fetchHttpLookup(uri))
 }
 
 const fetchFileLookup = (uri) => (dispatch) => {
+  /* eslint security/detect-non-literal-require: 'off' */
   const lookupJson = require(`../../static/${uri.substring(6)}`)
-  const opts = lookupJson.map((authority) => {
-    return { id: shortid.generate(), label: authority.label, uri: authority.uri }
-  })
-  dispatch(lookupOptionsRetrieved(uri, opts))
-  return opts
-}
-
-const fetchAuthorityLookup = (uri) => (dispatch) => {
-  const opts = Object.entries(lookupJson).map((entry) => {
-    return { id: shortid.generate(), label: entry[1], uri: entry[0] }
-  })
+  const opts = lookupJson.map((authority) => ({ id: shortid.generate(), label: authority.label, uri: authority.uri }))
   dispatch(lookupOptionsRetrieved(uri, opts))
   return opts
 }
@@ -41,7 +32,7 @@ const fetchHttpLookup = (uri) => (dispatch) => {
       return opts
     })
     .catch((err) => {
-      console.error(`Error fetching ${url}: ${err.toString()}`)
+      console.error(`Error fetching ${url}: ${err.message}`)
       const opts = [{
         isError: true,
       }]

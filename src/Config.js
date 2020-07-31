@@ -13,6 +13,10 @@ class Config {
     return process.env.TRELLIS_BASE_URL || 'http://localhost:8080'
   }
 
+  static get sinopiaApiBase() {
+    return process.env.SINOPIA_API_BASE_URL || 'http://localhost:3000/repository'
+  }
+
   static get awsCognitoDomain() {
     return process.env.AWS_COGNITO_DOMAIN || 'https://sinopia-development.auth.us-west-2.amazoncognito.com'
   }

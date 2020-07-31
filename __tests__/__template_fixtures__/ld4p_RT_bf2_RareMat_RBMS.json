@@ -1,47 +1,135 @@
-{
-  "propertyTemplates": [
-    {
-      "mandatory": "false",
-      "repeatable": "true",
-      "type": "literal",
-      "resourceTemplates": [],
-      "valueConstraint": {
-        "valueTemplateRefs": [],
-        "useValuesFrom": [],
-        "defaults": [],
-        "valueDataType": {}
+[
+  {
+    "@id": "_:b1",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "RBMS term"
+      }
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+      {
+        "@id": "http://www.loc.gov/mads/rdf/v1#authoritativeLabel"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasCardinality": [
+      {
+        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/literal"
+      }
+    ]
+  },
+  {
+    "@id": "_:b2",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Source of term"
+      }
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/source"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasCardinality": [
+      {
+        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/uri"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasLookupAttributes": [
+      {
+        "@id": "_:b3"
+      }
+    ]
+  },
+  {
+    "@id": "_:b3",
+    "@type": [
+      "http://sinopia.io/vocabulary/LookupPropertyTemplate"
+    ],
+    "http://sinopia.io/vocabulary/hasDefault": [
+      {
+        "@id": "_:b4"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasAuthority": [
+      {
+        "@id": "https://id.loc.gov/vocabulary/genreFormSchemes"
+      }
+    ]
+  },
+  {
+    "@id": "_:b4",
+    "@type": [
+      "http://sinopia.io/vocabulary/Uri"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "RBMS"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasUri": [
+      {
+        "@id": "http://id.loc.gov/vocabulary/genreFormSchemes/rbmscv"
+      }
+    ]
+  },
+  {
+    "@id": "http://localhost:3000/repository/ld4p:RT:bf2:RareMat:RBMS",
+    "http://sinopia.io/vocabulary/hasResourceTemplate": [
+      {
+        "@value": "sinopia:template:resource"
+      }
+    ],
+    "@type": [
+      "http://sinopia.io/vocabulary/ResourceTemplate"
+    ],
+    "http://sinopia.io/vocabulary/hasResourceId": [
+      {
+        "@id": "ld4p:RT:bf2:RareMat:RBMS"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasClass": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/GenreForm"
+      }
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "RBMS term"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasAuthor": [
+      {
+        "@value": "LD4P"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasRemark": [
+      {
+        "@value": "based on LC template ld4p:RT:bf2:RareMat:RBMS"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyTemplate": [
+      {
+        "@id": "_:b1"
       },
-      "propertyURI": "http://www.loc.gov/mads/rdf/v1#authoritativeLabel",
-      "propertyLabel": "RBMS term"
-    },
-    {
-      "mandatory": "false",
-      "repeatable": "true",
-      "type": "lookup",
-      "resourceTemplates": [],
-      "valueConstraint": {
-        "valueTemplateRefs": [],
-        "useValuesFrom": [
-          "https://id.loc.gov/vocabulary/genreFormSchemes"
-        ],
-        "defaults": [
-          {
-            "defaultURI": "http://id.loc.gov/vocabulary/genreFormSchemes/rbmscv",
-            "defaultLiteral": "RBMS"
-          }
-        ],
-        "valueDataType": {
-          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Source"
-        }
-      },
-      "propertyURI": "http://id.loc.gov/ontologies/bibframe/source",
-      "propertyLabel": "Source of term"
-    }
-  ],
-  "id": "ld4p:RT:bf2:RareMat:RBMS",
-  "resourceURI": "http://id.loc.gov/ontologies/bibframe/GenreForm",
-  "author": "LD4P",
-  "resourceLabel": "RBMS term",
-  "remark": "based on LC template ld4p:RT:bf2:RareMat:RBMS",
-  "schema": "https://ld4p.github.io/sinopia/schemas/0.0.9/resource-template.json"
-}
+      {
+        "@id": "_:b2"
+      }
+    ]
+  }
+]

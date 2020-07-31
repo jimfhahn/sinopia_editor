@@ -1,39 +1,103 @@
-{
-  "propertyTemplates": [
-    {
-      "mandatory": "false",
-      "repeatable": "true",
-      "type": "literal",
-      "resourceTemplates": [],
-      "valueConstraint": {
-        "valueTemplateRefs": [],
-        "useValuesFrom": [],
-        "defaults": [],
-        "valueDataType": {}
+[
+  {
+    "@id": "_:b1",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Geographic Coverage 1"
+      }
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/geographicCoverage"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasRemark": [
+      {
+        "@value": "tooltip 1"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasCardinality": [
+      {
+        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/literal"
+      }
+    ]
+  },
+  {
+    "@id": "_:b2",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Geographic Coverage 2"
+      }
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/geographicCoverage"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasRemark": [
+      {
+        "@value": "tooltip 2"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasCardinality": [
+      {
+        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/literal"
+      }
+    ]
+  },
+  {
+    "@id": "http://localhost:3000/repository/rt:repeated:propertyURI:propertyLabel",
+    "http://sinopia.io/vocabulary/hasResourceTemplate": [
+      {
+        "@value": "sinopia:template:resource"
+      }
+    ],
+    "@type": [
+      "http://sinopia.io/vocabulary/ResourceTemplate"
+    ],
+    "http://sinopia.io/vocabulary/hasResourceId": [
+      {
+        "@id": "rt:repeated:propertyURI:propertyLabel"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasClass": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/Work"
+      }
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "repeated propertyURI with differing propertyLabel"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasAuthor": [
+      {
+        "@value": "michelle"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyTemplate": [
+      {
+        "@id": "_:b1"
       },
-      "propertyURI": "http://id.loc.gov/ontologies/bibframe/geographicCoverage",
-      "propertyLabel": "Geographic Coverage 1",
-      "remark": "tooltip 1"
-    },
-    {
-      "mandatory": "false",
-      "repeatable": "true",
-      "type": "literal",
-      "resourceTemplates": [],
-      "valueConstraint": {
-        "valueTemplateRefs": [],
-        "useValuesFrom": [],
-        "defaults": [],
-        "valueDataType": {}
-      },
-      "propertyURI": "http://id.loc.gov/ontologies/bibframe/geographicCoverage",
-      "propertyLabel": "Geographic Coverage 2",
-      "remark": "tooltip 2"
-    }
-  ],
-  "id": "rt:repeated:propertyURI:propertyLabel",
-  "resourceURI": "http://id.loc.gov/ontologies/bibframe/Work",
-  "author": "michelle",
-  "resourceLabel": "repeated propertyURI with differing propertyLabel",
-  "schema": "https://ld4p.github.io/sinopia/schemas/0.0.9/resource-template.json"
-}
+      {
+        "@id": "_:b2"
+      }
+    ]
+  }
+]

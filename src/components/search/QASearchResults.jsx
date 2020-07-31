@@ -42,7 +42,7 @@ const QASearchResults = (props) => {
     dispatch(clearErrors(searchQARetrieveErrorKey))
     getTerm(resourceURI, resourceId, searchUri)
       .then((resourceN3) => setResourceN3(resourceN3))
-      .catch((err) => dispatch(addError(`Error retrieving resource: ${err.toString()}`)))
+      .catch((err) => dispatch(addError(`Error retrieving resource: ${err.message}`)))
   }, [dispatch, resourceId, resourceURI, searchUri])
 
   const errors = useSelector((state) => selectErrors(state, searchQARetrieveErrorKey))

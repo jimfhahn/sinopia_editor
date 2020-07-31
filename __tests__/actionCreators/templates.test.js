@@ -76,7 +76,7 @@ describe('loadResourceTemplate()', () => {
           type: 'ADD_ERROR',
           payload: {
             errorKey: 'testerrorkey',
-            error: 'Error retrieving ld4p:RT:bf2:xxx: Error: ERROR: non-fixture resourceTemplate: ld4p:RT:bf2:xxx',
+            error: 'Error retrieving ld4p:RT:bf2:xxx: Error parsing resource: Error retrieving resource: Not Found',
           },
         },
       ])

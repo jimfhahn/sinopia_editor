@@ -5,10 +5,11 @@ import rdf from 'rdf-ext'
 import _ from 'lodash'
 import Config from 'Config'
 import CryptoJS from 'crypto-js'
-import SerializerJsonld from '@rdfjs/serializer-jsonld'
+import { JsonLdParser } from 'jsonld-streaming-parser'
+
 const concatStream = require('concat-stream')
 const Readable = require('stream').Readable
-const ParserJsonld = require('@rdfjs/parser-jsonld')
+const SerializerJsonld = require('@rdfjs/serializer-jsonld-ext')
 
 export const defaultLanguageId = 'eng'
 
@@ -62,34 +63,31 @@ export const rdfDatasetFromN3 = (data) => new Promise((resolve, reject) => {
 })
 
 export const jsonldFromDataset = (dataset) => {
-  const SerializerJsonld = require('@rdfjs/serializer-jsonld')
-
-  const serializerJsonld = new SerializerJsonld()
+  const serializerJsonld = new SerializerJsonld({ expand: true })
 
   const output = serializerJsonld.import(dataset.toStream())
 
   return new Promise((resolve, reject) => {
-    output.pipe(concatStream(content => resolve(content)))
+    output.pipe(concatStream((content) => resolve(content)))
 
-    output.on('error', err => reject(err))
+    output.on('error', (err) => reject(err))
   })
-
 }
 
 export const datasetFromJsonld = (jsonld) => {
-  const parserJsonld = new ParserJsonld()
+  const parserJsonld = new JsonLdParser()
 
   const input = new Readable({
     read: () => {
       input.push(JSON.stringify(jsonld))
       input.push(null)
-    }
+    },
   })
 
   const output = parserJsonld.import(input)
   const dataset = rdf.dataset()
 
-  output.on('data', quad => {
+  output.on('data', (quad) => {
     dataset.add(quad)
   })
 
@@ -97,10 +95,9 @@ export const datasetFromJsonld = (jsonld) => {
     output.on('end', resolve)
     output.on('error', reject)
   })
-    .then(() => {
-      return dataset
-    })
+    .then(() => dataset)
 }
+
 
 export const generateMD5 = (message) => CryptoJS.MD5(message).toString()
 

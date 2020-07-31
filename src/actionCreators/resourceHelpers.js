@@ -7,7 +7,6 @@ import {
   selectProperty, selectSubject, selectValue,
 } from 'selectors/resources'
 import { newLiteralValue, newUriValue, newValueSubject } from 'utilities/valueFactory'
-import { datasetFromJsonld } from 'utilities/Utilities'
 
 /**
  * Helper methods that should only be used in 'actionCreators/resources'
@@ -266,30 +265,4 @@ const newValueCopy = (valueKey, property) => (dispatch, getState) => {
   }
 
   return newValue
-}
-
-export const fetchResource = (uri, errorKey) => (dispatch) => {
-  return fetch(uri, {
-    headers: { 'Accept': 'application/json' }
-  })
-  .then((resp) => {
-    if(! resp.ok) {
-      dispatch(addError(errorKey, `Error retrieving resource: ${resp.statusText}`))
-      return [null, null]
-    }
-    return resp.json()
-      .then((response) => {
-        return Promise.all([datasetFromJsonld(response.data), Promise.resolve(response)])
-      })
-      .catch((err) => {
-        console.error(err)
-        dispatch(addError(errorKey, `Error parsing resource: ${err.toString()}`))
-        return [null, null]
-      })
-  })
-  .catch((err) => {
-    console.error(err)
-    dispatch(addError(errorKey, `Error retrieving resource: ${err.toString()}`))
-    return [null, null]
-  })
 }

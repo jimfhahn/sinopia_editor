@@ -5,11 +5,7 @@
   },
   {
     "uri": "http://sinopia.io/vocabulary/propertyType/uri",
-    "label": "uri"
-  },
-  {
-    "uri": "http://sinopia.io/vocabulary/propertyType/lookup",
-    "label": "lookup"
+    "label": "uri or lookup"
   },
   {
     "uri": "http://sinopia.io/vocabulary/propertyType/resource",

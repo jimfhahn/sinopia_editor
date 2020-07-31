@@ -61,7 +61,9 @@
             "subjectTemplate": {
               "key": "resourceTemplate:testing:uber2",
               "id": "resourceTemplate:testing:uber2",
+              "author": null,
               "class": "http://id.loc.gov/ontologies/bibframe/Uber2",
+              "date": null,
               "label": "Uber template2",
               "remark": "Template for testing purposes with single repeatable literal.",
               "propertyTemplateKeys": [
@@ -80,7 +82,7 @@
                   "remarkUrl": null,
                   "type": "literal",
                   "component": "InputLiteral",
-                  "valueSubjectTemplateKeys": null,
+                  "valueSubjectTemplateKeys": [],
                   "authorities": []
                 }
               ]

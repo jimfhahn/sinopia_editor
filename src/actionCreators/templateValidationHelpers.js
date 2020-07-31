@@ -1,6 +1,6 @@
 import { addError } from 'actions/errors'
 import _ from 'lodash'
-import { loadResourceTemplateWithoutValidation } from './templateHelpers'
+import { loadResourceTemplateWithoutValidation } from './templates'
 
 /**
  * Helper methods that should only be used in 'actionCreators/templates'

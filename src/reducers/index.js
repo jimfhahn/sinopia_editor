@@ -11,7 +11,7 @@ import {
   addSubject, addProperty, addValue, removeValue,
   removeProperty, removeSubject, clearResource,
   saveResourceFinished, loadResourceFinished,
-  setResourceGroup
+  setResourceGroup,
 } from './resources'
 import {
   setLanguage, fetchingLanguages, languagesReceived,
