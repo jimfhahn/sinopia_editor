@@ -1,6 +1,6 @@
 // Copyright 2020 Stanford University see LICENSE for license
 
-import TemplatesBuilder from 'TemplatesBuilder'
+import TemplatesBuilder from 'LegacyTemplatesBuilder'
 
 import { getFixtureResourceTemplate } from 'fixtureLoaderHelper'
 

@@ -1,7 +1,7 @@
 import { addTemplates } from 'actions/templates'
 import { getResourceTemplate } from 'sinopiaServer'
 import { selectSubjectAndPropertyTemplates } from 'selectors/templates'
-import TemplatesBuilder from 'TemplatesBuilder'
+import TemplatesBuilder from 'LegacyTemplatesBuilder'
 
 /**
  * Helper methods that should only be used in 'actionCreators/templates'

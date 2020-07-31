@@ -9,7 +9,6 @@ export const fetchLookup = (uri) => (dispatch, getState) => {
     return existingLookup
   }
 
-  console.log(uri)
   if(uri.startsWith('file:')) return dispatch(fetchFileLookup(uri))
 
   return dispatch(fetchHttpLookup(uri))
