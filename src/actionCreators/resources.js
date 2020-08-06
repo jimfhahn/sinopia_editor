@@ -1,11 +1,18 @@
 import { addTemplateHistory } from 'actions/templates'
 import { clearErrors, addError } from 'actions/errors'
 import { updateRDFResource, loadRDFResource, publishRDFResource } from 'sinopiaServer'
+<<<<<<< HEAD
 import { rdfDatasetFromN3, findRootResourceTemplateId, jsonldFromDataset } from 'utilities/Utilities'
 import {
   addResourceFromDataset, addEmptyResource, newSubject,
   newSubjectCopy, newPropertiesFromTemplates, chooseURI,
   fetchResource
+=======
+import { rdfDatasetFromN3, findRootResourceTemplateId, jsonldFromDataset, datasetFromJsonld } from 'utilities/Utilities'
+import {
+  addResourceFromDataset, addEmptyResource, newSubject,
+  newSubjectCopy, newPropertiesFromTemplates, chooseURI
+>>>>>>> d37f7a06... Replaced Trellis with Sinopia API / mongo
 } from './resourceHelpers'
 import GraphBuilder from 'GraphBuilder'
 import {
@@ -27,9 +34,24 @@ import CognitoUtils from 'utilities/CognitoUtils'
  */
 export const loadResource = (currentUser, uri, errorKey, asNewResource) => (dispatch) => {
   dispatch(clearErrors(errorKey))
+<<<<<<< HEAD
   return dispatch(fetchResource(uri, errorKey))
           .then(([dataset, response]) => {
             if(!dataset) return false
+=======
+  return fetch(uri, {
+    headers: { 'Accept': 'application/json' }
+  })
+  .then((resp) => {
+    if(! resp.ok) {
+      dispatch(addError(errorKey, `Error retrieving resource: ${resp.statusText}`))
+      return false
+    }
+    return resp.json()
+      .then((response) => {
+        return datasetFromJsonld(response.data)
+          .then((dataset) => {
+>>>>>>> d37f7a06... Replaced Trellis with Sinopia API / mongo
             const resourceTemplateId = resourceTemplateIdFromDataset(chooseURI(dataset, uri), dataset)
             return dispatch(addResourceFromDataset(dataset, uri, resourceTemplateId, errorKey, asNewResource, response.group))
               .then(([resource, usedDataset]) => {
@@ -48,6 +70,21 @@ export const loadResource = (currentUser, uri, errorKey, asNewResource) => (disp
                 return false
               })
           })
+<<<<<<< HEAD
+=======
+          .catch((err) => {
+            console.error(err)
+            dispatch(addError(errorKey, `Error parsing resource: ${err.toString()}`))
+            return false
+          })
+      })
+  })
+  .catch((err) => {
+    console.error(err)
+    dispatch(addError(errorKey, `Error retrieving resource: ${err.toString()}`))
+    return false
+  })
+>>>>>>> d37f7a06... Replaced Trellis with Sinopia API / mongo
 }
 
 /**
