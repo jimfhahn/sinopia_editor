@@ -26,13 +26,8 @@ export const addResourceFromDataset = (dataset, uri, resourceTemplateId, errorKe
     })
 }
 
-// In the early days, resources were persisted to Trellis with a relative URI (<>) as N-Triples.
-// When these resources are retrieved, they retain a relative URI.
-// Now, resources are persisted to Trellis as Turtle. When these resources are retrieved,
-// they have the resource's URI.
-// This function guesses which.
+// The provided URI or <>.
 export const chooseURI = (dataset, uri) => (dataset.match(rdf.namedNode(uri)).size > 0 ? uri : '')
-
 
 export const addEmptyResource = (resourceTemplateId, errorKey) => (dispatch) => dispatch(newSubject(null, resourceTemplateId, null, errorKey))
   .then((subject) => dispatch(newPropertiesFromTemplates(subject, false, errorKey))

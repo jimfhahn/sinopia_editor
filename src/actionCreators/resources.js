@@ -18,7 +18,7 @@ import {
 import { newValueSubject } from 'utilities/valueFactory'
 
 /**
- * A thunk that loads an existing resource from Trellis and adds to state.
+ * A thunk that loads an existing resource from Sinopia API and adds to state.
  * @return {boolean} true if successful
  */
 export const loadResource = (currentUser, uri, errorKey, asNewResource) => (dispatch) => {
@@ -26,7 +26,7 @@ export const loadResource = (currentUser, uri, errorKey, asNewResource) => (disp
   return fetchResource(uri)
     .then(([dataset, response]) => {
       if (!dataset) return false
-      const resourceTemplateId = resourceTemplateIdFromDataset(chooseURI(dataset, uri), dataset)
+      const resourceTemplateId = resourceTemplateIdFromDataset(uri, dataset)
       return dispatch(addResourceFromDataset(dataset, uri, resourceTemplateId, errorKey, asNewResource, response.group))
         .then(([resource, usedDataset]) => {
           const unusedDataset = dataset.difference(usedDataset)

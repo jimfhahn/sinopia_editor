@@ -4,7 +4,7 @@ import {
   addProperty, addSubject, addValue, clearResource,
   hideProperty, removeProperty, removeSubject,
   removeValue, saveResourceFinished, setBaseURL, setCurrentResource,
-  setUnusedRDF, showProperty, loadResourceFinished,
+  setUnusedRDF, showProperty, loadResourceFinished, setResourceGroup,
 } from 'reducers/resources'
 
 import { createState } from 'stateUtils'
@@ -24,6 +24,7 @@ const reducers = {
   SET_BASE_URL: setBaseURL,
   SET_CURRENT_RESOURCE: setCurrentResource,
   SET_UNUSED_RDF: setUnusedRDF,
+  SET_RESOURCE_GROUP: setResourceGroup,
   SHOW_PROPERTY: showProperty,
 }
 
@@ -538,5 +539,34 @@ describe('showProperty()', () => {
     }
     const newState = reducer(oldState, action)
     expect(newState.entities.properties['kqKVn-1TbC'].show).toBeTruthy()
+  })
+})
+
+describe('setResourceGroup()', () => {
+  it('sets group', () => {
+    const oldState = {
+      entities: {
+        subjects: {
+          abcde345: {},
+        },
+      },
+    }
+    const action = {
+      type: 'SET_RESOURCE_GROUP',
+      payload: {
+        resourceKey: 'abcde345',
+        group: 'stanford',
+      },
+    }
+    const newState = reducer(oldState, action)
+    expect(newState).toStrictEqual({
+      entities: {
+        subjects: {
+          abcde345: {
+            group: 'stanford',
+          },
+        },
+      },
+    })
   })
 })

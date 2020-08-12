@@ -58,7 +58,6 @@
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
     "@honeybadger-io/react": "0.0.6",
-    "@rdfjs/serializer-jsonld": "^1.2.2",
     "@rdfjs/serializer-jsonld-ext": "^2.0.0",
     "ajv": "^6.12.2",
     "amazon-cognito-identity-js": "^3.3.3",
