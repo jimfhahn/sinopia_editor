@@ -45,17 +45,17 @@ jobs:
           command: npm run jest-ci
           environment:
             JEST_JUNIT_OUTPUT: "test-results/jest/jest-results.xml"
-      - setup_remote_docker
-      - run:
-          name: Start docker env
-          command: |
-            set -x
-            COGNITO_ADMIN_PASSWORD=$COGNITO_ADMIN_PASSWORD AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY TRELLIS_BASE_URL='http://platform:8080' docker-compose up -d
-            docker run --network sinopia_editor_default appropriate/curl --retry 25 --retry-delay 1 --retry-connrefused http://editor:8000/
-            docker run --network sinopia_editor_default appropriate/curl --retry 60 --retry-delay 1 --retry-connrefused http://platform:8080
+      # - setup_remote_docker
+      # - run:
+      #     name: Start docker env
+      #     command: |
+      #       set -x
+      #       COGNITO_ADMIN_PASSWORD=$COGNITO_ADMIN_PASSWORD AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY TRELLIS_BASE_URL='http://platform:8080' docker-compose up -d
+      #       docker run --network sinopia_editor_default appropriate/curl --retry 25 --retry-delay 1 --retry-connrefused http://editor:8000/
+      #       docker run --network sinopia_editor_default appropriate/curl --retry 60 --retry-delay 1 --retry-connrefused http://platform:8080
       # The test needs to be run within Docker, as (remote) Sinopia network is not available from this testing container.
-      - run: docker build -f Dockerfile.cypress -t ld4l/sinopia_editor_cypress .
-      - run: docker run -it --security-opt seccomp=unconfined --network sinopia_editor_default -e CYPRESS_EDITOR_URL='http://editor:8000/' -e CYPRESS_COGNITO_TEST_USER_NAME=$COGNITO_TEST_USER_NAME -e CYPRESS_COGNITO_TEST_USER_PASS=$COGNITO_TEST_USER_PASS ld4l/sinopia_editor_cypress
+      # - run: docker build -f Dockerfile.cypress -t ld4l/sinopia_editor_cypress .
+      # - run: docker run -it --security-opt seccomp=unconfined --network sinopia_editor_default -e CYPRESS_EDITOR_URL='http://editor:8000/' -e CYPRESS_COGNITO_TEST_USER_NAME=$COGNITO_TEST_USER_NAME -e CYPRESS_COGNITO_TEST_USER_PASS=$COGNITO_TEST_USER_PASS ld4l/sinopia_editor_cypress
 
   register_latest_image:
     <<: *defaults
@@ -69,11 +69,11 @@ jobs:
       - run:
           name: Build & Register Images
           command: |
-            docker build -t ld4p/sinopia_editor:latest .
-            docker build -t ld4p/sinopia_editor:dev --build-arg TRELLIS_BASE_URL=$TRELLIS_BASE_URL_DEV --build-arg SINOPIA_ENV=DEV --build-arg SINOPIA_URI=$SINOPIA_URI_DEV --build-arg AWS_COGNITO_DOMAIN=$AWS_COGNITO_DOMAIN_DEV --build-arg COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID_DEV --build-arg COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID_DEV --build-arg INDEX_URL=$INDEX_URL_DEV --build-arg SEARCH_HOST=$INDEX_URL_DEV --build-arg EXPORT_BUCKET_URL=$EXPORT_BUCKET_URL_DEV --build-arg HONEYBADGER_API_KEY=$HONEYBADGER_API_KEY --build-arg HONEYBADGER_REVISION=$CIRCLE_SHA1 .
+            # docker build -t ld4p/sinopia_editor:latest .
+            docker build -t ld4p/sinopia_editor:mongo-dev --build-arg SINOPIA_API_BASE_URL=$SINOPIA_API_BASE_URL_DEV --build-arg SINOPIA_ENV=DEV --build-arg SINOPIA_URI=$SINOPIA_URI_DEV --build-arg AWS_COGNITO_DOMAIN=$AWS_COGNITO_DOMAIN_DEV --build-arg COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID_DEV --build-arg COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID_DEV --build-arg INDEX_URL=$INDEX_URL_DEV --build-arg SEARCH_HOST=$INDEX_URL_DEV --build-arg EXPORT_BUCKET_URL=$EXPORT_BUCKET_URL_DEV --build-arg HONEYBADGER_API_KEY=$HONEYBADGER_API_KEY --build-arg HONEYBADGER_REVISION=$CIRCLE_SHA1 .
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            docker push ld4p/sinopia_editor:latest
-            docker push ld4p/sinopia_editor:dev
+            # docker push ld4p/sinopia_editor:latest
+            docker push ld4p/sinopia_editor:mongo-dev
   register_tag_image:
     <<: *defaults
     steps:
@@ -144,7 +144,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - dfe2
             tags:
               ignore:
                 - /v.*/
