@@ -71,8 +71,7 @@ module.exports = {
     new webpack.EnvironmentPlugin(
       [
         'USE_FIXTURES',
-        'TRELLIS_BASE_URL',
-        'DEFAULT_PROFILE_SCHEMA_VERSION',
+        'SINOPIA_API_BASE_URL',
         'SINOPIA_GROUP',
         'SINOPIA_ENV',
         'SINOPIA_URI',
