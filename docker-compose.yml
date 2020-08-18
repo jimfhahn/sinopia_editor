@@ -7,14 +7,15 @@ services:
         - USE_FIXTURES='false'
     environment:
       INDEX_URL: http://elasticsearch:9200
+      SINOPIA_API_BASE_URL: http://api:3000/repository
     ports:
       - 8000:8000
     depends_on:
       - api
   pipeline:
-    # image: ld4p/sinopia_indexing_pipeline:latest
-    build:
-      context: ../sinopia_indexing_pipeline
+    image: ld4p/sinopia_indexing_pipeline:mongo
+    # build:
+    #   context: ../sinopia_indexing_pipeline
     environment:
       INDEX_URL: http://elasticsearch:9200
       MONGODB_HOST: mongo
@@ -53,9 +54,10 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: sekret
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
   mongo-setup:
-    build:
-      context: ../sinopia_api
-      dockerfile: Dockerfile-setup
+    image: ld4p/sinopia_dev_setup:latest
+    # build:
+    #   context: ../sinopia_api
+    #   dockerfile: Dockerfile-setup
     depends_on:
       - mongo
       - pipeline

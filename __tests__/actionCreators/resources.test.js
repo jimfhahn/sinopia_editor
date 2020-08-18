@@ -1,5 +1,5 @@
 import {
-  newResourceFromN3, loadResource, newResource, newResourceCopy,
+  newResourceFromDataset, loadResource, newResource, newResourceCopy,
   expandProperty, addSiblingValueSubject,
 } from 'actionCreators/resources'
 import Config from 'Config'
@@ -7,7 +7,7 @@ import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import { createState } from 'stateUtils'
 import GraphBuilder from 'GraphBuilder'
-import { rdfDatasetFromN3 } from 'utilities/Utilities'
+import { datasetFromN3 } from 'utilities/Utilities'
 import shortid from 'shortid'
 import _ from 'lodash'
 
@@ -47,14 +47,15 @@ _:b2_c14n2 <http://id.loc.gov/ontologies/bibframe/uber/template2/property1> "Ube
 _:b2_c14n2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/bibframe/Uber2> .
 `
 
-describe('newResourceFromN3', () => {
+describe('newResourceFromDataset', () => {
   const expectedAddResourceAction = require('../__action_fixtures__/newResourceFromN3-ADD_SUBJECT.json')
 
   describe('loading a resource', () => {
     const store = mockStore(createState())
 
     it('dispatches actions', async () => {
-      const result = await store.dispatch(newResourceFromN3(n3.replace(/<>/g, `<${uri}>`), uri, null, 'testerrorkey'))
+      const dataset = await datasetFromN3(n3.replace(/<>/g, `<${uri}>`))
+      const result = await store.dispatch(newResourceFromDataset(dataset, uri, null, 'testerrorkey'))
       expect(result).toBe(true)
 
       const actions = store.getActions()
@@ -71,7 +72,7 @@ describe('newResourceFromN3', () => {
 
       // As a bonus check, roundtrip to RDF.
       const actualRdf = new GraphBuilder(addSubjectAction.payload).graph.toCanonical()
-      const expectedGraph = await rdfDatasetFromN3(n3.replace(/<>/g, `<${uri}>`))
+      const expectedGraph = await datasetFromN3(n3.replace(/<>/g, `<${uri}>`))
       const expectedRdf = expectedGraph.toCanonical()
       expect(actualRdf).toMatch(expectedRdf)
 
@@ -86,7 +87,8 @@ describe('newResourceFromN3', () => {
     const store = mockStore(createState())
 
     it('dispatches actions', async () => {
-      const result = await store.dispatch(newResourceFromN3(n3, uri, null, 'testerrorkey'))
+      const dataset = await datasetFromN3(n3)
+      const result = await store.dispatch(newResourceFromDataset(dataset, uri, null, 'testerrorkey'))
       expect(result).toBe(true)
 
       const actions = store.getActions()
@@ -103,7 +105,8 @@ describe('newResourceFromN3', () => {
       const extraRdf = `<> <http://id.loc.gov/ontologies/bibframe/uber/template1/property6x> <ubertemplate1:property6> .
 <x> <http://id.loc.gov/ontologies/bibframe/uber/template1/property6> <ubertemplate1:property6> .
 `
-      const result = await store.dispatch(newResourceFromN3(n3 + extraRdf, uri, null, 'testerrorkey'))
+      const dataset = await datasetFromN3(n3 + extraRdf)
+      const result = await store.dispatch(newResourceFromDataset(dataset, uri, null, 'testerrorkey'))
       expect(result).toBe(true)
 
       const actions = store.getActions()
@@ -119,7 +122,8 @@ describe('newResourceFromN3', () => {
     const store = mockStore(createState())
 
     it('dispatches actions', async () => {
-      const result = await store.dispatch(newResourceFromN3(n3.replace(/<>/g, `<${uri}>`), uri, null, 'testerrorkey', true))
+      const dataset = await datasetFromN3(n3.replace(/<>/g, `<${uri}>`))
+      const result = await store.dispatch(newResourceFromDataset(dataset, uri, null, 'testerrorkey', true))
       expect(result).toBe(true)
 
       const actions = store.getActions()
@@ -144,7 +148,8 @@ describe('newResourceFromN3', () => {
     it('dispatches actions', async () => {
       // Change the hasResourceTemplate triple.
       const fixtureRdf = n3.replace(resourceTemplateId, `${resourceTemplateId}x`)
-      const result = await store.dispatch(newResourceFromN3(fixtureRdf, uri, resourceTemplateId, 'testerrorkey'))
+      const dataset = await datasetFromN3(fixtureRdf)
+      const result = await store.dispatch(newResourceFromDataset(dataset, uri, resourceTemplateId, 'testerrorkey'))
       expect(result).toBe(true)
 
       const actions = store.getActions()
@@ -159,7 +164,8 @@ describe('newResourceFromN3', () => {
 
     it('dispatches actions', async () => {
       const fixtureRdf = n3.replace(resourceTemplateId, 'rt:repeated:propertyURI:propertyLabel')
-      const result = await store.dispatch(newResourceFromN3(fixtureRdf, uri, null, 'testerrorkey'))
+      const dataset = await datasetFromN3(fixtureRdf)
+      const result = await store.dispatch(newResourceFromDataset(dataset, uri, null, 'testerrorkey'))
       expect(result).toBe(false)
 
       const actions = store.getActions()

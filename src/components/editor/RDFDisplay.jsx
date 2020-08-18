@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { rdfDatasetFromN3 } from 'utilities/Utilities'
+import { datasetFromN3 } from 'utilities/Utilities'
 import Alert from '../Alert'
 import { Writer as N3Writer } from 'n3'
 
@@ -11,7 +11,7 @@ const RDFDisplay = (props) => {
   const [dataset, setDataset] = useState(false)
   useEffect(() => {
     setError(false)
-    rdfDatasetFromN3(props.rdf)
+    datasetFromN3(props.rdf)
       .then((dataset) => setDataset(dataset))
       .catch((err) => setError(err.message))
   }, [props.rdf])

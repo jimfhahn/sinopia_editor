@@ -1,6 +1,6 @@
 import { addTemplateHistory } from 'actions/templates'
 import { clearErrors, addError } from 'actions/errors'
-import { rdfDatasetFromN3, findRootResourceTemplateId } from 'utilities/Utilities'
+import { findRootResourceTemplateId } from 'utilities/Utilities'
 import {
   addResourceFromDataset, addEmptyResource, newSubject,
   newSubjectCopy, newPropertiesFromTemplates, chooseURI,
@@ -91,38 +91,32 @@ export const newResourceCopy = (resourceKey) => (dispatch) => dispatch(newSubjec
 
 /**
  * A thunk that loads a resource from N3 data and adds to state.
- * @param {string} data containing N3 for resource.
+ * @param {rdf.Dataset} dataset containing the resource.
  * @param {string} URI for the resource.
  * @param {string} resourceTemplateId if known.
  * @param {string} errorKey
  * @param {boolean} asNewResource if true, does not set URI for the resource.
  * @return {boolean} true if successful
  */
-export const newResourceFromN3 = (data, uri, resourceTemplateId, errorKey, asNewResource) => (dispatch) => rdfDatasetFromN3(data)
-  .then((dataset) => {
-    const newResourceTemplateId = resourceTemplateId || resourceTemplateIdFromDataset(chooseURI(dataset, uri), dataset)
-    return dispatch(addResourceFromDataset(dataset, uri, newResourceTemplateId, errorKey, asNewResource))
-      .then(([resource, usedDataset]) => {
-        const unusedDataset = dataset.difference(usedDataset)
-        dispatch(setUnusedRDF(resource.key, unusedDataset.size > 0 ? unusedDataset.toCanonical() : null))
-        dispatch(setCurrentResource(resource.key))
-        if (!asNewResource) dispatch(loadResourceFinished(resource.key))
-        return true
-      })
-      .catch((err) => {
-        // ResourceTemplateErrors have already been dispatched.
-        if (err.name !== 'ResourceTemplateError') {
-          console.error(err)
-          dispatch(addError(errorKey, `Error retrieving ${resourceTemplateId}: ${err.message}`))
-        }
-        return false
-      })
-  })
-  .catch((err) => {
-    console.error(err)
-    dispatch(addError(errorKey, `Error parsing: ${err.message}`))
-    return false
-  })
+export const newResourceFromDataset = (dataset, uri, resourceTemplateId, errorKey, asNewResource) => (dispatch) => {
+  const newResourceTemplateId = resourceTemplateId || resourceTemplateIdFromDataset(chooseURI(dataset, uri), dataset)
+  return dispatch(addResourceFromDataset(dataset, uri, newResourceTemplateId, errorKey, asNewResource))
+    .then(([resource, usedDataset]) => {
+      const unusedDataset = dataset.difference(usedDataset)
+      dispatch(setUnusedRDF(resource.key, unusedDataset.size > 0 ? unusedDataset.toCanonical() : null))
+      dispatch(setCurrentResource(resource.key))
+      if (!asNewResource) dispatch(loadResourceFinished(resource.key))
+      return true
+    })
+    .catch((err) => {
+      // ResourceTemplateErrors have already been dispatched.
+      if (err.name !== 'ResourceTemplateError') {
+        console.error(err)
+        dispatch(addError(errorKey, `Error retrieving ${resourceTemplateId}: ${err.message}`))
+      }
+      return false
+    })
+}
 
 const resourceTemplateIdFromDataset = (uri, dataset) => {
   const resourceTemplateId = findRootResourceTemplateId(uri, dataset)

@@ -44,7 +44,7 @@ export const isValidURI = (value) => {
  * @param {string} data that is the N3
  * @return {Promise<rdf.Dataset>} a promise that resolves to the loaded dataset
  */
-export const rdfDatasetFromN3 = (data) => new Promise((resolve, reject) => {
+export const datasetFromN3 = (data) => new Promise((resolve, reject) => {
   const parser = new N3Parser({ factory: rdf })
   const dataset = rdf.dataset()
   parser.parse(data,
@@ -112,4 +112,15 @@ export const findRootResourceTemplateId = (resourceURI, dataset) => {
 export const hasQuadsForRootResourceTemplateId = (resourceURI, dataset) => {
   const rtQuads = dataset.match(rdf.namedNode(resourceURI)).toArray()
   return rtQuads.length > 0
+}
+
+export const datasetFromRdf = (rdf) => {
+  // Try parsing as JSON.
+  let json
+  try {
+    json = JSON.parse(rdf)
+  } catch {
+    return datasetFromN3(rdf)
+  }
+  return datasetFromJsonld(json)
 }

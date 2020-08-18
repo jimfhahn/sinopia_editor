@@ -1,5 +1,5 @@
 import TemplatesBuilder from 'TemplatesBuilder'
-import { rdfDatasetFromN3 } from 'utilities/Utilities'
+import { datasetFromN3 } from 'utilities/Utilities'
 
 describe('TemplatesBuilder', () => {
   it('builds subjectTemplate', async () => {
@@ -12,7 +12,7 @@ describe('TemplatesBuilder', () => {
 <> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://sinopia.io/vocabulary/ResourceTemplate> .
 <> <http://www.w3.org/2000/01/rdf-schema#label> "Uber template1"@eng .`
 
-    const dataset = await rdfDatasetFromN3(rdf)
+    const dataset = await datasetFromN3(rdf)
     const subjectTemplate = new TemplatesBuilder(dataset, '').build()
     expect(subjectTemplate).toStrictEqual({
       key: 'resourceTemplate:testing:uber1',
@@ -45,7 +45,7 @@ _:b1_c14n0 <http://sinopia.io/vocabulary/hasRemarkUrl> <http://access.rdatoolkit
 _:b1_c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#> <http://id.loc.gov/ontologies/bibframe/uber/template1/property1> .
 _:b1_c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://sinopia.io/vocabulary/PropertyTemplate> .
 _:b1_c14n0 <http://www.w3.org/2000/01/rdf-schema#label> "Uber template1, property2"@eng .`
-    const dataset = await rdfDatasetFromN3(rdf)
+    const dataset = await datasetFromN3(rdf)
     const subjectTemplate = new TemplatesBuilder(dataset, '').build()
     expect(subjectTemplate.propertyTemplates[0]).toStrictEqual({
       key: 'resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
@@ -80,7 +80,7 @@ _:b2_c14n0 <http://www.w3.org/2000/01/rdf-schema#label> "Uber template1, propert
 _:b2_c14n1 <http://sinopia.io/vocabulary/hasDefault> "default1"@eng .
 _:b2_c14n1 <http://sinopia.io/vocabulary/hasDefault> "default2" .
 _:b2_c14n1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://sinopia.io/vocabulary/LiteralPropertyTemplate> .`
-    const dataset = await rdfDatasetFromN3(rdf)
+    const dataset = await datasetFromN3(rdf)
     const subjectTemplate = new TemplatesBuilder(dataset, '').build()
     expect(subjectTemplate.propertyTemplates[0]).toStrictEqual({
       key: 'resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
@@ -123,7 +123,7 @@ _:b3_c14n3 <http://sinopia.io/vocabulary/hasUriAttributes> _:b3_c14n2 .
 _:b3_c14n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#> <http://id.loc.gov/ontologies/bibframe/uber/template1/property1> .
 _:b3_c14n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://sinopia.io/vocabulary/PropertyTemplate> .
 _:b3_c14n3 <http://www.w3.org/2000/01/rdf-schema#label> "Uber template1, property2"@eng .`
-    const dataset = await rdfDatasetFromN3(rdf)
+    const dataset = await datasetFromN3(rdf)
     const subjectTemplate = new TemplatesBuilder(dataset, '').build()
     expect(subjectTemplate.propertyTemplates[0]).toStrictEqual({
       key: 'resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
@@ -161,7 +161,7 @@ _:b4_c14n1 <http://sinopia.io/vocabulary/hasResourceAttributes> _:b4_c14n0 .
 _:b4_c14n1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#> <http://id.loc.gov/ontologies/bibframe/uber/template1/property1> .
 _:b4_c14n1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://sinopia.io/vocabulary/PropertyTemplate> .
 _:b4_c14n1 <http://www.w3.org/2000/01/rdf-schema#label> "Uber template1, property2"@eng .`
-    const dataset = await rdfDatasetFromN3(rdf)
+    const dataset = await datasetFromN3(rdf)
     const subjectTemplate = new TemplatesBuilder(dataset, '').build()
     expect(subjectTemplate.propertyTemplates[0]).toStrictEqual({
       key: 'resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
@@ -205,7 +205,7 @@ _:b5_c14n1 <http://www.w3.org/2000/01/rdf-schema#label> "Uber template1, propert
 _:b5_c14n2 <http://sinopia.io/vocabulary/hasUri> <http://sinopia.io/uri1> .
 _:b5_c14n2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://sinopia.io/vocabulary/Uri> .
 _:b5_c14n2 <http://www.w3.org/2000/01/rdf-schema#label> "URI1"@eng .`
-    const dataset = await rdfDatasetFromN3(rdf)
+    const dataset = await datasetFromN3(rdf)
     const subjectTemplate = new TemplatesBuilder(dataset, '').build()
 
     expect(subjectTemplate.propertyTemplates[0]).toStrictEqual({
