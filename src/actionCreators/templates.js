@@ -11,17 +11,15 @@ import { fetchResource } from 'sinopiaApi'
  * A thunk that gets a resource template from state or the server.
  * @return [Object] subject template
  */
-export const loadResourceTemplate = (resourceTemplateId, resourceTemplatePromises, errorKey) => (dispatch) => {
-  return dispatch(loadResourceTemplateWithoutValidation(resourceTemplateId, resourceTemplatePromises))
+export const loadResourceTemplate = (resourceTemplateId,
+  resourceTemplatePromises, errorKey) => (dispatch) => dispatch(loadResourceTemplateWithoutValidation(resourceTemplateId,
+  resourceTemplatePromises))
   .then((subjectTemplate) => dispatch(validateTemplates(subjectTemplate, resourceTemplatePromises, errorKey))
-    .then((isValid) => {
-      return isValid ? subjectTemplate : null}
-    ))
+    .then((isValid) => (isValid ? subjectTemplate : null)))
   .catch((err) => {
     dispatch(addError(errorKey, `Error retrieving ${resourceTemplateId}: ${err.message}`))
     return null
   })
-}
 
 /**
    * A thunk that gets a resource template from state or the server and transforms to
@@ -34,7 +32,7 @@ export const loadResourceTemplateWithoutValidation = (resourceTemplateId, resour
   // Try to get it from resourceTemplatePromises.
   // Using this cache since in some cases, adding to state to too slow.
   const resourceTemplatePromise = resourceTemplatePromises?.[resourceTemplateId]
-  if(resourceTemplatePromise) {
+  if (resourceTemplatePromise) {
     return resourceTemplatePromise
   }
   // Try to get it from state.
@@ -52,6 +50,6 @@ export const loadResourceTemplateWithoutValidation = (resourceTemplateId, resour
       return subjectTemplate
     })
 
-  if(resourceTemplatePromises) resourceTemplatePromises[resourceTemplateId] = newResourceTemplatePromise
+  if (resourceTemplatePromises) resourceTemplatePromises[resourceTemplateId] = newResourceTemplatePromise
   return newResourceTemplatePromise
 }

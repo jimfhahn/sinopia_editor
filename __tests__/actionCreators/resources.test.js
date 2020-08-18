@@ -54,8 +54,6 @@ describe('newResourceFromN3', () => {
     const store = mockStore(createState())
 
     it('dispatches actions', async () => {
-      // const response = await getFixtureResource(uri)
-      // console.log('response', response)
       const result = await store.dispatch(newResourceFromN3(n3.replace(/<>/g, `<${uri}>`), uri, null, 'testerrorkey'))
       expect(result).toBe(true)
 

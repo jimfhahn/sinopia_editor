@@ -246,13 +246,13 @@
           "valueSubjectTemplateKeys": [],
           "authorities": [
             {
-              "uri": "https://id.loc.gov/vocabulary/mrecmedium",
-              "label": "recording medium",
+              "uri": "https://id.loc.gov/vocabulary/mrectype",
+              "label": "type of recording",
               "nonldLookup": false
             },
             {
-              "uri": "https://id.loc.gov/vocabulary/mrectype",
-              "label": "type of recording",
+              "uri": "https://id.loc.gov/vocabulary/mrecmedium",
+              "label": "recording medium",
               "nonldLookup": false
             }
           ],

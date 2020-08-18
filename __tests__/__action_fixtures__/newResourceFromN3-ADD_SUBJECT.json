@@ -246,13 +246,13 @@
           "valueSubjectTemplateKeys": [],
           "authorities": [
             {
-              "uri": "https://id.loc.gov/vocabulary/mrecmedium",
-              "label": "recording medium",
+              "uri": "https://id.loc.gov/vocabulary/mrectype",
+              "label": "type of recording",
               "nonldLookup": false
             },
             {
-              "uri": "https://id.loc.gov/vocabulary/mrectype",
-              "label": "type of recording",
+              "uri": "https://id.loc.gov/vocabulary/mrecmedium",
+              "label": "recording medium",
               "nonldLookup": false
             }
           ],
@@ -403,7 +403,7 @@
         "resourceKey": "abc0",
         "values": [
           {
-            "key": "abc39",
+            "key": "abc37",
             "resourceKey": "abc0",
             "literal": null,
             "lang": null,
@@ -460,11 +460,11 @@
               "resourceKey": "abc0",
               "properties": [
                 {
-                  "key": "abc31",
+                  "key": "abc29",
                   "resourceKey": "abc0",
                   "values": [
                     {
-                      "key": "abc35",
+                      "key": "abc33",
                       "resourceKey": "abc0",
                       "literal": "Uber template3, property1",
                       "lang": "eng",
@@ -476,11 +476,11 @@
                   "show": false
                 },
                 {
-                  "key": "abc32",
+                  "key": "abc30",
                   "resourceKey": "abc0",
                   "values": [
                     {
-                      "key": "abc36",
+                      "key": "abc34",
                       "resourceKey": "abc0",
                       "literal": "Uber template3, property2",
                       "lang": "eng",
@@ -495,7 +495,7 @@
             }
           },
           {
-            "key": "abc37",
+            "key": "abc38",
             "resourceKey": "abc0",
             "literal": null,
             "lang": null,
@@ -536,11 +536,11 @@
               "resourceKey": "abc0",
               "properties": [
                 {
-                  "key": "abc29",
+                  "key": "abc31",
                   "resourceKey": "abc0",
                   "values": [
                     {
-                      "key": "abc33",
+                      "key": "abc35",
                       "resourceKey": "abc0",
                       "literal": "Uber template2, property1",
                       "lang": "eng",
@@ -555,7 +555,7 @@
             }
           },
           {
-            "key": "abc38",
+            "key": "abc39",
             "resourceKey": "abc0",
             "literal": null,
             "lang": null,
@@ -564,43 +564,14 @@
             "valueSubject": {
               "key": "abc28",
               "uri": null,
-              "subjectTemplate": {
-                "key": "resourceTemplate:testing:uber2",
-                "id": "resourceTemplate:testing:uber2",
-                "class": "http://id.loc.gov/ontologies/bibframe/Uber2",
-                "label": "Uber template2",
-                "author": null,
-                "remark": "Template for testing purposes with single repeatable literal.",
-                "date": null,
-                "propertyTemplateKeys": [
-                  "resourceTemplate:testing:uber2 > http://id.loc.gov/ontologies/bibframe/uber/template2/property1"
-                ],
-                "propertyTemplates": [
-                  {
-                    "key": "resourceTemplate:testing:uber2 > http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
-                    "subjectTemplateKey": "resourceTemplate:testing:uber2",
-                    "label": "Uber template2, property1",
-                    "uri": "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
-                    "required": false,
-                    "repeatable": true,
-                    "remark": "A repeatable literal",
-                    "remarkUrl": null,
-                    "defaults": [],
-                    "valueSubjectTemplateKeys": [],
-                    "authorities": [],
-                    "type": "literal",
-                    "component": "InputLiteral"
-                  }
-                ]
-              },
               "resourceKey": "abc0",
               "properties": [
                 {
-                  "key": "abc30",
+                  "key": "abc32",
                   "resourceKey": "abc0",
                   "values": [
                     {
-                      "key": "abc34",
+                      "key": "abc36",
                       "resourceKey": "abc0",
                       "literal": "Uber template2, property1b",
                       "lang": "eng",

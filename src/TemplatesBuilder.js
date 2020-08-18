@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { findAuthorityConfigs, findAuthorityConfig } from 'utilities/authorityConfig'
+import { findAuthorityConfig } from 'utilities/authorityConfig'
 import rdf from 'rdf-ext'
 
 export default class TemplatesBuilder {
@@ -170,10 +170,10 @@ export default class TemplatesBuilder {
 
     return vocabUris.map((vocabUri) => {
       const authority = {
-        uri: vocabUri
+        uri: vocabUri,
       }
       const authorityConfig = findAuthorityConfig(vocabUri)
-      if(authorityConfig) {
+      if (authorityConfig) {
         authority.label = authorityConfig.label
         authority.authority = authorityConfig.authority
         authority.subauthority = authorityConfig.subauthority

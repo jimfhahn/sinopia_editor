@@ -221,18 +221,18 @@ _:b5_c14n2 <http://www.w3.org/2000/01/rdf-schema#label> "URI1"@eng .`
       valueSubjectTemplateKeys: [],
       authorities: [
         {
-          uri: 'urn:ld4p:qa:agrovoc',
-          label: 'AGROVOC (QA)',
-          authority: 'agrovoc_ld4l_cache',
-          subauthority: '',
-          nonldLookup: false,
-        },
-        {
           uri: 'urn:discogs',
           label: 'Discogs',
           authority: 'discogs',
           subauthority: 'all',
           nonldLookup: true,
+        },
+        {
+          uri: 'urn:ld4p:qa:agrovoc',
+          label: 'AGROVOC (QA)',
+          authority: 'agrovoc_ld4l_cache',
+          subauthority: '',
+          nonldLookup: false,
         },
       ],
       type: 'uri',

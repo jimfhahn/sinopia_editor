@@ -101,7 +101,10 @@ const newNestedResourceFromQuad = (quad, property, resourceTemplatePromises, dat
 
   // Among the valueTemplateRefs, find all of the resource templates that match a type.
   // Ideally, only want 1 but need to handle other cases.
-  return Promise.all(typeQuads.map((typeQuad) => dispatch(selectResourceTemplateId(property.propertyTemplate, typeQuad.object.value, resourceTemplatePromises, errorKey))))
+  return Promise.all(
+    typeQuads.map((typeQuad) => dispatch(selectResourceTemplateId(property.propertyTemplate,
+      typeQuad.object.value, resourceTemplatePromises, errorKey))),
+  )
     .then((childRtIds) => {
       const compactChildRtIds = _.compact(_.flatten(childRtIds))
 
@@ -117,17 +120,17 @@ const newNestedResourceFromQuad = (quad, property, resourceTemplatePromises, dat
       usedDataset.addAll(typeQuads)
 
       // One resource template
-      return dispatch(recursiveResourceFromDataset(quad.object, null, compactChildRtIds[0], property.resourceKey, resourceTemplatePromises, dataset, usedDataset, errorKey))
+      return dispatch(recursiveResourceFromDataset(quad.object, null, compactChildRtIds[0],
+        property.resourceKey, resourceTemplatePromises, dataset, usedDataset, errorKey))
         .then((subject) => newValueSubject(property, subject))
     })
 }
 
-const selectResourceTemplateId = (propertyTemplate, resourceURI, resourceTemplatePromises, errorKey) => (dispatch) => {
-  return Promise.all(
-    // The keys are resource template ids. They may or may not be in state
-    propertyTemplate.valueSubjectTemplateKeys.map((resourceTemplateId) => dispatch(loadResourceTemplate(resourceTemplateId, resourceTemplatePromises, errorKey))
-      .then((subjectTemplate) => (subjectTemplate.class === resourceURI ? resourceTemplateId : undefined))),
-  )}
+const selectResourceTemplateId = (propertyTemplate, resourceURI, resourceTemplatePromises, errorKey) => (dispatch) => Promise.all(
+  // The keys are resource template ids. They may or may not be in state
+  propertyTemplate.valueSubjectTemplateKeys.map((resourceTemplateId) => dispatch(loadResourceTemplate(resourceTemplateId, resourceTemplatePromises, errorKey))
+    .then((subjectTemplate) => (subjectTemplate.class === resourceURI ? resourceTemplateId : undefined))),
+)
 
 const newLiteralFromQuad = (quad, property, usedDataset) => {
   usedDataset.add(quad)
