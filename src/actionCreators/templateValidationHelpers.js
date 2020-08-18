@@ -11,18 +11,20 @@ import { loadResourceTemplateWithoutValidation } from './templates'
  * Note that this may involve loading additional subject templates.
  * @return [Array<String>] errors
  */
-export const validateTemplates = (subjectTemplate, errorKey) => (dispatch) => Promise.all([
-  Promise.resolve(validateSubjectTemplate(subjectTemplate)),
-  Promise.resolve(validatePropertyTemplates(subjectTemplate.propertyTemplates)),
-  Promise.resolve(validateRepeatedPropertyTemplates(subjectTemplate.propertyTemplates)),
-  dispatch(validateAllRefResourceTemplatesExist(subjectTemplate.propertyTemplates)),
-  dispatch(validateAllUniqueResourceURIs(subjectTemplate.propertyTemplates)),
-])
+export const validateTemplates = (subjectTemplate, resourceTemplatePromises, errorKey) => (dispatch) => {
+  return Promise.all([
+    Promise.resolve(validateSubjectTemplate(subjectTemplate)),
+    Promise.resolve(validatePropertyTemplates(subjectTemplate.propertyTemplates)),
+    Promise.resolve(validateRepeatedPropertyTemplates(subjectTemplate.propertyTemplates)),
+    dispatch(validateAllRefResourceTemplatesExist(subjectTemplate.propertyTemplates, resourceTemplatePromises)),
+    dispatch(validateAllUniqueResourceURIs(subjectTemplate.propertyTemplates, resourceTemplatePromises)),
+  ])
   .then((errors) => {
     const flatErrors = errors.flat()
     flatErrors.forEach((error) => dispatch(addError(errorKey, error)))
     return _.isEmpty(flatErrors)
   })
+}
 
 const validateSubjectTemplate = (template) => {
   const errors = []
@@ -72,8 +74,8 @@ const validateRepeatedPropertyTemplates = (propertyTemplates) => {
   return []
 }
 
-const validateAllRefResourceTemplatesExist = (propertyTemplates) => (dispatch) => Promise.all(
-  propertyTemplates.map((template) => dispatch(validateRefResourceTemplatesExist(template))),
+const validateAllRefResourceTemplatesExist = (propertyTemplates, resourceTemplatePromises) => (dispatch) => Promise.all(
+  propertyTemplates.map((template) => dispatch(validateRefResourceTemplatesExist(template, resourceTemplatePromises))),
 )
   .then((missingResourceTemplateIds) => {
     // If misssing, then write errors for uniq
@@ -85,27 +87,27 @@ const validateAllRefResourceTemplatesExist = (propertyTemplates) => (dispatch) =
 /**
  * Validates that all value template refs exist.
  */
-const validateRefResourceTemplatesExist = (propertyTemplate) => (dispatch) => {
+const validateRefResourceTemplatesExist = (propertyTemplate, resourceTemplatePromises) => (dispatch) => {
   if (_.isEmpty(propertyTemplate.valueSubjectTemplateKeys)) return Promise.resolve([])
 
-  return Promise.all(propertyTemplate.valueSubjectTemplateKeys.map((resourceTemplateId) => dispatch(loadResourceTemplateWithoutValidation(resourceTemplateId))
+  return Promise.all(propertyTemplate.valueSubjectTemplateKeys.map((resourceTemplateId) => dispatch(loadResourceTemplateWithoutValidation(resourceTemplateId, resourceTemplatePromises))
     .then(() => null)
     .catch(() => resourceTemplateId)))
     .then((missingResourceTemplateIds) => _.compact(missingResourceTemplateIds))
 }
 
-const validateAllUniqueResourceURIs = (propertyTemplates) => (dispatch) => Promise.all(
-  propertyTemplates.map((propertyTemplate) => dispatch(validateUniqueResourceURIs(propertyTemplate))),
+const validateAllUniqueResourceURIs = (propertyTemplates, resourceTemplatePromises) => (dispatch) => Promise.all(
+  propertyTemplates.map((propertyTemplate) => dispatch(validateUniqueResourceURIs(propertyTemplate, resourceTemplatePromises))),
 )
   .then((errors) => errors.flat())
 
 /**
  * Validates that all value template refs have unique resource URIs.
  */
-const validateUniqueResourceURIs = (propertyTemplate) => (dispatch) => {
+const validateUniqueResourceURIs = (propertyTemplate, resourceTemplatePromises) => (dispatch) => {
   if (_.isEmpty(propertyTemplate.valueSubjectTemplateKeys)) return Promise.resolve([])
 
-  return Promise.all(propertyTemplate.valueSubjectTemplateKeys.map((resourceTemplateId) => dispatch(loadResourceTemplateWithoutValidation(resourceTemplateId))
+  return Promise.all(propertyTemplate.valueSubjectTemplateKeys.map((resourceTemplateId) => dispatch(loadResourceTemplateWithoutValidation(resourceTemplateId, resourceTemplatePromises))
     .then((subjectTemplate) => [subjectTemplate.class, subjectTemplate.id])
     .catch(() => { /* nothing */ })))
     .then((results) => {

@@ -168,18 +168,24 @@ export default class TemplatesBuilder {
   newAuthorities(propertyTerm) {
     const vocabUris = this.valuesFor(propertyTerm, 'http://sinopia.io/vocabulary/hasAuthority')
 
-    return findAuthorityConfigs(vocabUris).map((authorityConfig) => ({
-      uri: authorityConfig.uri,
-      label: authorityConfig.label,
-      authority: authorityConfig.authority,
-      subauthority: authorityConfig.subauthority,
-      nonldLookup: authorityConfig.nonldLookup || false,
-    }))
+    return vocabUris.map((vocabUri) => {
+      const authority = {
+        uri: vocabUri
+      }
+      const authorityConfig = findAuthorityConfig(vocabUri)
+      if(authorityConfig) {
+        authority.label = authorityConfig.label
+        authority.authority = authorityConfig.authority
+        authority.subauthority = authorityConfig.subauthority
+        authority.nonldLookup = authorityConfig.nonldLookup || false
+      }
+      return authority
+    })
   }
 
   componentForLookup(vocabUri) {
     const config = findAuthorityConfig(vocabUri)
-    switch (config.component) {
+    switch (config?.component) {
       case 'local-lookup':
         return 'InputLookupSinopia'
       case 'lookup':
