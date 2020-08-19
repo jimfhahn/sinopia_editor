@@ -375,6 +375,17 @@ To trigger a test exception, doubleclick "The underdrawing for the new world of 
 ```
 -> Added by selector, not stored in state.
 
+The following are only in the resource subject (that is, the base subject).
+```
+{
+  group: <group that that resource belongs to>,
+  bfAdminMetadataRefs: [uri of referenced admin metadata resource, ...],
+  bfWorkRefs: [uri of referenced Bibframe Work resource, ...],
+  bfInstanceRefs: [uri of referenced Bibframe Instance resource, ...],
+  bfItemRefs: [uri of referenced Bibframe Item resources, ...]
+}
+```
+
 ### Subject template model
 ```
 {

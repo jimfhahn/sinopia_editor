@@ -30,7 +30,8 @@ const ResourceTemplateRow = (props) => (<tr key={props.row.id}>
   </td>
   <td>
     <div className="btn-group" role="group" aria-label="Result Actions">
-      <button className="btn btn-link"
+      <button type="button"
+              className="btn btn-link"
               title="Edit"
               aria-label={`Edit ${props.row.label}`}
               onClick={(e) => props.handleEdit(props.row.uri, e) }>

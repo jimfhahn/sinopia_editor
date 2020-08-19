@@ -7,6 +7,7 @@ export const createState = (options = {}) => {
   buildAuthenticate(state, options)
   buildLanguages(state, options)
   buildResourceWithLiteral(state, options)
+  buildResourceWithUri(state, options)
   buildResourceWithContractedLiteral(state, options)
   buildResourceWithNestedResource(state, options)
   buildResourceWithContractedNestedResource(state, options)
@@ -79,6 +80,11 @@ const buildResourceWithLiteral = (state, options) => {
       propertyKeys: [
         'JQEtq-vmq8',
       ],
+      bfAdminMetadataRefs: [],
+      bfInstanceRefs: [],
+      bfItemRefs: [],
+      bfWorkRefs: [],
+      group: null,
       changed: false,
     },
   }
@@ -104,6 +110,111 @@ const buildResourceWithLiteral = (state, options) => {
       lang: 'eng',
       uri: null,
       label: null,
+      valueSubjectKey: null,
+    },
+  }
+}
+
+const buildResourceWithUri = (state, options) => {
+  if (!options.hasResourceWithUri) return
+
+  state.selectorReducer.editor.currentResource = 'wihOjn-0Z'
+  state.selectorReducer.entities.subjectTemplates = {
+    'test:resource:SinopiaLookup': {
+      key: 'test:resource:SinopiaLookup',
+      id: 'test:resource:SinopiaLookup',
+      class: 'http://id.loc.gov/ontologies/bibframe/Instance',
+      label: 'Testing sinopia lookup',
+      author: null,
+      remark: 'This hits elasticsearch',
+      date: null,
+      propertyTemplateKeys: [
+        'test:resource:SinopiaLookup > http://id.loc.gov/ontologies/bibframe/instanceOf',
+      ],
+    },
+  }
+  state.selectorReducer.entities.propertyTemplates = {
+    'test:resource:SinopiaLookup > http://id.loc.gov/ontologies/bibframe/instanceOf': {
+      key: 'test:resource:SinopiaLookup > http://id.loc.gov/ontologies/bibframe/instanceOf',
+      subjectTemplateKey: 'test:resource:SinopiaLookup',
+      label: 'Instance of (lookup)',
+      uri: 'http://id.loc.gov/ontologies/bibframe/instanceOf',
+      required: true,
+      repeatable: false,
+      remark: 'lookup',
+      remarkUrl: null,
+      defaults: [],
+      valueSubjectTemplateKeys: [],
+      authorities: [
+        {
+          uri: 'urn:ld4p:sinopia:bibframe:instance',
+          label: 'Sinopia BIBFRAME instance resources',
+          nonldLookup: false,
+        },
+        {
+          uri: 'urn:ld4p:sinopia:bibframe:work',
+          label: 'Sinopia BIBFRAME work resources',
+          nonldLookup: false,
+        },
+      ],
+      type: 'uri',
+      component: 'InputLookupSinopia',
+    },
+  }
+
+  state.selectorReducer.entities.subjects = {
+    'wihOjn-0Z': {
+      key: 'wihOjn-0Z',
+      uri: null,
+      resourceKey: 'wihOjn-0Z',
+      subjectTemplateKey: 'test:resource:SinopiaLookup',
+      group: null,
+      bfAdminMetadataRefs: [],
+      bfItemRefs: [],
+      bfInstanceRefs: [],
+      bfWorkRefs: [
+        'http://localhost:3000/repository/stanford/74770f92-f8cf-48ee-970a-aefc97843738',
+      ],
+      propertyKeys: [
+        'i0SAJP-Zhd',
+      ],
+      changed: true,
+      subjectTemplate: {
+        key: 'test:resource:SinopiaLookup',
+        id: 'test:resource:SinopiaLookup',
+        class: 'http://id.loc.gov/ontologies/bibframe/Instance',
+        label: 'Testing sinopia lookup',
+        author: null,
+        remark: 'This hits elasticsearch',
+        date: null,
+        propertyTemplateKeys: [
+          'test:resource:SinopiaLookup > http://id.loc.gov/ontologies/bibframe/instanceOf',
+        ],
+      },
+    },
+  }
+  state.selectorReducer.entities.properties = {
+    'i0SAJP-Zhd': {
+      key: 'i0SAJP-Zhd',
+      resourceKey: 'wihOjn-0Z',
+      show: true,
+      subjectKey: 'wihOjn-0Z',
+      propertyTemplateKey: 'test:resource:SinopiaLookup > http://id.loc.gov/ontologies/bibframe/instanceOf',
+      errors: [],
+      valueKeys: [
+        's8-qt3-uu',
+      ],
+    },
+  }
+  state.selectorReducer.entities.values = {
+    's8-qt3-uu': {
+      key: 's8-qt3-uu',
+      resourceKey: 'wihOjn-0Z',
+      literal: null,
+      lang: null,
+      uri: 'http://localhost:3000/repository/stanford/74770f92-f8cf-48ee-970a-aefc97843738',
+      label: 'foo',
+      propertyKey: 'i0SAJP-Zhd',
       valueSubjectKey: null,
     },
   }
@@ -151,6 +262,11 @@ const buildResourceWithContractedLiteral = (state, options) => {
         'JQEtq-vmq8',
       ],
       changed: false,
+      bfAdminMetadataRefs: [],
+      bfInstanceRefs: [],
+      bfItemRefs: [],
+      bfWorkRefs: [],
+      group: null,
     },
   }
   state.selectorReducer.entities.properties = {
@@ -236,6 +352,11 @@ const buildResourceWithNestedResource = (state, options) => {
         'v1o90QO1Qx',
       ],
       changed: false,
+      bfAdminMetadataRefs: [],
+      bfInstanceRefs: [],
+      bfItemRefs: [],
+      bfWorkRefs: [],
+      group: null,
     },
     XPb8jaPWo: {
       key: 'XPb8jaPWo',
@@ -340,6 +461,11 @@ const buildResourceWithContractedNestedResource = (state, options) => {
         'v1o90QO1Qx',
       ],
       changed: false,
+      bfAdminMetadataRefs: [],
+      bfInstanceRefs: [],
+      bfItemRefs: [],
+      bfWorkRefs: [],
+      group: null,
     },
   }
   state.selectorReducer.entities.properties = {

@@ -49,7 +49,9 @@ export const getFixtureResource = (uri) => {
   return { id, uri, data: resource }
 }
 
-const normUri = (uri) => uri.substring(uri.indexOf('repository/') + 11)
+const normUri = (uri) => {
+  return uri.substring(uri.indexOf('repository/') + 11)
+}
 
 // Cache of search results
 const fixtureTemplateSearchResults = []
@@ -63,7 +65,8 @@ export const getFixtureTemplateSearchResults = () => {
       const jsonld = require(`../__template_fixtures__/${templateFilenames[id]}`)
       return datasetFromJsonld(jsonld)
         .then((dataset) => {
-          const template = new TemplatesBuilder(dataset, `http://localhost:3000/repository/${id}`).build()
+          const uri = `http://localhost:3000/repository/${id}`
+          const template = new TemplatesBuilder(dataset, uri).build()
           const result = {
             id: template.id,
             author: template.author,
@@ -71,6 +74,7 @@ export const getFixtureTemplateSearchResults = () => {
             remark: template.remark,
             resourceLabel: template.label,
             resourceURI: template.class,
+            uri,
           }
           fixtureTemplateSearchResults.push(result)
           return result

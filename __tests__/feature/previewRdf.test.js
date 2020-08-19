@@ -36,6 +36,7 @@ describe('preview RDF after editing', () => {
       { target: { value: 'turtle' } })
 
     // Tests for presence of turtle RDF in the model
-    expect(screen.getByTestId('rdf-display').textContent).toContain(rdf)
+    const rdfDisplay = await screen.findByTestId('rdf-display')
+    expect(rdfDisplay.textContent).toContain(rdf)
   })
 })

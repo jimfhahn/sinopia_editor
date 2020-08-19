@@ -82,6 +82,11 @@ const saveBodyForResource = (resource, user, group) => {
       user,
       group,
       templateId: resource.subjectTemplate.id,
+      types: [resource.subjectTemplate.class],
+      bfAdminMetadataRefs: resource.bfAdminMetadataRefs,
+      bfItemRefs: resource.bfItemRefs,
+      bfInstanceRefs: resource.bfInstanceRefs,
+      bfWorkRefs: resource.bfWorkRefs,
     }))
 }
 

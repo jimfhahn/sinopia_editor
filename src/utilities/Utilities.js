@@ -6,6 +6,7 @@ import _ from 'lodash'
 import Config from 'Config'
 import CryptoJS from 'crypto-js'
 import { JsonLdParser } from 'jsonld-streaming-parser'
+import { Writer as N3Writer } from 'n3'
 
 const concatStream = require('concat-stream')
 const Readable = require('stream').Readable
@@ -60,6 +61,18 @@ export const datasetFromN3 = (data) => new Promise((resolve, reject) => {
         resolve(dataset)
       }
     })
+})
+
+export const n3FromDataset = (dataset, format) => new Promise((resolve, reject) => {
+  const writer = new N3Writer({ format: format === 'n-triples' ? 'N-Triples' : undefined })
+  writer.addQuads(dataset.toArray())
+  writer.end((error, result) => {
+    if (error) {
+      reject(error)
+    } else {
+      resolve(result)
+    }
+  })
 })
 
 export const jsonldFromDataset = (dataset) => {

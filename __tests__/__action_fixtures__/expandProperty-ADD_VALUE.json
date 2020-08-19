@@ -16,6 +16,11 @@
               "uri": null,
               "resourceKey": "ljAblGiBW",
               "subjectTemplateKey": "resourceTemplate:testing:uber1",
+              "bfAdminMetadataRefs": [],
+              "bfInstanceRefs": [],
+              "bfItemRefs": [],
+              "bfWorkRefs": [],
+              "group": null,
               "propertyKeys": [
                 "v1o90QO1Qx"
               ],
