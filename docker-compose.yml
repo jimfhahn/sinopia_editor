@@ -7,7 +7,6 @@ services:
         - USE_FIXTURES='false'
     environment:
       INDEX_URL: http://elasticsearch:9200
-      SINOPIA_API_BASE_URL: http://api:3000/repository
     ports:
       - 8000:8000
     depends_on:

@@ -5,20 +5,6 @@ describe('End-to-end test', () => {
   shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@_')
   const title = shortid.generate()
 
-  // This is used to paste JSON into text area.
-  // Type is too slow. See See https://github.com/cypress-io/cypress/issues/1123
-  Cypress.Commands.add('paste', {
-    prevSubject: true,
-    element: true,
-  }, ($element, text) => {
-    const subString = text.substr(0, text.length - 1)
-    const lastChar = text.slice(-1)
-
-    $element.text(subString)
-    $element.val(subString)
-    cy.get($element).type(lastChar)
-  })
-
   it('Opens the app', () => {
     cy.visit(Cypress.env('EDITOR_URL') || 'http://localhost:8000/')
     cy.contains('The underdrawing for the new world of linked data in libraries')
@@ -42,10 +28,12 @@ describe('End-to-end test', () => {
     cy.url().should('include', '/templates')
   })
 
-  it('Uploads a profile template', () => {
+  it('Uploads a resource template', () => {
     cy.get('#searchInput')
       .type('resourceTemplate:bf2:WorkTitle')
       .should('have.value', 'resourceTemplate:bf2:WorkTitle')
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500)
 
     // Need to determine if should upload a resource template.
     cy.get('#resource-templates').then((rtDiv) => {
@@ -54,17 +42,17 @@ describe('End-to-end test', () => {
         cy.url().should('include', '/load')
         cy.contains('Load RDF into Editor')
         cy.fixture('WorkTitle.txt').then((json) => {
-          // cy.log(json)
-
           // Type is to slow. See https://github.com/cypress-io/cypress/issues/1123
           cy.get('#resourceTextArea').paste(json)
           // .type(json, {delay: 0})
           cy.get('#uriInput')
             .type('http://localhost:3000/repository/resourceTemplate:bf2:WorkTitle')
           cy.get('button[type="submit"]:not(:disabled)').contains('Submit').click()
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(500)
 
           // Now on editor
-          cy.url().should('include', '/load')
+          cy.url().should('include', '/editor')
           cy.get('button.editor-save').contains('Save').click()
 
           // Group choice modal

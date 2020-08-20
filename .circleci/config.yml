@@ -46,19 +46,25 @@ jobs:
           environment:
             JEST_JUNIT_OUTPUT: "test-results/jest/jest-results.xml"
       - setup_remote_docker
+      - run: docker build -t ld4l/sinopia_editor --build-arg USE_FIXTURES=false --build-arg INDEX_URL=http://elasticsearch:9200 --build-arg SINOPIA_API_BASE_URL=http://api:3000/repository .
+      - run: docker build -f Dockerfile.cypress -t ld4l/sinopia_editor_cypress .
       - run:
           name: Start docker env
           command: |
             set -x
-            COGNITO_ADMIN_PASSWORD=$COGNITO_ADMIN_PASSWORD AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY docker-compose up -d pipeline elasticsearch mongo api mongo-setup editor
-            # Wait for mongo-setup to run
-            docker run --network sinopia_editor_default appropriate/curl --retry 25 --retry-delay 1 --retry-connrefused http://editor:8000/
-            docker run --network sinopia_editor_default appropriate/curl --retry 60 --retry-delay 1 --retry-connrefused http://api:3000/
-            sleep 45
-            docker run --network sinopia_editor_default appropriate/curl --retry 60 --retry-delay 1 --retry-connrefused http://api:3000/repository/sinopia:template:uri
+            # Start everything but API.
+            COGNITO_ADMIN_PASSWORD=$COGNITO_ADMIN_PASSWORD AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY docker-compose up -d pipeline elasticsearch mongo
+            docker run --name editor-cypress -it --security-opt seccomp=unconfined --network sinopia_editor_default -e COGNITO_ADMIN_PASSWORD=$COGNITO_ADMIN_PASSWORD -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -d ld4l/sinopia_editor
+            sleep 5
+            # This is a special mongo-setup just for cypress env.
+            docker run --rm --name mongo-setup-cypress -it --security-opt seccomp=unconfined --network sinopia_editor_default -d ld4l/sinopia_dev_setup:cypress
+            # Wait while mongo-setup creates the user needed by api
+            sleep 5
+            COGNITO_ADMIN_PASSWORD=$COGNITO_ADMIN_PASSWORD AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY docker-compose up -d api
+            docker run --rm --network sinopia_editor_default appropriate/curl --retry 25 --retry-delay 1 --retry-connrefused http://editor-cypress:8000/
+            docker run --rm --network sinopia_editor_default appropriate/curl --retry 25 --retry-delay 1 --retry-connrefused http://api:3000/
       # The test needs to be run within Docker, as (remote) Sinopia network is not available from this testing container.
-      - run: docker build -f Dockerfile.cypress -t ld4l/sinopia_editor_cypress .
-      - run: docker run -it --security-opt seccomp=unconfined --network sinopia_editor_default -e CYPRESS_EDITOR_URL='http://editor:8000/' -e CYPRESS_COGNITO_TEST_USER_NAME=$COGNITO_TEST_USER_NAME -e CYPRESS_COGNITO_TEST_USER_PASS=$COGNITO_TEST_USER_PASS ld4l/sinopia_editor_cypress
+      - run: docker run -it --security-opt seccomp=unconfined --network sinopia_editor_default -e CYPRESS_EDITOR_URL='http://editor-cypress:8000/' -e CYPRESS_COGNITO_TEST_USER_NAME=$COGNITO_TEST_USER_NAME -e CYPRESS_COGNITO_TEST_USER_PASS=$COGNITO_TEST_USER_PASS ld4l/sinopia_editor_cypress
 
   register_latest_image:
     <<: *defaults
