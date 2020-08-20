@@ -5,6 +5,20 @@ describe('End-to-end test', () => {
   shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@_')
   const title = shortid.generate()
 
+  // This is used to paste JSON into text area.
+  // Type is too slow. See See https://github.com/cypress-io/cypress/issues/1123
+  Cypress.Commands.add('paste', {
+    prevSubject: true,
+    element: true,
+  }, ($element, text) => {
+    const subString = text.substr(0, text.length - 1)
+    const lastChar = text.slice(-1)
+
+    $element.text(subString)
+    $element.val(subString)
+    cy.get($element).type(lastChar)
+  })
+
   it('Opens the app', () => {
     cy.visit(Cypress.env('EDITOR_URL') || 'http://localhost:8000/')
     cy.contains('The underdrawing for the new world of linked data in libraries')
@@ -30,28 +44,45 @@ describe('End-to-end test', () => {
 
   it('Uploads a profile template', () => {
     cy.get('#searchInput')
-      .type('ld4p:RT:bf2:WorkTitle')
-      .should('have.value', 'ld4p:RT:bf2:WorkTitle')
+      .type('resourceTemplate:bf2:WorkTitle')
+      .should('have.value', 'resourceTemplate:bf2:WorkTitle')
 
     // Need to determine if should upload a resource template.
     cy.get('#resource-templates').then((rtDiv) => {
       if (rtDiv.find('div#no-rt-warning').length > 0) {
-        cy.contains('Import Profile / Resource Template').click()
-        cy.contains('Drag and drop a profile or resource template file')
-        const fileName = 'LD4P_BIBFRAME_2.0_Title_Information.json'
-        cy.fixture(fileName).then((fileJson) => {
-          const fileContent = JSON.stringify(fileJson)
-          cy.get('input[type="file"]').upload({ fileContent, fileName, mimeType: 'application/json' })
+        cy.get('a').contains('Load RDF').click()
+        cy.url().should('include', '/load')
+        cy.contains('Load RDF into Editor')
+        cy.fixture('WorkTitle.txt').then((json) => {
+          // cy.log(json)
+
+          // Type is to slow. See https://github.com/cypress-io/cypress/issues/1123
+          cy.get('#resourceTextArea').paste(json)
+          // .type(json, {delay: 0})
+          cy.get('#uriInput')
+            .type('http://localhost:3000/repository/resourceTemplate:bf2:WorkTitle')
+          cy.get('button[type="submit"]:not(:disabled)').contains('Submit').click()
+
+          // Now on editor
+          cy.url().should('include', '/load')
+          cy.get('button.editor-save').contains('Save').click()
+
+          // Group choice modal
+          cy.contains('Which group do you want to save to?')
+          cy.get('div#group-choice-modal button').contains('Save').click()
+
+          // Waiting for indexing. If this proves problematic, can try a different approach.
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(10000)
+
+          // Go back to templates
+          cy.get('a').contains('Resource Templates').click()
+          cy.url().should('include', '/templates')
+
+          cy.get('#searchInput')
+            .type('resourceTemplate:bf2:WorkTitle')
+            .should('have.value', 'resourceTemplate:bf2:WorkTitle')
         })
-        // Waiting for indexing. If this proves problematic, can try a different approach.
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(15000)
-        cy.get('#searchInput')
-          .type('{backspace}')
-          .should('have.value', 'ld4p:RT:bf2:WorkTitl')
-        cy.get('#searchInput')
-          .type('e')
-          .should('have.value', 'ld4p:RT:bf2:WorkTitle')
       }
     })
   })
@@ -73,7 +104,7 @@ describe('End-to-end test', () => {
     cy.get('button[title="Preview RDF"]').first().click()
     cy.get('select#rdfFormat').select('n-triples')
     cy.contains(`<> <http://id.loc.gov/ontologies/bibframe/mainTitle> "${title}"@eng .`)
-    cy.contains('<> <http://sinopia.io/vocabulary/hasResourceTemplate> "ld4p:RT:bf2:WorkTitle" .')
+    cy.contains('<> <http://sinopia.io/vocabulary/hasResourceTemplate> "resourceTemplate:bf2:WorkTitle" .')
     cy.contains('<> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/bibframe/Title> .')
   })
 
@@ -90,7 +121,7 @@ describe('End-to-end test', () => {
   it('Search', () => {
     // Waiting for indexing. If this proves problematic, can try a different approach.
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(15000)
+    cy.wait(10000)
 
     cy.get('a').contains('Search').click()
     cy.url().should('include', '/search')
