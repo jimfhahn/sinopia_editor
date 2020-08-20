@@ -71,9 +71,10 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: sekret
   api:
-    build:
-      context: ../sinopia_api
-      dockerfile: Dockerfile
+    image: ld4p/sinopia_api:latest
+    # build:
+    #   context: ../sinopia_api
+    #   dockerfile: Dockerfile
     restart: always
     ports:
       - 3000:3000
