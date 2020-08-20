@@ -56,7 +56,7 @@ jobs:
             docker run --network sinopia_editor_default appropriate/curl --retry 60 --retry-delay 1 --retry-connrefused http://api:3000/
             sleep 45
             docker run --network sinopia_editor_default appropriate/curl --retry 60 --retry-delay 1 --retry-connrefused http://api:3000/repository/sinopia:template:uri
-      The test needs to be run within Docker, as (remote) Sinopia network is not available from this testing container.
+      # The test needs to be run within Docker, as (remote) Sinopia network is not available from this testing container.
       - run: docker build -f Dockerfile.cypress -t ld4l/sinopia_editor_cypress .
       - run: docker run -it --security-opt seccomp=unconfined --network sinopia_editor_default -e CYPRESS_EDITOR_URL='http://editor:8000/' -e CYPRESS_COGNITO_TEST_USER_NAME=$COGNITO_TEST_USER_NAME -e CYPRESS_COGNITO_TEST_USER_PASS=$COGNITO_TEST_USER_PASS ld4l/sinopia_editor_cypress
 
