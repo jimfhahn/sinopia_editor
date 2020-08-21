@@ -57,7 +57,7 @@ jobs:
             docker run --name editor-cypress -it --security-opt seccomp=unconfined --network sinopia_editor_default -e COGNITO_ADMIN_PASSWORD=$COGNITO_ADMIN_PASSWORD -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -d ld4l/sinopia_editor
             sleep 5
             # This is a special mongo-setup just for cypress env.
-            docker run --rm --name mongo-setup-cypress -it --security-opt seccomp=unconfined --network sinopia_editor_default -d ld4l/sinopia_dev_setup:cypress
+            docker run --rm --name mongo-setup-cypress -it --security-opt seccomp=unconfined --network sinopia_editor_default -d ld4p/sinopia_dev_setup:cypress
             # Wait while mongo-setup creates the user needed by api
             sleep 5
             COGNITO_ADMIN_PASSWORD=$COGNITO_ADMIN_PASSWORD AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY docker-compose up -d api
