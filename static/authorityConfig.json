@@ -1899,8 +1899,8 @@
     "component": "list"
   },
   {
-    "label": "cardinality",
-    "uri": "file:/cardinality.json",
+    "label": "propertyAttribute",
+    "uri": "file:/propertyAttribute.json",
     "component": "list"
   },
   {

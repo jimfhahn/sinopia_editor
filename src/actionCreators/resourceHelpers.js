@@ -80,24 +80,54 @@ export const newPropertiesFromTemplates = (subject, noDefaults, errorKey) => (di
 )
 
 const newValuesFromDataset = (subjectTerm, property, resourceTemplatePromises, dataset, usedDataset, errorKey) => (dispatch) => {
-  // All quads for this property
-  const quads = dataset.match(subjectTerm, rdf.namedNode(property.propertyTemplate.uri)).toArray()
-  return Promise.all(quads.map((quad) => {
+  // Get the objects for the values. How depends on whether property is ordered.
+  const objectsFunc = property.propertyTemplate.ordered ? orderedObjects : unorderedObjects
+  const objects = objectsFunc(subjectTerm, property, dataset, usedDataset)
+  return Promise.all(objects.map((obj) => {
     if (property.propertyTemplate.type === 'resource') {
-      return dispatch(newNestedResourceFromQuad(quad, property, resourceTemplatePromises, dataset, usedDataset, errorKey))
-    } if (quad.object.termType === 'NamedNode') {
+      return dispatch(newNestedResourceFromObject(obj, property, resourceTemplatePromises, dataset, usedDataset, errorKey))
+    } if (obj.termType === 'NamedNode') {
       // URI
-      return Promise.resolve(newUriFromQuad(quad, property, dataset, usedDataset))
+      return Promise.resolve(newUriFromObject(obj, property, dataset, usedDataset))
     }
     // Literal
-    return Promise.resolve(newLiteralFromQuad(quad, property, usedDataset))
+    return Promise.resolve(newLiteralFromObject(obj, property))
   }))
 }
 
-const newNestedResourceFromQuad = (quad, property, resourceTemplatePromises, dataset, usedDataset, errorKey) => (dispatch) => {
+const orderedObjects = (subjectTerm, property, dataset, usedDataset) => {
+  // All quads for this property
+  const quads = dataset.match(subjectTerm, rdf.namedNode(property.propertyTemplate.uri)).toArray()
+  // Should only be one.
+  if (quads.length > 1) {
+    throw `More than one quad for ordered property ${property.propertyTemplate.uri}: ${quads}`
+  }
+  if (quads.length === 0) return
+  usedDataset.addAll(quads)
+  const objects = []
+  recursiveOrderedObjects(quads[0].object, objects, dataset, usedDataset)
+  return objects
+}
+
+const recursiveOrderedObjects = (subjectTerm, objects, dataset, usedDataset) => {
+  const firstQuad = dataset.match(subjectTerm, rdf.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first')).toArray()[0]
+  objects.push(firstQuad.object)
+  const restQuad = dataset.match(subjectTerm, rdf.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest')).toArray()[0]
+  usedDataset.add(restQuad)
+  if(restQuad.object.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil') recursiveOrderedObjects(restQuad.object, objects, dataset, usedDataset)
+}
+
+const unorderedObjects = (subjectTerm, property, dataset, usedDataset) => {
+  // All quads for this property
+  const quads = dataset.match(subjectTerm, rdf.namedNode(property.propertyTemplate.uri)).toArray()
+  usedDataset.addAll(quads)
+  return quads.map((quad) => quad.object)
+}
+
+const newNestedResourceFromObject = (obj, property, resourceTemplatePromises, dataset, usedDataset, errorKey) => (dispatch) => {
   // Only build this embedded resource if can find the resource template.
   // Multiple types may be provided.
-  const typeQuads = dataset.match(quad.object, rdf.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')).toArray()
+  const typeQuads = dataset.match(obj, rdf.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')).toArray()
 
   // Among the valueTemplateRefs, find all of the resource templates that match a type.
   // Ideally, only want 1 but need to handle other cases.
@@ -116,11 +146,10 @@ const newNestedResourceFromQuad = (quad, property, resourceTemplatePromises, dat
       if (_.isEmpty(compactChildRtIds)) {
         return null
       }
-      usedDataset.add(quad)
       usedDataset.addAll(typeQuads)
 
       // One resource template
-      return dispatch(recursiveResourceFromDataset(quad.object, null, compactChildRtIds[0],
+      return dispatch(recursiveResourceFromDataset(obj, null, compactChildRtIds[0],
         property.resourceKey, resourceTemplatePromises, dataset, usedDataset, errorKey))
         .then((subject) => newValueSubject(property, subject))
     })
@@ -132,15 +161,13 @@ const selectResourceTemplateId = (propertyTemplate, resourceURI, resourceTemplat
     .then((subjectTemplate) => (subjectTemplate.class === resourceURI ? resourceTemplateId : undefined))),
 )
 
-const newLiteralFromQuad = (quad, property, usedDataset) => {
-  usedDataset.add(quad)
-  return newLiteralValue(property, quad.object.value, quad.object.language)
+const newLiteralFromObject = (obj, property) => {
+  return newLiteralValue(property, obj.value, obj.language)
 }
 
-const newUriFromQuad = (quad, property, dataset, usedDataset) => {
-  const uri = quad.object.value
-  usedDataset.add(quad)
-  const labelQuads = dataset.match(quad.object, rdf.namedNode('http://www.w3.org/2000/01/rdf-schema#label')).toArray()
+const newUriFromObject = (obj, property, dataset, usedDataset) => {
+  const uri = obj.value
+  const labelQuads = dataset.match(obj, rdf.namedNode('http://www.w3.org/2000/01/rdf-schema#label')).toArray()
   let label = uri
   if (labelQuads.length > 0) {
     label = labelQuads[0].object.value // Use first match

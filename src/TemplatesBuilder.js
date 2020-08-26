@@ -34,12 +34,18 @@ export default class TemplatesBuilder {
   }
 
   buildPropertyTemplates() {
-    // Sort is a hack for getting the property templates in the proper order based on the blank node.
-    // Ideally this would be an RDF sequence, but that seems horrible to implement.
-    const quads = this.dataset.match(this.subjectTerm, rdf.namedNode('http://sinopia.io/vocabulary/hasPropertyTemplate'))
-      .toArray()
-      .sort(quadCompare)
-    quads.forEach((quad) => this.buildPropertyTemplate(quad.object))
+    // Property templates is a list.
+    const quads = this.dataset.match(this.subjectTerm, rdf.namedNode('http://sinopia.io/vocabulary/hasPropertyTemplate')).toArray()
+    if(_.isEmpty(quads)) return
+    const objects = []
+    this.buildList(quads[0].object, objects)
+    objects.forEach((obj) => this.buildPropertyTemplate(obj))
+  }
+
+  buildList(subjectTerm, objects) {    
+    objects.push(this.dataset.match(subjectTerm, rdf.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first')).toArray()[0].object)
+    const restQuad = this.dataset.match(subjectTerm, rdf.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest')).toArray()[0]
+    if(restQuad.object.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil') this.buildList(restQuad.object, objects)
   }
 
   buildPropertyTemplate(propertyTerm) {
@@ -78,16 +84,17 @@ export default class TemplatesBuilder {
   }
 
   newBasePropertyTemplate(propertyTerm) {
-    const propertyUri = this.valueFor(propertyTerm, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-    const cardinalityValues = this.valuesFor(propertyTerm, 'http://sinopia.io/vocabulary/hasCardinality')
+    const propertyUri = this.valueFor(propertyTerm, 'http://sinopia.io/vocabulary/hasPropertyUri')
+    const propertyAttrValues = this.valuesFor(propertyTerm, 'http://sinopia.io/vocabulary/hasPropertyAttribute')
     return {
       // This key will be unique for resource templates, property templates.
       key: `${this.subjectTemplate.key} > ${propertyUri}`,
       subjectTemplateKey: this.subjectTemplate.key,
       label: this.valueFor(propertyTerm, 'http://www.w3.org/2000/01/rdf-schema#label'),
       uri: propertyUri,
-      required: cardinalityValues.includes('http://sinopia.io/vocabulary/cardinality/required'),
-      repeatable: cardinalityValues.includes('http://sinopia.io/vocabulary/cardinality/repeatable'),
+      required: propertyAttrValues.includes('http://sinopia.io/vocabulary/propertyAttribute/required'),
+      repeatable: propertyAttrValues.includes('http://sinopia.io/vocabulary/propertyAttribute/repeatable'),
+      ordered: propertyAttrValues.includes('http://sinopia.io/vocabulary/propertyAttribute/ordered'),
       remark: this.valueFor(propertyTerm, 'http://sinopia.io/vocabulary/hasRemark'),
       remarkUrl: this.valueFor(propertyTerm, 'http://sinopia.io/vocabulary/hasRemarkUrl'),
       defaults: [],
