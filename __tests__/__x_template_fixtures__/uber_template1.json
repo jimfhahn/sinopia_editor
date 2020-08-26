@@ -263,6 +263,71 @@
       "repeatable": "true",
       "type": "resource",
       "remark": "Mandatory nested resource templates."
+    },
+    {
+      "propertyLabel": "Admin metadata",
+      "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
+      "resourceTemplates": [],
+      "valueConstraint": {
+        "useValuesFrom": [
+          "urn:ld4p:sinopia:bibframe:adminMetadata"
+        ]
+      },
+      "mandatory": "false",
+      "repeatable": "false",
+      "type": "resource"
+    },
+    {
+      "propertyLabel": "Has instance",
+      "propertyURI": "http://id.loc.gov/ontologies/bibframe/hasInstance",
+      "resourceTemplates": [],
+      "valueConstraint": {
+        "useValuesFrom": [
+          "urn:ld4p:sinopia:bibframe:instance"
+        ]
+      },
+      "mandatory": "false",
+      "repeatable": "true",
+      "type": "resource"
+    },
+    {
+      "propertyLabel": "Instance of",
+      "propertyURI": "http://id.loc.gov/ontologies/bibframe/instanceOf",
+      "resourceTemplates": [],
+      "valueConstraint": {
+        "useValuesFrom": [
+          "urn:ld4p:sinopia:bibframe:work"
+        ]
+      },
+      "mandatory": "false",
+      "repeatable": "true",
+      "type": "resource"
+    },
+    {
+      "propertyLabel": "Has item",
+      "propertyURI": "http://id.loc.gov/ontologies/bibframe/hasItem",
+      "resourceTemplates": [],
+      "valueConstraint": {
+        "useValuesFrom": [
+          "urn:ld4p:sinopia:bibframe:item"
+        ]
+      },
+      "mandatory": "false",
+      "repeatable": "true",
+      "type": "resource"
+    },
+    {
+      "propertyLabel": "Item of",
+      "propertyURI": "http://id.loc.gov/ontologies/bibframe/itemOf",
+      "resourceTemplates": [],
+      "valueConstraint": {
+        "useValuesFrom": [
+          "urn:ld4p:sinopia:bibframe:instance"
+        ]
+      },
+      "mandatory": "false",
+      "repeatable": "true",
+      "type": "resource"
     }
   ]
 }

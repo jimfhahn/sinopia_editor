@@ -114,7 +114,7 @@ const recursiveOrderedObjects = (subjectTerm, objects, dataset, usedDataset) => 
   objects.push(firstQuad.object)
   const restQuad = dataset.match(subjectTerm, rdf.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest')).toArray()[0]
   usedDataset.add(restQuad)
-  if(restQuad.object.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil') recursiveOrderedObjects(restQuad.object, objects, dataset, usedDataset)
+  if (restQuad.object.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil') recursiveOrderedObjects(restQuad.object, objects, dataset, usedDataset)
 }
 
 const unorderedObjects = (subjectTerm, property, dataset, usedDataset) => {
@@ -161,9 +161,7 @@ const selectResourceTemplateId = (propertyTemplate, resourceURI, resourceTemplat
     .then((subjectTemplate) => (subjectTemplate.class === resourceURI ? resourceTemplateId : undefined))),
 )
 
-const newLiteralFromObject = (obj, property) => {
-  return newLiteralValue(property, obj.value, obj.language)
-}
+const newLiteralFromObject = (obj, property) => newLiteralValue(property, obj.value, obj.language)
 
 const newUriFromObject = (obj, property, dataset, usedDataset) => {
   const uri = obj.value

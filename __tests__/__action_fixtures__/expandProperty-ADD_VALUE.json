@@ -82,6 +82,7 @@
                   "uri": "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
                   "required": false,
                   "repeatable": true,
+                  "ordered": false,
                   "defaults": [],
                   "remark": "A repeatable literal",
                   "remarkUrl": null,

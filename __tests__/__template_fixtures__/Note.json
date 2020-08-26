@@ -1,6 +1,6 @@
 [
   {
-    "@id": "_:b1",
+    "@id": "_:b2",
     "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
@@ -9,7 +9,7 @@
         "@value": "Note"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
         "@id": "http://www.w3.org/2000/01/rdf-schema#label"
       }
@@ -47,7 +47,11 @@
     ],
     "http://sinopia.io/vocabulary/hasPropertyTemplate": [
       {
-        "@id": "_:b1"
+        "@list": [
+          {
+            "@id": "_:b2"
+          }
+        ]
       }
     ]
   }

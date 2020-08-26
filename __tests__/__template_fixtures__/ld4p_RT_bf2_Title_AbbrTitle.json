@@ -1,6 +1,6 @@
 [
   {
-    "@id": "_:b1",
+    "@id": "_:b2",
     "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
@@ -9,7 +9,7 @@
         "@value": "Abbreviated Title"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
         "@id": "http://id.loc.gov/ontologies/bibframe/mainTitle"
       }
@@ -57,7 +57,11 @@
     ],
     "http://sinopia.io/vocabulary/hasPropertyTemplate": [
       {
-        "@id": "_:b1"
+        "@list": [
+          {
+            "@id": "_:b2"
+          }
+        ]
       }
     ]
   }

@@ -1,106 +1,33 @@
 [
   {
-    "@id": "_:b1",
-    "@type": [
-      "http://sinopia.io/vocabulary/PropertyTemplate"
-    ],
-    "http://www.w3.org/2000/01/rdf-schema#label": [
-      {
-        "@value": "Barcode"
-      }
-    ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
-      {
-        "@id": "http://id.loc.gov/ontologies/bibframe/Barcode"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
-      {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasPropertyType": [
-      {
-        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasResourceAttributes": [
-      {
-        "@id": "_:b2"
-      }
-    ]
-  },
-  {
     "@id": "_:b10",
     "@type": [
       "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "lc:RT:bf2:Identifiers:ISBN"
-      }
-    ]
-  },
-  {
-    "@id": "_:b11",
-    "@type": [
-      "http://sinopia.io/vocabulary/PropertyTemplate"
-    ],
-    "http://www.w3.org/2000/01/rdf-schema#label": [
-      {
-        "@value": "ISMN"
-      }
-    ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
-      {
-        "@id": "http://id.loc.gov/ontologies/bibframe/Ismn"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
-      {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasPropertyType": [
-      {
-        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasResourceAttributes": [
-      {
-        "@id": "_:b12"
+        "@id": "lc:RT:bf2:Identifiers:EAN"
       }
     ]
   },
   {
     "@id": "_:b12",
     "@type": [
-      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
-    ],
-    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
-      {
-        "@id": "lc:RT:bf2:Identifiers:ISMN"
-      }
-    ]
-  },
-  {
-    "@id": "_:b13",
-    "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "ISRC"
+        "@value": "EIDR"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/Isrc"
+        "@id": "http://id.loc.gov/ontologies/bflc/Eidr"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -110,18 +37,18 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceAttributes": [
       {
-        "@id": "_:b14"
+        "@id": "_:b13"
       }
     ]
   },
   {
-    "@id": "_:b14",
+    "@id": "_:b13",
     "@type": [
       "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "lc:RT:bf2:TestProfile:ISRC"
+        "@id": "lc:RT:bf2:Identifiers:Eidr"
       }
     ]
   },
@@ -132,17 +59,17 @@
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "ISSN"
+        "@value": "ISBN"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/Issn"
+        "@id": "http://id.loc.gov/ontologies/bibframe/Isbn"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -163,70 +90,28 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "lc:RT:bf2:Identifiers:ISSN"
-      }
-    ]
-  },
-  {
-    "@id": "_:b17",
-    "@type": [
-      "http://sinopia.io/vocabulary/PropertyTemplate"
-    ],
-    "http://www.w3.org/2000/01/rdf-schema#label": [
-      {
-        "@value": "ISSN-L"
-      }
-    ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
-      {
-        "@id": "http://id.loc.gov/ontologies/bibframe/IssnL"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
-      {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasPropertyType": [
-      {
-        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasResourceAttributes": [
-      {
-        "@id": "_:b18"
+        "@id": "lc:RT:bf2:Identifiers:ISBN"
       }
     ]
   },
   {
     "@id": "_:b18",
     "@type": [
-      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
-    ],
-    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
-      {
-        "@id": "lc:RT:bf2:Identifiers:ISSNL"
-      }
-    ]
-  },
-  {
-    "@id": "_:b19",
-    "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "LCCN"
+        "@value": "ISMN"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/Lccn"
+        "@id": "http://id.loc.gov/ontologies/bibframe/Ismn"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -236,29 +121,18 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceAttributes": [
       {
-        "@id": "_:b20"
+        "@id": "_:b19"
       }
     ]
   },
   {
-    "@id": "_:b2",
+    "@id": "_:b19",
     "@type": [
       "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "lc:RT:bf2:Identifiers:Barcode"
-      }
-    ]
-  },
-  {
-    "@id": "_:b20",
-    "@type": [
-      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
-    ],
-    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
-      {
-        "@id": "lc:RT:bf2:Identifiers:LCCN"
+        "@id": "lc:RT:bf2:Identifiers:ISMN"
       }
     ]
   },
@@ -269,17 +143,17 @@
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "Music Distributor Number"
+        "@value": "ISRC"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/StockNumber"
+        "@id": "http://id.loc.gov/ontologies/bibframe/Isrc"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -300,70 +174,28 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "lc:RT:bf2:Identifiers:Distributor"
-      }
-    ]
-  },
-  {
-    "@id": "_:b23",
-    "@type": [
-      "http://sinopia.io/vocabulary/PropertyTemplate"
-    ],
-    "http://www.w3.org/2000/01/rdf-schema#label": [
-      {
-        "@value": "Music Plate Number"
-      }
-    ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
-      {
-        "@id": "http://id.loc.gov/ontologies/bibframe/MusicPlate"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
-      {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasPropertyType": [
-      {
-        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasResourceAttributes": [
-      {
-        "@id": "_:b24"
+        "@id": "lc:RT:bf2:TestProfile:ISRC"
       }
     ]
   },
   {
     "@id": "_:b24",
     "@type": [
-      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
-    ],
-    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
-      {
-        "@id": "lc:RT:bf2:Identifiers:MusicPlate"
-      }
-    ]
-  },
-  {
-    "@id": "_:b25",
-    "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "Music Publisher Number"
+        "@value": "ISSN"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/MusicPublisherNumber"
+        "@id": "http://id.loc.gov/ontologies/bibframe/Issn"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -373,18 +205,18 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceAttributes": [
       {
-        "@id": "_:b26"
+        "@id": "_:b25"
       }
     ]
   },
   {
-    "@id": "_:b26",
+    "@id": "_:b25",
     "@type": [
       "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "lc:RT:bf2:Identifiers:MusicPub"
+        "@id": "lc:RT:bf2:Identifiers:ISSN"
       }
     ]
   },
@@ -395,17 +227,17 @@
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "Publisher Number"
+        "@value": "ISSN-L"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/PublisherNumber"
+        "@id": "http://id.loc.gov/ontologies/bibframe/IssnL"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -426,38 +258,7 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "lc:RT:bf2:Identifiers:PubNumber"
-      }
-    ]
-  },
-  {
-    "@id": "_:b29",
-    "@type": [
-      "http://sinopia.io/vocabulary/PropertyTemplate"
-    ],
-    "http://www.w3.org/2000/01/rdf-schema#label": [
-      {
-        "@value": "Standard Technical Report Number"
-      }
-    ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
-      {
-        "@id": "http://id.loc.gov/ontologies/bibframe/Strn"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
-      {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasPropertyType": [
-      {
-        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
-      }
-    ],
-    "http://sinopia.io/vocabulary/hasResourceAttributes": [
-      {
-        "@id": "_:b30"
+        "@id": "lc:RT:bf2:Identifiers:ISSNL"
       }
     ]
   },
@@ -468,17 +269,17 @@
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "Copyright Registration Number"
+        "@value": "Barcode"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/CopyrightRegistration"
+        "@id": "http://id.loc.gov/ontologies/bibframe/Barcode"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -495,32 +296,21 @@
   {
     "@id": "_:b30",
     "@type": [
-      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
-    ],
-    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
-      {
-        "@id": "x:lc:RT:bf2:Identifiers:STRN"
-      }
-    ]
-  },
-  {
-    "@id": "_:b31",
-    "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "Universal Product Code (UPC)"
+        "@value": "LCCN"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/Upc"
+        "@id": "http://id.loc.gov/ontologies/bibframe/Lccn"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -530,18 +320,133 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceAttributes": [
       {
-        "@id": "_:b32"
+        "@id": "_:b31"
       }
     ]
   },
   {
-    "@id": "_:b32",
+    "@id": "_:b31",
     "@type": [
       "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "x:lc:RT:bf2:Identifiers:UPC"
+        "@id": "lc:RT:bf2:Identifiers:LCCN"
+      }
+    ]
+  },
+  {
+    "@id": "_:b33",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Music Distributor Number"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/StockNumber"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasResourceAttributes": [
+      {
+        "@id": "_:b34"
+      }
+    ]
+  },
+  {
+    "@id": "_:b34",
+    "@type": [
+      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
+    ],
+    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
+      {
+        "@id": "lc:RT:bf2:Identifiers:Distributor"
+      }
+    ]
+  },
+  {
+    "@id": "_:b36",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Music Plate Number"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/MusicPlate"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasResourceAttributes": [
+      {
+        "@id": "_:b37"
+      }
+    ]
+  },
+  {
+    "@id": "_:b37",
+    "@type": [
+      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
+    ],
+    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
+      {
+        "@id": "lc:RT:bf2:Identifiers:MusicPlate"
+      }
+    ]
+  },
+  {
+    "@id": "_:b39",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Music Publisher Number"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/MusicPublisherNumber"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasResourceAttributes": [
+      {
+        "@id": "_:b40"
       }
     ]
   },
@@ -552,28 +457,39 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "lc:RT:bf2:Identifiers:Copyright"
+        "@id": "lc:RT:bf2:Identifiers:Barcode"
       }
     ]
   },
   {
-    "@id": "_:b5",
+    "@id": "_:b40",
+    "@type": [
+      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
+    ],
+    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
+      {
+        "@id": "lc:RT:bf2:Identifiers:MusicPub"
+      }
+    ]
+  },
+  {
+    "@id": "_:b42",
     "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "EAN"
+        "@value": "Publisher Number"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/Ean"
+        "@id": "http://id.loc.gov/ontologies/bibframe/PublisherNumber"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -583,39 +499,123 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceAttributes": [
       {
-        "@id": "_:b6"
+        "@id": "_:b43"
+      }
+    ]
+  },
+  {
+    "@id": "_:b43",
+    "@type": [
+      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
+    ],
+    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
+      {
+        "@id": "lc:RT:bf2:Identifiers:PubNumber"
+      }
+    ]
+  },
+  {
+    "@id": "_:b45",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Standard Technical Report Number"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/Strn"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasResourceAttributes": [
+      {
+        "@id": "_:b46"
+      }
+    ]
+  },
+  {
+    "@id": "_:b46",
+    "@type": [
+      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
+    ],
+    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
+      {
+        "@id": "x:lc:RT:bf2:Identifiers:STRN"
+      }
+    ]
+  },
+  {
+    "@id": "_:b47",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Universal Product Code (UPC)"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/Upc"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/resource"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasResourceAttributes": [
+      {
+        "@id": "_:b48"
+      }
+    ]
+  },
+  {
+    "@id": "_:b48",
+    "@type": [
+      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
+    ],
+    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
+      {
+        "@id": "x:lc:RT:bf2:Identifiers:UPC"
       }
     ]
   },
   {
     "@id": "_:b6",
     "@type": [
-      "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
-    ],
-    "http://sinopia.io/vocabulary/hasResourceTemplateId": [
-      {
-        "@id": "lc:RT:bf2:Identifiers:EAN"
-      }
-    ]
-  },
-  {
-    "@id": "_:b7",
-    "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "EIDR"
+        "@value": "Copyright Registration Number"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bflc/Eidr"
+        "@id": "http://id.loc.gov/ontologies/bibframe/CopyrightRegistration"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -625,18 +625,18 @@
     ],
     "http://sinopia.io/vocabulary/hasResourceAttributes": [
       {
-        "@id": "_:b8"
+        "@id": "_:b7"
       }
     ]
   },
   {
-    "@id": "_:b8",
+    "@id": "_:b7",
     "@type": [
       "http://sinopia.io/vocabulary/ResourcePropertyTemplate"
     ],
     "http://sinopia.io/vocabulary/hasResourceTemplateId": [
       {
-        "@id": "lc:RT:bf2:Identifiers:Eidr"
+        "@id": "lc:RT:bf2:Identifiers:Copyright"
       }
     ]
   },
@@ -647,17 +647,17 @@
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
-        "@value": "ISBN"
+        "@value": "EAN"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
-        "@id": "http://id.loc.gov/ontologies/bibframe/Isbn"
+        "@id": "http://id.loc.gov/ontologies/bibframe/Ean"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -708,52 +708,56 @@
     ],
     "http://sinopia.io/vocabulary/hasPropertyTemplate": [
       {
-        "@id": "_:b1"
-      },
-      {
-        "@id": "_:b3"
-      },
-      {
-        "@id": "_:b5"
-      },
-      {
-        "@id": "_:b7"
-      },
-      {
-        "@id": "_:b9"
-      },
-      {
-        "@id": "_:b11"
-      },
-      {
-        "@id": "_:b13"
-      },
-      {
-        "@id": "_:b15"
-      },
-      {
-        "@id": "_:b17"
-      },
-      {
-        "@id": "_:b19"
-      },
-      {
-        "@id": "_:b21"
-      },
-      {
-        "@id": "_:b23"
-      },
-      {
-        "@id": "_:b25"
-      },
-      {
-        "@id": "_:b27"
-      },
-      {
-        "@id": "_:b29"
-      },
-      {
-        "@id": "_:b31"
+        "@list": [
+          {
+            "@id": "_:b3"
+          },
+          {
+            "@id": "_:b6"
+          },
+          {
+            "@id": "_:b9"
+          },
+          {
+            "@id": "_:b12"
+          },
+          {
+            "@id": "_:b15"
+          },
+          {
+            "@id": "_:b18"
+          },
+          {
+            "@id": "_:b21"
+          },
+          {
+            "@id": "_:b24"
+          },
+          {
+            "@id": "_:b27"
+          },
+          {
+            "@id": "_:b30"
+          },
+          {
+            "@id": "_:b33"
+          },
+          {
+            "@id": "_:b36"
+          },
+          {
+            "@id": "_:b39"
+          },
+          {
+            "@id": "_:b42"
+          },
+          {
+            "@id": "_:b45"
+          },
+          {
+            "@id": "_:b47"
+          }
+        ]
       }
     ]
   }

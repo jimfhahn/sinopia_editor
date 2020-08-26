@@ -1,6 +1,6 @@
 [
   {
-    "@id": "_:b1",
+    "@id": "_:b3",
     "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
@@ -14,14 +14,14 @@
         "@value": "A literal"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
         "@id": "http://id.loc.gov/ontologies/bibframe/uber/template3/property1"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -31,7 +31,7 @@
     ]
   },
   {
-    "@id": "_:b2",
+    "@id": "_:b4",
     "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
     ],
@@ -45,14 +45,14 @@
         "@value": "A literal"
       }
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": [
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
       {
         "@id": "http://id.loc.gov/ontologies/bibframe/uber/template3/property2"
       }
     ],
-    "http://sinopia.io/vocabulary/hasCardinality": [
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
       {
-        "@id": "http://sinopia.io/vocabulary/cardinality/repeatable"
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/repeatable"
       }
     ],
     "http://sinopia.io/vocabulary/hasPropertyType": [
@@ -93,10 +93,14 @@
     ],
     "http://sinopia.io/vocabulary/hasPropertyTemplate": [
       {
-        "@id": "_:b1"
-      },
-      {
-        "@id": "_:b2"
+        "@list": [
+          {
+            "@id": "_:b3"
+          },
+          {
+            "@id": "_:b4"
+          }
+        ]
       }
     ]
   }

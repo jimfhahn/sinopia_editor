@@ -36,16 +36,16 @@ export default class TemplatesBuilder {
   buildPropertyTemplates() {
     // Property templates is a list.
     const quads = this.dataset.match(this.subjectTerm, rdf.namedNode('http://sinopia.io/vocabulary/hasPropertyTemplate')).toArray()
-    if(_.isEmpty(quads)) return
+    if (_.isEmpty(quads)) return
     const objects = []
     this.buildList(quads[0].object, objects)
     objects.forEach((obj) => this.buildPropertyTemplate(obj))
   }
 
-  buildList(subjectTerm, objects) {    
+  buildList(subjectTerm, objects) {
     objects.push(this.dataset.match(subjectTerm, rdf.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first')).toArray()[0].object)
     const restQuad = this.dataset.match(subjectTerm, rdf.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest')).toArray()[0]
-    if(restQuad.object.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil') this.buildList(restQuad.object, objects)
+    if (restQuad.object.value !== 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil') this.buildList(restQuad.object, objects)
   }
 
   buildPropertyTemplate(propertyTerm) {
@@ -201,16 +201,4 @@ export default class TemplatesBuilder {
         return 'InputListLOC'
     }
   }
-}
-
-const quadCompare = (quad1, quad2) => {
-  const quad1Num = Number(quad1.object.value.slice(1))
-  const quad2Num = Number(quad2.object.value.slice(1))
-  if (quad1Num < quad2Num) {
-    return -1
-  }
-  if (quad1Num > quad2Num) {
-    return 1
-  }
-  return 0
 }

@@ -54,7 +54,7 @@ export default class GraphBuilder {
   buildProperty(property, subjectTerm) {
     if (property.values == null || property.values.length === 0) return
 
-    if(property.propertyTemplate.ordered) {
+    if (property.propertyTemplate.ordered) {
       let nextNode = rdf.blankNode()
       this.dataset.add(rdf.quad(subjectTerm, rdf.namedNode(property.propertyTemplate.uri), nextNode))
       property.values.forEach((value, index) => {
