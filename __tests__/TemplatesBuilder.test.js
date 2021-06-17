@@ -242,6 +242,13 @@ _:b5_c14n2 <http://www.w3.org/2000/01/rdf-schema#label> "URI1"@eng .`
       valueSubjectTemplateKeys: [],
       authorities: [
         {
+          uri: 'urn:annif',
+          label: 'Annif',
+          authority: 'annif',
+          subauthority: 'all',
+          nonldLookup: false,
+        },
+        {
           uri: 'urn:discogs',
           label: 'Discogs',
           authority: 'discogs',

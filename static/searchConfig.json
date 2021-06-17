@@ -1,5 +1,9 @@
 [
   {
+    "label": "Annif",
+    "uri": "urn:annif"
+  },
+  {
     "label": "DISCOGS Masters",
     "uri": "urn:discogs:master"
   },

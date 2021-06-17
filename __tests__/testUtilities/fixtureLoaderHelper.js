@@ -9,6 +9,7 @@ const resourceFilenames = {
 }
 
 const templateFilenames = {
+  'test:resource:AnnifLookup': 'AnnifLookup.json',
   'test:resource:DiscogsLookup': 'DiscogsLookup.json',
   'test:bf2:soundCharacteristics': 'multiple_loc.json',
   'resourceTemplate:bf2:Note': 'Note.json',

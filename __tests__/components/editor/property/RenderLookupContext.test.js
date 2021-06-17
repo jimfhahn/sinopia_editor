@@ -53,6 +53,13 @@ const genericResult = {
   ],
 }
 
+const annifResult = {
+  label: 'History--Study and teaching',
+  notation: null,
+  score: 0.7618043422698975,
+  uri: 'http://id.loc.gov/authorities/subjects/sh85061230',
+}
+
 const discogsResult = {
   uri: 'https://api.discogs.com/masters/144098',
   id: '144098',
@@ -169,6 +176,12 @@ describe('<RenderLookupContext />', () => {
     expect(discogsDetailsContainer.contains('Reprise Records')).toEqual(true)
     expect(discogsDetailsContainer.contains('Vinyl')).toEqual(true)
     expect(discogsDetailsContainer.contains('Master')).toEqual(true)
+  })
+
+  const annifWrapper = shallow(<RenderLookupContext.WrappedComponent {...annifResult} />)
+  it('displays annif label', () => {
+    const annifDetailsContainer = annifWrapper.find('.details-container')
+    expect(annifDetailsContainer.contains('History--Study and teaching')).toEqual(true)
   })
 
   const genreWrapper = shallow(<RenderLookupContext.WrappedComponent {...p4Props} />)

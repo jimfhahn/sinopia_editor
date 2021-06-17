@@ -35,6 +35,14 @@
     "component": "local-lookup"
   },
   {
+    "label": "Annif",
+    "uri": "urn:annif",
+    "authority": "annif",
+    "subauthority": "",
+    "language": "en",
+    "component": "lookup",
+    "nonldLookup": false
+  },{
     "label": "AGROVOC (QA)",
     "uri": "urn:ld4p:qa:agrovoc",
     "authority": "agrovoc_ld4l_cache",
