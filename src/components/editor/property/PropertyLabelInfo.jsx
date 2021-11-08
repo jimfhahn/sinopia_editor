@@ -1,20 +1,22 @@
 // Copyright 2019 Stanford University see LICENSE for license
 
-import React from 'react'
-import PropTypes from 'prop-types'
-import PropertyLabelInfoLink from './PropertyLabelInfoLink'
-import PropertyLabelInfoTooltip from './PropertyLabelInfoTooltip'
+import React from "react"
+import PropTypes from "prop-types"
+import PropertyLabelInfoLink from "./PropertyLabelInfoLink"
+import PropertyLabelInfoTooltip from "./PropertyLabelInfoTooltip"
 
-import _ from 'lodash'
+import _ from "lodash"
 
-const PropertyLabelInfo = (props) => {
-  if (props.propertyTemplate.remarkUrl !== null) {
-    return (<PropertyLabelInfoLink {...props} />)
-  } if (!_.isEmpty(props.propertyTemplate.remark)) {
-    return (<PropertyLabelInfoTooltip {...props} />)
-  }
-  return null
-}
+const PropertyLabelInfo = (props) => (
+  <React.Fragment>
+    {!_.isEmpty(props.propertyTemplate.remark) && (
+      <PropertyLabelInfoTooltip {...props} />
+    )}
+    {!_.isEmpty(props.propertyTemplate.remarkUrl) && (
+      <PropertyLabelInfoLink {...props} />
+    )}
+  </React.Fragment>
+)
 
 PropertyLabelInfo.propTypes = {
   propertyTemplate: PropTypes.object.isRequired,

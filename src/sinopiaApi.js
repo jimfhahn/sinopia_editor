@@ -1,188 +1,307 @@
 // Copyright 2019 Stanford University see LICENSE for license
 
-import { datasetFromJsonld, jsonldFromDataset } from 'utilities/Utilities'
-import Config from 'Config'
+import { datasetFromJsonld, jsonldFromDataset } from "utilities/Utilities"
+import Config from "Config"
 /* eslint-disable node/no-unpublished-import */
-import { hasFixtureResource, getFixtureResource } from '../__tests__/testUtilities/fixtureLoaderHelper'
-import GraphBuilder from 'GraphBuilder'
-import { v4 as uuidv4 } from 'uuid'
-import Auth from '@aws-amplify/auth'
+import {
+  hasFixtureResource,
+  getFixtureResource,
+  getFixtureResourceVersions,
+  getFixtureResourceRelationships,
+} from "../__tests__/testUtilities/fixtureLoaderHelper"
+import GraphBuilder from "GraphBuilder"
+import { v4 as uuidv4 } from "uuid"
+import Auth from "@aws-amplify/auth"
+import rtLiteralPropertyAttrs from "../static/templates/rt_literal_property_attrs_doc.json"
+import rtLookupPropertyAttrs from "../static/templates/rt_lookup_property_attrs_doc.json"
+import rtPropertyTemplate from "../static/templates/rt_property_template_doc.json"
+import rtResourcePropertyAttrs from "../static/templates/rt_resource_property_attrs_doc.json"
+import rtResourceRemplate from "../static/templates/rt_resource_template_doc.json"
+import rtUri from "../static/templates/rt_uri_doc.json"
+import rtUriPropertyAttrs from "../static/templates/rt_uri_property_attrs_doc.json"
+
+const baseTemplates = {
+  "sinopia:template:property:literal": rtLiteralPropertyAttrs,
+  "sinopia:template:property:lookup": rtLookupPropertyAttrs,
+  "sinopia:template:property": rtPropertyTemplate,
+  "sinopia:template:property:resource": rtResourcePropertyAttrs,
+  "sinopia:template:resource": rtResourceRemplate,
+  "sinopia:template:uri": rtUri,
+  "sinopia:template:property:uri": rtUriPropertyAttrs,
+}
 
 /**
  * Fetches a resource from the Sinopia API.
  * @return {Promise{[rdf.Dataset, Object]} resource as dataset, response JSON.
  * @throws when error occurs retrieving or parsing the resource template.
  */
-export const fetchResource = (uri, isTemplate) => {
+export const fetchResource = (
+  uri,
+  { isTemplate = false, version = null } = {}
+) => {
+  const fetchUri = encodeURI(version ? `${uri}/version/${version}` : uri)
+
   let fetchPromise
   // Templates have special handling when using fixtures.
   // A template will raise when found; other resources will try API.
+  // Note that ignoring version of fixtures.
   if (Config.useResourceTemplateFixtures && hasFixtureResource(uri)) {
     try {
       fetchPromise = Promise.resolve(getFixtureResource(uri))
     } catch (err) {
       fetchPromise = Promise.reject(err)
     }
+  } else if (isBaseTemplateUri(uri)) {
+    fetchPromise = loadBaseTemplate(uri)
   } else if (Config.useResourceTemplateFixtures && isTemplate) {
-    fetchPromise = Promise.reject(new Error('Not found'))
+    fetchPromise = Promise.reject(new Error("Not found"))
   } else {
-    fetchPromise = fetch(uri, {
-      headers: { Accept: 'application/json' },
-    })
-      .then((resp) => checkResp(resp)
-        .then(() => resp.json()))
+    fetchPromise = fetch(fetchUri, {
+      headers: { Accept: "application/json" },
+    }).then((resp) => checkResp(resp).then(() => resp.json()))
   }
 
   return fetchPromise
-    .then((response) => Promise.all([datasetFromJsonld(response.data), Promise.resolve(response)]))
+    .then((response) =>
+      Promise.all([datasetFromJsonld(response.data), Promise.resolve(response)])
+    )
     .catch((err) => {
       throw new Error(`Error parsing resource: ${err.message || err}`)
     })
 }
 
-// Publishes (saves) a new resource in Trellis
-export const postResource = (resource, currentUser, group) => {
+const isBaseTemplateUri = (uri) =>
+  uri.startsWith(`${Config.sinopiaApiBase}/resource/sinopia:template:`)
+
+const loadBaseTemplate = (uri) => {
+  const templateId = uri.slice(`${Config.sinopiaApiBase}/resource/`.length)
+  const template = baseTemplates[templateId]
+
+  // Insert the expected URI for base subject.
+  const baseNode = template.find((node) => node["@id"] === templateId)
+  if (baseNode) baseNode["@id"] = uri
+
+  return Promise.resolve({ data: template })
+}
+
+export const fetchResourceVersions = (uri) => {
+  if (Config.useResourceTemplateFixtures && hasFixtureResource(uri)) {
+    return Promise.resolve(getFixtureResourceVersions())
+  }
+  return fetch(`${uri}/versions`, {
+    headers: { Accept: "application/json" },
+  })
+    .then((resp) => checkResp(resp))
+    .then((resp) => resp.json())
+    .then((json) => json.versions)
+}
+
+export const fetchResourceRelationships = (uri) => {
+  if (Config.useResourceTemplateFixtures && hasFixtureResource(uri)) {
+    return Promise.resolve(getFixtureResourceRelationships())
+  }
+
+  return fetch(`${uri}/relationships`, {
+    headers: { Accept: "application/json" },
+  })
+    .then((resp) => checkResp(resp))
+    .then((resp) => resp.json())
+}
+
+// Fetches list of groups
+export const getGroups = () =>
+  fetch(`${Config.sinopiaApiBase}/groups`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((resp) => checkResp(resp))
+    .then((resp) => resp.json())
+    .then((json) => json.data)
+
+// Publishes (saves) a new resource
+export const postResource = (resource, currentUser, group, editGroups) => {
   const newResource = { ...resource }
   // Mint a uri. Resource templates use the template id.
   const resourceId = isTemplate(resource) ? templateIdFor(resource) : uuidv4()
   const uri = `${Config.sinopiaApiBase}/resource/${resourceId}`
   newResource.uri = uri
   newResource.group = group
-  return putResource(newResource, currentUser, 'POST')
-    .then(() => uri)
+  newResource.editGroups = editGroups
+  return putResource(newResource, currentUser, group, editGroups, "POST").then(
+    () => uri
+  )
 }
 
-// Saves an existing resource in Trellis
-export const putResource = (resource, currentUser, method) => saveBodyForResource(resource, currentUser.username, resource.group)
-  .then((body) => getJwt()
-    .then((jwt) => fetch(resource.uri, {
-      method: method || 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${jwt}`,
-      },
-      body,
-    })
-      .then((resp) => checkResp(resp)
-        .then(() => true))))
+// Saves an existing resource
+export const putResource = (resource, currentUser, group, editGroups, method) =>
+  saveBodyForResource(resource, currentUser.username, group, editGroups).then(
+    (body) =>
+      getJwt().then((jwt) =>
+        fetch(resource.uri, {
+          method: method || "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          body,
+        }).then((resp) => checkResp(resp).then(() => true))
+      )
+  )
 
 export const postMarc = (resourceUri) => {
-  const url = resourceUri.replace('resource', 'marc')
+  const url = resourceUri.replace("resource", "marc")
   return getJwt()
-    .then((jwt) => fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    }))
-    .then((resp) => checkResp(resp)
-      .then(() => resp.headers.get('Content-Location')))
+    .then((jwt) =>
+      fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+    )
+    .then((resp) =>
+      checkResp(resp).then(() => resp.headers.get("Content-Location"))
+    )
 }
 
-export const getMarcJob = (marcJobUrl) => fetch(marcJobUrl)
-  .then((resp) => checkResp(resp)
-    .then(() => {
+export const getMarcJob = (marcJobUrl) =>
+  fetch(marcJobUrl).then((resp) =>
+    checkResp(resp).then(() => {
       // Will return 200 if job is not yet completed.
       // Will return 303 if job completed. Fetch automatically redirects,
       // which retrieves the MARC text.
       if (!resp.redirected) return [undefined, undefined]
-      return resp.text()
-        .then((body) => [resp.url, body])
-    }))
+      return resp.text().then((body) => [resp.url, body])
+    })
+  )
 
-export const getMarc = (marcUrl, asText) => fetch(marcUrl, {
-  headers: {
-    Accept: asText ? 'text/plain' : 'application/marc',
-  },
-})
-  .then((resp) => checkResp(resp)
-    .then(() => resp.blob()))
-
-export const fetchUser = (userId) => fetch(userUrlFor(userId), {
-  headers: {
-    Accept: 'application/json',
-  },
-})
-  .then((resp) => {
-    if (resp.status === 404) return postUser(userId)
-    return checkResp(resp)
-      .then(() => resp.json())
-  })
-
-const postUser = (userId) => getJwt()
-  .then((jwt) => fetch(userUrlFor(userId), {
-    method: 'POST',
+export const getMarc = (marcUrl, asText) =>
+  fetch(marcUrl, {
     headers: {
-      Authorization: `Bearer ${jwt}`,
+      Accept: asText ? "text/plain" : "application/marc",
     },
-  })
-    .then((resp) => checkResp(resp)
-      .then(() => resp.json())))
+  }).then((resp) => checkResp(resp).then(() => resp.blob()))
 
-export const putUserHistory = (userId, historyType, historyItemKey, historyItemPayload) => {
-  const url = `${userUrlFor(userId)}/history/${historyType}/${encodeURI(historyItemKey)}`
-  return getJwt()
-    .then((jwt) => fetch(url, {
-      method: 'PUT',
+export const fetchUser = (userId) =>
+  fetch(userUrlFor(userId), {
+    headers: {
+      Accept: "application/json",
+    },
+  }).then((resp) => {
+    if (resp.status === 404) return postUser(userId)
+    return checkResp(resp).then(() => resp.json())
+  })
+
+const postUser = (userId) =>
+  getJwt().then((jwt) =>
+    fetch(userUrlFor(userId), {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,
-        'Content-Type': 'application/json',
+      },
+    }).then((resp) => checkResp(resp).then(() => resp.json()))
+  )
+
+export const putUserHistory = (
+  userId,
+  historyType,
+  historyItemKey,
+  historyItemPayload
+) => {
+  const url = `${userUrlFor(userId)}/history/${historyType}/${encodeURI(
+    historyItemKey
+  )}`
+  return getJwt().then((jwt) =>
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ payload: historyItemPayload }),
-    })
-      .then((resp) => checkResp(resp)
-        .then(() => resp.json())))
+    }).then((resp) => checkResp(resp).then(() => resp.json()))
+  )
 }
 
+export const postTransfer = (resourceUri, group, target) => {
+  const url = `${resourceUri.replace(
+    "resource",
+    "transfer"
+  )}/${group}/${target}`
+  return getJwt()
+    .then((jwt) =>
+      fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+    )
+    .then((resp) => checkResp(resp))
+}
 
-const userUrlFor = (userId) => `${Config.sinopiaApiBase}/user/${encodeURI(userId)}`
+const userUrlFor = (userId) =>
+  `${Config.sinopiaApiBase}/user/${encodeURI(userId)}`
 
-const saveBodyForResource = (resource, user, group) => {
+const saveBodyForResource = (resource, user, group, editGroups) => {
   const dataset = new GraphBuilder(resource).graph
 
-  return jsonldFromDataset(dataset)
-    .then((jsonld) => JSON.stringify({
+  return jsonldFromDataset(dataset).then((jsonld) =>
+    JSON.stringify({
       data: jsonld,
       user,
       group,
+      editGroups,
       templateId: resource.subjectTemplate.id,
       types: [resource.subjectTemplate.class],
       bfAdminMetadataRefs: resource.bfAdminMetadataRefs,
       bfItemRefs: resource.bfItemRefs,
       bfInstanceRefs: resource.bfInstanceRefs,
       bfWorkRefs: resource.bfWorkRefs,
-    }))
+    })
+  )
 }
 
-const isTemplate = (resource) => resource.subjectTemplate.id === Config.rootResourceTemplateId
+const isTemplate = (resource) =>
+  resource.subjectTemplate.id === Config.rootResourceTemplateId
 
 const templateIdFor = (resource) => {
-  const resourceIdProperty = resource.properties.find((property) => property.propertyTemplate.uri === 'http://sinopia.io/vocabulary/hasResourceId')
+  const resourceIdProperty = resource.properties.find(
+    (property) =>
+      property.propertyTemplate.uri ===
+      "http://sinopia.io/vocabulary/hasResourceId"
+  )
   return resourceIdProperty.values[0].literal
 }
 
-const getJwt = () => Auth.currentSession()
-  .then((data) => {
-    if (!data.idToken.jwtToken) throw new Error('jwt is undefined')
-    return data.idToken.jwtToken
-  })
-  .catch((err) => {
-    if (err) throw err
-    throw new Error('Error getting current authentication session')
-  })
+const getJwt = () =>
+  Auth.currentSession()
+    .then((data) => {
+      if (!data.idToken.jwtToken) throw new Error("jwt is undefined")
+      return data.idToken.jwtToken
+    })
+    .catch((err) => {
+      if (err) throw err
+      throw new Error("Error getting current authentication session")
+    })
 
 const checkResp = (resp) => {
-  if (resp.ok) return Promise.resolve()
-  return resp.json()
+  if (resp.ok) return Promise.resolve(resp)
+  return resp
+    .json()
     .then((errors) => {
       // Assuming only one for now.
       const error = errors[0]
-      const newError = new Error(`${error.title}: ${error.details}`)
-      newError.name = 'ApiError'
+      const newError = error.details
+        ? new Error(`${error.title}: ${error.details}`)
+        : new Error(`${error.title}`)
+      newError.name = "ApiError"
       throw newError
     })
     .catch((err) => {
-      if (err.name === 'ApiError') throw err
+      if (err.name === "ApiError") throw err
       throw new Error(`Sinopia API returned ${resp.statusText}`)
     })
 }

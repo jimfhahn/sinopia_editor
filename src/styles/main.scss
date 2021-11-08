@@ -1,14 +1,14 @@
-   /* Copyright 2019 Stanford University see LICENSE for license */
+/* Copyright 2019 Stanford University see LICENSE for license */
 
-@import 'colors';
-@import 'bootstrap-variables';
+@import "colors";
+@import "bootstrap-variables";
+@import "variables";
 @import "~bootstrap/scss/bootstrap";
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
-@import 'variables';
-@import 'bootstrap-override';
+@import "bootstrap-override";
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
 
 .left-space {
-    margin-left: 3px;
+  margin-left: 3px;
 }
 
 .invalid-feedback {
@@ -28,12 +28,14 @@
   margin-left: 11px;
 }
 
-.btn-add, .btn-remove {
+.btn-add,
+.btn-remove {
   background-image: none;
   border-style: dashed;
 }
 
-.panel-heading > .btn-add, .panel-heading > .btn-remove {
+.panel-heading > .btn-add,
+.panel-heading > .btn-remove {
   float: right;
   margin-top: -5px;
   border-style: solid;
@@ -41,15 +43,20 @@
 
 .btn-toggle {
   background-color: transparent;
+  padding: 0.25rem 0.25rem 0.25rem 0.25rem;
 }
 
 .btn-literal {
   background-image: none;
 }
 
+.btn-filter {
+  background-color: $white;
+}
+
 .homepage-navbar {
-  padding-bottom: 2% ;
-  padding-top:2%;
+  padding-bottom: 2%;
+  padding-top: 2%;
 }
 
 .info-icon {
@@ -60,7 +67,7 @@
 .panel-news {
   margin: 3% 10%;
   padding: 2%;
-  opacity:0.85;
+  opacity: 0.85;
   box-shadow: -3px 3px 10px 0px #999999;
 }
 
@@ -72,7 +79,7 @@
 .desc-panel h3 {
   font-weight: 600;
   margin-top: 5%;
-  margin-bottom: 2%
+  margin-bottom: 2%;
 }
 
 #footer {
@@ -81,7 +88,7 @@
 }
 
 .offcanvas-menu {
-  background-color: rgb(55,66,79);
+  background-color: rgb(55, 66, 79);
   height: 100%;
 }
 
@@ -102,8 +109,10 @@
 .prop-heading {
   background-color: $prop-heading-bg !important;
   color: $prop-heading-color !important;
+  padding: 1rem 1rem 0 1rem;
 
-  .tooltip-heading, .prop-remark  {
+  .tooltip-heading,
+  .prop-remark {
     color: $heading-icon-color;
   }
 }
@@ -111,31 +120,13 @@
 .panel-property {
   background-color: $prop-panel-bg;
   break-inside: avoid;
+  padding: 1rem;
 }
 
-.group-panel {
-  border-color: #8C8A83;
-  border-style: solid;
-  border-width: 1px;
-  background-color: #F8F6EF;
-  min-height: 200px;
-  padding: 80px;
-}
-
-.group-choose-buttons {
-  float: right;
-  position: relative;
-  top: 40px;
-}
-
-.group-select-label {
-  float: left;
-  padding-right: 20px;
-  position: relative;
-}
-
-.group-select-options {
-  position: relative;
+.nested-resource {
+  background-color: $white-linen;
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 .close-icon {
@@ -147,35 +138,25 @@
 }
 
 .rOutline-property {
-  margin: .5em;
+  margin: 0.5em;
   border: 1px dotted;
   background-color: white;
-  margin: .5em;
-  padding: .25em;
+  margin: 0.5em;
+  padding: 0.25em;
 }
 
-.editor-navbar {
-  background-image: url('./editorheaderbg.png');
-  padding-bottom: 1em;
-  margin-bottom: 1em;
-}
-
-#footer-text{
+#footer-text {
   padding-left: 10%;
 }
 
-h1.editor-logo {
+.editor-logo {
   text-decoration: none;
+  text-transform: uppercase;
   font-family: "Copperplate Gothic Light";
-  color: #2F2424;
+  color: #2f2424;
   margin-top: 5px;
   padding-left: 25px;
   margin-bottom: 0px;
-}
-
-a.editor-subtitle {
-  font-family: "Copperplate Gothic Light";
-  color: #2F2424 !important;
 }
 
 .open-search-modal {
@@ -183,28 +164,28 @@ a.editor-subtitle {
 }
 
 .input-value {
-  marginTop: .25em;
+  margin-top: 0.25em;
 }
 
 .rdf-modal-content {
   padding: 20px 25px 20px 20px;
 }
 
-@import 'header';
-@import 'lookupContext';
+@import "header";
+@import "lookupContext";
 
 /** For lookup menu headers **/
 .dropdown-header {
-	font-weight:800;
-	color:#333;
-	background-color:#d3d3d3;
+  font-weight: 800;
+  color: #333;
+  background-color: #d3d3d3;
 }
 
-.dropdown-empty, .dropdown-error {
-	font-weight:400;
-	color: #999999;
+.dropdown-empty,
+.dropdown-error {
+  font-weight: 400;
+  color: #999999;
 }
-
 
 .dropdown-item.active {
   color: #000000;
@@ -230,13 +211,31 @@ button.collapse-heading.collapsed::before {
   @extend .btn-link;
 }
 
-button.btn-add-instance {
-  color: white;
-  text-decoration: underline;
+.btn-no-outline {
+  border: 0px;
+  box-shadow: none !important;
+  margin-right: 0px;
 }
 
-@import 'resourceTabs';
-@import 'resourceNav';
+.btn-no-outline.btn-danger {
+  background-color: transparent;
+  color: $bright-red;
+}
+
+.separator-circle {
+  margin-top: 0.4em;
+  color: #004372;
+}
+
+.editor-action-close {
+  margin-left: 1em;
+}
+
+@import "resourceTabs";
+@import "resourceNav";
+@import "diff";
+@import "relationships";
+@import "resourceEditor";
 
 .icon-lg {
   font-size: 20px;
@@ -250,7 +249,7 @@ button.btn-add-instance {
 .btn-view-resource {
   padding-left: 20px;
   padding-right: 20px;
-  margin-right: 20px;
+  margin-right: 5px;
   background-color: $link-color;
   border-color: $link-color;
 }
@@ -259,12 +258,12 @@ button.btn-add-instance {
   padding-right: 20px;
 }
 
-.view-resource-modal-content {
-  overflow-x: hidden;
+.view-resource-modal-footer {
+  margin-right: 15px;
 }
 
-.modal-close {
-  opacity: 1;
+.view-resource-modal-content {
+  overflow-x: hidden;
 }
 
 .lookup-value {
@@ -289,20 +288,56 @@ button.btn-add-instance {
   }
 }
 
-.search-list, .resource-template-list, .search-results-list, .resource-list {
+.search-list,
+.resource-template-list,
+.search-results-list,
+.resource-list {
   thead {
-    background-color: $spring-wood;
+    background-color: $double-spanish-white;
   }
 }
 
 .input-group {
   width: 100% !important;
 
-   .input-group-btn {
-     margin-left: 5px;
-   }
+  .input-group-btn {
+    margin-left: 5px;
+  }
 }
 
 .hidden {
   display: none;
+}
+
+// Async typeahead
+div.rbt div {
+  display: block !important;
+}
+
+.expanding-section {
+  border-color: $nobel;
+  background-color: $solitude;
+}
+
+.modal-open {
+  overflow: hidden;
+}
+
+.modal {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.rdf-display-panel {
+  background-color: $greyblue;
+  border: 1px solid #979797;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rdf-display-panel table th {
+  background-color: $greyblue;
+}
+
+.rdf-display-panel table td {
+  background-color: $greyblue;
 }

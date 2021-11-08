@@ -1,4 +1,4 @@
-FROM circleci/node:14.11
+FROM cimg/node:16.8
 
 # Allow build-time arguments (for, environment variables that need to be encoded into the webpack distribution)
 ARG USE_FIXTURES
@@ -12,28 +12,19 @@ ARG INDEX_URL
 ARG EXPORT_BUCKET_URL
 ARG HONEYBADGER_API_KEY
 ARG HONEYBADGER_REVISION
+ENV HONEYBADGER_API_KEY=$HONEYBADGER_API_KEY
 
 # Set environment variables from the build args
 ENV INDEX_URL ${INDEX_URL}
 
-# This is the directory the user in the circleci/node image can write to
-WORKDIR /home/circleci
-
-# Everything that isn't in .dockerignore ships
-COPY . .
-
-RUN mkdir dist
-RUN mkdir node_modules
-
-# Allow circleci user to run npm build
-USER root
-RUN /bin/bash -c 'chown -R circleci dist node_modules'
-
-# Build and run app using non-privileged account
-USER circleci
+COPY --chown=circleci:circleci package.json .
+COPY --chown=circleci:circleci package-lock.json .
 
 # Install dependencies
 RUN npm install --no-optional
+
+# Everything that isn't in .dockerignore ships
+COPY --chown=circleci:circleci . .
 
 # Build the app *within* the container because environment variables are fixed at build-time
 RUN npm run build

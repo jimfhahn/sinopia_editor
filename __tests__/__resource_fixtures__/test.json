@@ -12,7 +12,11 @@
       ],
       "http://id.loc.gov/ontologies/bibframe/uber/template3/property2": [
         {
-          "@value": "Uber template3, property2",
+          "@value": "Uber template3, property2, value1",
+          "@language": "eng"
+        },
+        {
+          "@value": "Uber template3, property2, value2",
           "@language": "eng"
         }
       ]
@@ -152,7 +156,7 @@
       ],
       "http://id.loc.gov/ontologies/bibframe/uber/template1/property5": [
         {
-          "@id": "ubertemplate1:property5"
+          "@id": "http://example.edu/ubertemplate1:property5"
         }
       ],
       "http://id.loc.gov/ontologies/bibframe/uber/template1/property6": [
@@ -228,7 +232,7 @@
       "@id": "http://localhost:3000/resource/c7db5404-7d7d-40ac-b38e-c821d2c3ae3f",
       "http://www.w3.org/2000/01/rdf-schema#label": [
         {
-          "@value": "foo"
+          "@value": "Example Label"
         }
       ]
     },
@@ -241,10 +245,11 @@
       ]
     },
     {
-      "@id": "ubertemplate1:property5",
+      "@id": "http://example.edu/ubertemplate1:property5",
       "http://www.w3.org/2000/01/rdf-schema#label": [
         {
-          "@value": "ubertemplate1:property5"
+          "@value": "ubertemplate1:property5",
+          "@language": "eng"
         }
       ]
     },

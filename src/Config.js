@@ -2,11 +2,11 @@
 
 class Config {
   static get rootResourceTemplateId() {
-    return process.env.ROOT_RESOURCE_TEMPLATE_ID || 'sinopia:template:resource'
+    return process.env.ROOT_RESOURCE_TEMPLATE_ID || "sinopia:template:resource"
   }
 
   static get sinopiaApiBase() {
-    return process.env.SINOPIA_API_BASE_URL || 'http://localhost:3000'
+    return process.env.SINOPIA_API_BASE_URL || "http://localhost:3000"
   }
 
   /*
@@ -18,14 +18,14 @@ class Config {
    */
   static get useResourceTemplateFixtures() {
     if (process.env.USE_FIXTURES) {
-      return process.env.USE_FIXTURES === 'true'
+      return process.env.USE_FIXTURES === "true"
     }
 
     return false
   }
 
   static get sinopiaUrl() {
-    return process.env.SINOPIA_URI || 'https://sinopia.io'
+    return process.env.SINOPIA_URI || "https://sinopia.io"
   }
 
   static get sinopiaEnv() {
@@ -34,11 +34,11 @@ class Config {
     }
 
     // We do not set this value in production, and don't want to see the env label in production
-    return ''
+    return ""
   }
 
   static get indexUrl() {
-    return process.env.INDEX_URL || 'http://localhost:9200'
+    return process.env.INDEX_URL || "http://localhost:9200"
   }
 
   /*
@@ -49,46 +49,47 @@ class Config {
    * that hosts the client javascript.
    */
   static get searchHost() {
-    return process.env.SEARCH_HOST || ''
+    return process.env.SEARCH_HOST || ""
   }
 
   static get searchResultsPerPage() {
-    return process.env.SEARCH_RESULTS_PER_PAGE || 10
+    return 10
   }
 
   static get templateSearchResultsPerPage() {
     // This # should be large enough to return all results.
-    return process.env.TEMPLATE_SEARCH_RESULTS_PER_PAGE || 250
+    return 250
   }
-
 
   /*
    * This is the public endpont for the sinopia search.
    */
   static get searchPath() {
-    return process.env.SEARCH_PATH || '/api/search/sinopia_resources/sinopia/_search'
+    return "/api/search/sinopia_resources/sinopia/_search"
   }
 
   static get templateSearchPath() {
-    return process.env.TEMPLATE_SEARCH_PATH || '/api/search/sinopia_templates/sinopia/_search'
+    return "/api/search/sinopia_templates/sinopia/_search"
   }
 
   static get sinopiaDomainName() {
-    return `${this.sinopiaUrl}`.replace('https://', '')
+    return `${this.sinopiaUrl}`.replace("https://", "")
   }
 
   static get sinopiaHelpAndResourcesMenuContent() {
-    return 'https://ld4p.github.io/sinopia/help_and_resources/menu_content.html'
+    return "https://ld4p.github.io/sinopia/help_and_resources/menu_content.html"
   }
 
   static get awsCognitoDomain() {
-    return process.env.AWS_COGNITO_DOMAIN || 'https://sinopia-development.auth.us-west-2.amazoncognito.com'
+    return (
+      process.env.AWS_COGNITO_DOMAIN ||
+      "https://sinopia-development.auth.us-west-2.amazoncognito.com"
+    )
   }
 
   static get awsClientID() {
-    return process.env.COGNITO_CLIENT_ID || '2u6s7pqkc1grq1qs464fsi82at'
+    return process.env.COGNITO_CLIENT_ID || "2u6s7pqkc1grq1qs464fsi82at"
   }
-
 
   static get awsCognitoForgotPasswordUrl() {
     return `${this.awsCognitoDomain}/forgotPassword?response_type=token&client_id=${this.awsClientID}&redirect_uri=${this.sinopiaUrl}`
@@ -99,7 +100,7 @@ class Config {
   }
 
   static get awsCognitoUserPoolId() {
-    return process.env.COGNITO_USER_POOL_ID || 'us-west-2_CGd9Wq136'
+    return process.env.COGNITO_USER_POOL_ID || "us-west-2_CGd9Wq136"
   }
 
   static get cognitoTestUserName() {
@@ -115,49 +116,31 @@ class Config {
   }
 
   static get qaUrl() {
-    return process.env.QA_URL || 'https://lookup.ld4l.org'
+    return process.env.QA_URL || "https://lookup.ld4l.org"
   }
 
   static get exportBucketUrl() {
-    return process.env.EXPORT_BUCKET_URL || 'https://sinopia-exports-development.s3-us-west-2.amazonaws.com'
+    return (
+      process.env.EXPORT_BUCKET_URL ||
+      "https://sinopia-exports-development.s3-us-west-2.amazonaws.com"
+    )
   }
 
   static get honeybadgerApiKey() {
-    return process.env.HONEYBADGER_API_KEY || ''
+    return process.env.HONEYBADGER_API_KEY || ""
   }
 
   static get honeybadgerRevision() {
-    return process.env.HONEYBADGER_REVISION || ''
+    return process.env.HONEYBADGER_REVISION || ""
   }
 
-  // WARNING: the groups section in config/default.js in the sinopia_acl codebase *must* be kept in sync with this section
-  static get groupsInSinopia() {
+  static get transferConfig() {
     return {
-      alberta: 'University of Alberta',
-      boulder: 'University of Colorado, Boulder',
-      chicago: 'University of Chicago',
-      cornell: 'Cornell University',
-      dlc: 'Library of Congress',
-      duke: 'Duke University',
-      frick: 'Frick Art Reference Library',
-      harvard: 'Harvard University',
-      hrc: 'University of Texas, Austin, Harry Ransom Center',
-      ld4p: 'LD4P',
-      michigan: 'University of Michigan',
-      minnesota: 'University of Minnesota',
-      mla: 'Music Library Association',
-      nlm: 'National Library of Medicine',
-      northwestern: 'Northwestern University',
-      other: 'Other',
-      pcc: 'PCC',
-      penn: 'University of Pennsylvania',
-      princeton: 'Princeton University',
-      stanford: 'Stanford University',
-      tamu: 'Texas A&M University',
-      ucdavis: 'University of California, Davis',
-      ucsd: 'University of California, San Diego',
-      washington: 'University of Washington',
-      yale: 'Yale University',
+      ils: {
+        // group: label
+        stanford: "Catalog",
+      },
+      // Can add additional transfer targets, e.g., discovery
     }
   }
 }

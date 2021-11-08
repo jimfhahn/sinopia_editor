@@ -19,6 +19,7 @@ services:
     environment:
       INDEX_URL: http://elasticsearch:9200
       MONGODB_HOST: mongo
+      API_BASE_URL: http://api:3000
     depends_on:
       - elasticsearch
       - mongo
@@ -79,6 +80,8 @@ services:
       - 3000:3000
     environment:
       MONGODB_HOST: mongo
-      NO_AUTH: "true"
+      NO_AUTH: "false"
+      AWS_ACCESS_KEY_ID: ${DOCKER_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${DOCKER_AWS_SECRET_ACCESS_KEY}
     depends_on:
       - mongo

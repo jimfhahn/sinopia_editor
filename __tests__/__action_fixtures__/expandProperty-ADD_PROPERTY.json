@@ -2,6 +2,10 @@
       "type": "ADD_PROPERTY",
       "payload": {
         "key": "JQEtq-vmq8",
+        "labels": [
+          "Abbreviated Title",
+          "Abbreviated Title"
+        ],
         "subjectKey": "t9zVwg2zO",
         "rootSubjectKey": "t9zVwg2zO",
         "rootPropertyKey": "JQEtq-vmq8",
@@ -10,9 +14,12 @@
         "propertyTemplateKey": "ld4p:RT:bf2:Title:AbbrTitle > http://id.loc.gov/ontologies/bibframe/mainTitle",
         "valueKeys": null,
         "show": true,
-        "errors": [],
+        "showNav": false,
         "subject": {
           "key": "t9zVwg2zO",
+          "labels": [
+            "Abbreviated Title"
+          ],
           "rootSubjectKey": "t9zVwg2zO",
           "rootPropertyKey": null,
           "descUriOrLiteralValueKeys": [],
@@ -24,11 +31,13 @@
           "bfItemRefs": [],
           "bfWorkRefs": [],
           "group": null,
+          "editGroups": [],
           "propertyKeys": [
             "JQEtq-vmq8"
           ],
           "changed": false,
           "valueSubjectOfKey": null,
+          "showNav": false,
           "subjectTemplate": {
             "key": "ld4p:RT:bf2:Title:AbbrTitle",
             "id": "ld4p:RT:bf2:Title:AbbrTitle",
@@ -36,6 +45,8 @@
             "label": "Abbreviated Title",
             "author": "LD4P",
             "date": "2019-08-19",
+            "group": "stanford",
+            "editGroups": ["cornell"],
             "propertyTemplateKeys": [
               "ld4p:RT:bf2:Title:AbbrTitle > http://id.loc.gov/ontologies/bibframe/mainTitle"
             ]
@@ -48,6 +59,7 @@
           "uri": "http://id.loc.gov/ontologies/bibframe/mainTitle",
           "required": false,
           "repeatable": false,
+          "immutable": false,
           "defaults": [],
           "remarkUrl": null,
           "type": "literal",

@@ -1,64 +1,93 @@
 // Copyright 2018, 2019 Stanford University see LICENSE for license
 
-import { combineReducers } from 'redux'
+import { combineReducers } from "redux"
+import { setUser, removeUser } from "./authenticate"
+import { setLanguage, languagesReceived } from "./languages"
+import { groupsReceived } from "./groups"
 import {
-  setUser, removeUser,
-} from './authenticate'
+  setBaseURL,
+  hideProperty,
+  showProperty,
+  showNavProperty,
+  hideNavProperty,
+  showNavSubject,
+  hideNavSubject,
+  setUnusedRDF,
+  setCurrentEditResource,
+  setCurrentPreviewResource,
+  setCurrentDiffResources,
+  addSubject,
+  addProperty,
+  addValue,
+  removeValue,
+  removeSubject,
+  clearResource,
+  saveResourceFinished,
+  loadResourceFinished,
+  setResourceGroup,
+  setValueOrder,
+  clearResourceFromEditor,
+  saveResourceFinishedEditor,
+  updateValue,
+  setVersions,
+  clearVersions,
+} from "./resources"
+import { setRelationships, clearRelationships } from "./relationships"
 import {
-  setBaseURL, hideProperty, showProperty,
-  setUnusedRDF, setCurrentResource, setCurrentResourceIsReadOnly,
-  addSubject, addProperty, addValue, removeValue,
-  removeSubject, clearResource,
-  saveResourceFinished, loadResourceFinished,
-  setResourceGroup, setValueOrder,
-  clearResourceFromEditor, saveResourceFinishedEditor,
-} from './resources'
-import {
-  setLanguage, languagesReceived,
-} from './languages'
-import {
-  hideValidationErrors, addError, clearErrors,
+  hideValidationErrors,
+  addError,
+  clearErrors,
   showValidationErrors,
-} from './errors'
+} from "./errors"
 import {
-  showModal, hideModal, addModalMessage, clearModalMessages,
-} from './modals'
-import { showCopyNewMessage } from './messages'
+  showModal,
+  hideModal,
+  addModalMessage,
+  clearModalMessages,
+} from "./modals"
+import { showCopyNewMessage } from "./messages"
+import { exportsReceived } from "./exports"
+import { addTemplates } from "./templates"
 import {
-  exportsReceived,
-} from './exports'
-import { addTemplates } from './templates'
-import {
-  addTemplateHistory, addTemplateHistoryByResult, addSearchHistory,
-  addResourceHistory, addResourceHistoryByResult,
-} from './history'
-import {
-  clearSearchResults, setSearchResults,
-} from './search'
-import {
-  lookupOptionsRetrieved,
-} from './lookups'
+  addTemplateHistory,
+  addTemplateHistoryByResult,
+  addSearchHistory,
+  addResourceHistory,
+  addResourceHistoryByResult,
+} from "./history"
+import { clearSearchResults, setSearchResults } from "./search"
+import { lookupOptionsRetrieved } from "./lookups"
 
-export const setAppVersion = (state, action) => ({ ...state, version: action.payload })
+export const setCurrentComponent = (state, action) => {
+  const rootSubjectKey = action.payload.rootSubjectKey
+  const componentKey = action.payload.key
+  const rootPropertyKey = action.payload.rootPropertyKey
 
-export const setCurrentComponent = (state, action) => ({
-  ...state,
-  currentComponent: {
-    ...state.currentComponent,
-    [action.payload.rootSubjectKey]: {
-      component: action.payload.key,
-      property: action.payload.rootPropertyKey,
+  // Don't change if modal open
+  if (state.modal.name) return state
+
+  const currentComponent = state.currentComponent[rootSubjectKey]
+  if (
+    currentComponent?.component === componentKey &&
+    currentComponent?.property === rootPropertyKey
+  )
+    return state
+
+  return {
+    ...state,
+    currentComponent: {
+      ...state.currentComponent,
+      [rootSubjectKey]: {
+        component: componentKey,
+        property: rootPropertyKey,
+      },
     },
-  },
-})
+  }
+}
 
 const authHandlers = {
   SET_USER: setUser,
   REMOVE_USER: removeUser,
-}
-
-const appHandlers = {
-  SET_APP_VERSION: setAppVersion,
 }
 
 const editorHandlers = {
@@ -71,8 +100,9 @@ const editorHandlers = {
   HIDE_VALIDATION_ERRORS: hideValidationErrors,
   SAVE_RESOURCE_FINISHED: saveResourceFinishedEditor,
   SET_CURRENT_COMPONENT: setCurrentComponent,
-  SET_CURRENT_RESOURCE: setCurrentResource,
-  SET_CURRENT_RESOURCE_IS_READ_ONLY: setCurrentResourceIsReadOnly,
+  SET_CURRENT_DIFF_RESOURCES: setCurrentDiffResources,
+  SET_CURRENT_EDIT_RESOURCE: setCurrentEditResource,
+  SET_CURRENT_PREVIEW_RESOURCE: setCurrentPreviewResource,
   SET_UNUSED_RDF: setUnusedRDF,
   SHOW_COPY_NEW_MESSAGE: showCopyNewMessage,
   SHOW_MODAL: showModal,
@@ -84,9 +114,14 @@ const entityHandlers = {
   ADD_SUBJECT: addSubject,
   ADD_TEMPLATES: addTemplates,
   ADD_VALUE: addValue,
+  CLEAR_RELATIONSHIPS: clearRelationships,
   CLEAR_RESOURCE: clearResource,
+  CLEAR_VERSIONS: clearVersions,
   EXPORTS_RECEIVED: exportsReceived,
+  HIDE_NAV_PROPERTY: hideNavProperty,
+  HIDE_NAV_SUBJECT: hideNavSubject,
   HIDE_PROPERTY: hideProperty,
+  GROUPS_RECEIVED: groupsReceived,
   LANGUAGES_RECEIVED: languagesReceived,
   LANGUAGE_SELECTED: setLanguage,
   LOAD_RESOURCE_FINISHED: loadResourceFinished,
@@ -95,9 +130,14 @@ const entityHandlers = {
   REMOVE_VALUE: removeValue,
   SAVE_RESOURCE_FINISHED: saveResourceFinished,
   SET_BASE_URL: setBaseURL,
+  SET_RELATIONSHIPS: setRelationships,
   SET_RESOURCE_GROUP: setResourceGroup,
   SET_VALUE_ORDER: setValueOrder,
+  SET_VERSIONS: setVersions,
+  SHOW_NAV_PROPERTY: showNavProperty,
+  SHOW_NAV_SUBJECT: showNavSubject,
   SHOW_PROPERTY: showProperty,
+  UPDATE_VALUE: updateValue,
 }
 
 const historyHandlers = {
@@ -113,14 +153,15 @@ const searchHandlers = {
   SET_SEARCH_RESULTS: setSearchResults,
 }
 
-export const createReducer = (handlers) => (state = {}, action) => {
-  const fn = handlers[action.type]
-  return fn ? fn(state, action) : state
-}
+export const createReducer =
+  (handlers) =>
+  (state = {}, action) => {
+    const fn = handlers[action.type]
+    return fn ? fn(state, action) : state
+  }
 
 const appReducer = combineReducers({
   authenticate: createReducer(authHandlers),
-  app: createReducer(appHandlers),
   editor: createReducer(editorHandlers),
   entities: createReducer(entityHandlers),
   history: createReducer(historyHandlers),

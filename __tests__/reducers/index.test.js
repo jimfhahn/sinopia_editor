@@ -1,28 +1,15 @@
 // Copyright 2020 Stanford University see LICENSE for license
 
-import { createReducer, setAppVersion } from 'reducers/index'
+import { createReducer, setCurrentComponent } from "reducers/index"
+import { createState } from "stateUtils"
 
-describe('setAppVersion()', () => {
-  it('sets the version of the application', () => {
-    const handlers = { SET_APP_VERSION: setAppVersion }
+const reducers = {
+  SET_CURRENT_COMPONENT: setCurrentComponent,
+}
+const reducer = createReducer(reducers)
 
-    const reducer = createReducer(handlers)
-
-    // It would be impressive to get to version 2000.0.1
-    const action = { type: 'SET_APP_VERSION', payload: '2000.0.1' }
-
-    const oldState = {
-      version: '3.0.0',
-    }
-
-    const newState = reducer(oldState, action)
-
-    expect(newState.version).toStrictEqual('2000.0.1')
-  })
-})
-
-describe('createReducer', () => {
-  it('handles the initial state', () => {
+describe("createReducer", () => {
+  it("handles the initial state", () => {
     const oldState = {}
     const reducer = createReducer({})
     const action = {}
@@ -30,5 +17,47 @@ describe('createReducer', () => {
     const newState = reducer(oldState, action)
 
     expect(newState).toMatchObject({})
+  })
+})
+
+describe("setCurrentComponent()", () => {
+  describe("when modal closed", () => {
+    it("sets current component", () => {
+      const oldState = createState()
+
+      const action = {
+        type: "SET_CURRENT_COMPONENT",
+        payload: {
+          rootSubjectKey: "CxGx7WMh2",
+          rootPropertyKey: "DyGx7WMh3",
+          key: "EzGx7WMh4",
+        },
+      }
+
+      const newState = reducer(oldState.editor, action)
+      expect(newState.currentComponent.CxGx7WMh2).toStrictEqual({
+        component: "EzGx7WMh4",
+        property: "DyGx7WMh3",
+      })
+    })
+  })
+
+  describe("when modal open", () => {
+    it("does not set current component", () => {
+      const oldState = createState()
+      oldState.editor.modal.name = "GroupChoiceModal"
+
+      const action = {
+        type: "SET_CURRENT_COMPONENT",
+        payload: {
+          rootSubjectKey: "CxGx7WMh2",
+          rootPropertyKey: "DyGx7WMh3",
+          key: "EzGx7WMh4",
+        },
+      }
+
+      const newState = reducer(oldState.editor, action)
+      expect(newState.currentComponent).toStrictEqual({})
+    })
   })
 })

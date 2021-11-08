@@ -1,155 +1,197 @@
-import React from 'react'
-import TypeFilter from 'components/search/TypeFilter'
-import { fireEvent, waitFor, screen } from '@testing-library/react'
-import { createStore, renderComponent } from 'testUtils'
-import { createState } from 'stateUtils'
-import * as server from 'sinopiaSearch'
-import * as sinopiaApi from 'sinopiaApi'
+import React from "react"
+import TypeFilter from "components/search/TypeFilter"
+import { fireEvent, waitFor, screen } from "@testing-library/react"
+import { createStore, renderComponent } from "testUtils"
+import { createState } from "stateUtils"
+import * as server from "sinopiaSearch"
+import * as sinopiaApi from "sinopiaApi"
 
-describe('<TypeFilter />', () => {
+describe("<TypeFilter />", () => {
   const facetResults = {
     types: [
       {
-        key: 'http://id.loc.gov/ontologies/bibframe/Title',
+        key: "http://id.loc.gov/ontologies/bibframe/Title",
         doc_count: 5,
       },
       {
-        key: 'http://id.loc.gov/ontologies/bibframe/AbbreviatedTitle',
+        key: "http://id.loc.gov/ontologies/bibframe/AbbreviatedTitle",
         doc_count: 4,
       },
       {
-        key: 'http://id.loc.gov/ontologies/bibframe/Barcode',
+        key: "http://id.loc.gov/ontologies/bibframe/Barcode",
         doc_count: 1,
       },
       {
-        key: 'http://id.loc.gov/ontologies/bibframe/Chronology',
+        key: "http://id.loc.gov/ontologies/bibframe/Chronology",
         doc_count: 1,
       },
     ],
   }
 
-  jest.spyOn(sinopiaApi, 'putUserHistory').mockResolvedValue()
+  jest.spyOn(sinopiaApi, "putUserHistory").mockResolvedValue()
 
   const createInitialState = () => {
     const state = createState()
     state.search.resource = {
       facetResults,
-      query: 'twain',
+      query: "twain",
     }
     return state
   }
 
-  it('does not render when no facet results', () => {
+  it("does not render when no facet results", () => {
     renderComponent(<TypeFilter />)
 
-    expect(screen.queryByText('Filter by class')).not.toBeInTheDocument()
+    expect(screen.queryByText("Filter by class")).not.toBeInTheDocument()
   })
 
-  it('renders when results', () => {
+  it("renders when results", () => {
     const mockGetSearchResults = jest.fn()
-    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([{}, undefined])
-
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      undefined,
+    ])
 
     const store = createStore(createInitialState())
     const { container } = renderComponent(<TypeFilter />, store)
 
-    screen.getByText('Filter by class')
-    screen.getByText('http://id.loc.gov/ontologies/bibframe/Title (5)')
-    screen.getByText('http://id.loc.gov/ontologies/bibframe/Chronology (1)')
+    screen.getByText("Filter by class")
+    screen.getByText("http://id.loc.gov/ontologies/bibframe/Title (5)")
+    screen.getByText("http://id.loc.gov/ontologies/bibframe/Chronology (1)")
 
     // Everything checked
-    expect(container.querySelectorAll('input:checked')).toHaveLength(4)
+    expect(container.querySelectorAll("input:checked")).toHaveLength(5)
   })
 
-  it('allows changing filters by unselecting', async () => {
+  it("allows changing filters by unselecting", async () => {
     const mockGetSearchResults = jest.fn()
-    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([{}, undefined])
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      undefined,
+    ])
 
     const store = createStore(createInitialState())
     const { container } = renderComponent(<TypeFilter />, store)
 
-    expect(container.querySelector('div.show')).not.toBeInTheDocument()
-    fireEvent.click(screen.getByText('Filter by class'))
-    expect(container.querySelector('div.show')).toBeInTheDocument()
-    fireEvent.click(screen.getByText('http://id.loc.gov/ontologies/bibframe/Title (5)'))
+    expect(container.querySelector(".show")).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText("Filter by class"))
+    expect(container.querySelector(".show")).toBeInTheDocument()
+    fireEvent.click(
+      screen.getByText("http://id.loc.gov/ontologies/bibframe/Title (5)")
+    )
 
-    // 3 checked
-    expect(container.querySelectorAll('input:checked')).toHaveLength(3)
+    // 3 checked with unselect (also clears Select/Deselect All)
+    expect(container.querySelectorAll("input:checked")).toHaveLength(3)
 
     // Apply filter
-    fireEvent.click(screen.getByText('Go'))
+    fireEvent.click(screen.getByText("Go"))
 
-    await waitFor(() => expect(container.querySelector('div.show')).not.toBeInTheDocument())
+    await waitFor(() =>
+      expect(container.querySelector(".show")).not.toBeInTheDocument()
+    )
 
-    expect(mockGetSearchResults).toHaveBeenCalledWith('twain', {
+    expect(mockGetSearchResults).toHaveBeenCalledWith("twain", {
       resultsPerPage: 10,
       startOfRange: 0,
       sortField: undefined,
       sortOrder: undefined,
       typeFilter: [
-        'http://id.loc.gov/ontologies/bibframe/AbbreviatedTitle',
-        'http://id.loc.gov/ontologies/bibframe/Barcode',
-        'http://id.loc.gov/ontologies/bibframe/Chronology',
+        "http://id.loc.gov/ontologies/bibframe/AbbreviatedTitle",
+        "http://id.loc.gov/ontologies/bibframe/Barcode",
+        "http://id.loc.gov/ontologies/bibframe/Chronology",
       ],
     })
   })
 
-  it('allows selecting only', async () => {
+  it("allows selecting / deselecting all", async () => {
     const mockGetSearchResults = jest.fn()
-    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([{}, undefined])
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      undefined,
+    ])
 
     const store = createStore(createInitialState())
     const { container } = renderComponent(<TypeFilter />, store)
 
-    fireEvent.click(screen.getByText('Filter by class'))
-    fireEvent.click(screen.getAllByText('Only')[0])
+    fireEvent.click(screen.getByText("Filter by class"))
+    // Deselect all
+    fireEvent.click(screen.getByText("Select/Deselect all"))
 
-    // 3 checked
-    expect(container.querySelectorAll('input:checked')).toHaveLength(1)
+    // none checked
+    expect(container.querySelectorAll("input:checked")).toHaveLength(0)
+
+    // Select all
+    fireEvent.click(screen.getByText("Select/Deselect all"))
+
+    // all checked
+    expect(container.querySelectorAll("input:checked")).toHaveLength(5)
+  })
+
+  it("allows clearing filters", async () => {
+    const mockGetSearchResults = jest.fn()
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      facetResults,
+    ])
+
+    const store = createStore(createInitialState())
+    const { container } = renderComponent(<TypeFilter />, store)
+
+    fireEvent.click(screen.getByText("Filter by class"))
+    fireEvent.click(
+      screen.getByText("http://id.loc.gov/ontologies/bibframe/Title (5)")
+    )
+
+    // 3 checked with clear (also clears Select/Deselect All)
+    expect(container.querySelectorAll("input:checked")).toHaveLength(3)
 
     // Apply filter
-    fireEvent.click(screen.getByText('Go'))
+    fireEvent.click(screen.getByText("Go"))
 
-    await waitFor(() => expect(container.querySelector('div.show')).not.toBeInTheDocument())
+    await waitFor(() =>
+      expect(container.querySelector(".show")).not.toBeInTheDocument()
+    )
 
-    expect(mockGetSearchResults).toHaveBeenCalledWith('twain', {
+    fireEvent.click(screen.getByText("Filter by class"))
+    fireEvent.click(screen.getByText("Clear filter"))
+
+    expect(mockGetSearchResults).toHaveBeenLastCalledWith("twain", {
       resultsPerPage: 10,
       startOfRange: 0,
       sortField: undefined,
       sortOrder: undefined,
-      typeFilter: [
-        'http://id.loc.gov/ontologies/bibframe/Title',
-      ],
+      typeFilter: null,
     })
   })
 
-  it('allows clearing filters', async () => {
+  it("allows reselecting cleared filters before using them", async () => {
     const mockGetSearchResults = jest.fn()
-    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([{}, facetResults])
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      facetResults,
+    ])
 
     const store = createStore(createInitialState())
     const { container } = renderComponent(<TypeFilter />, store)
 
-    fireEvent.click(screen.getByText('Filter by class'))
-    fireEvent.click(screen.getByText('http://id.loc.gov/ontologies/bibframe/Title (5)'))
+    fireEvent.click(screen.getByText("Filter by class"))
+    // all checked
+    expect(container.querySelectorAll("input:checked")).toHaveLength(5)
 
-    // 3 checked
-    expect(container.querySelectorAll('input:checked')).toHaveLength(3)
+    // Deselect individual filter
+    fireEvent.click(
+      screen.getByText("http://id.loc.gov/ontologies/bibframe/Title (5)")
+    )
 
-    // Apply filter
-    fireEvent.click(screen.getByText('Go'))
+    // 3 checked with deselect (also clears Select/Deselect All)
+    expect(container.querySelectorAll("input:checked")).toHaveLength(3)
 
-    await waitFor(() => expect(container.querySelector('div.show')).not.toBeInTheDocument())
+    // Reselect individual filter
+    fireEvent.click(
+      screen.getByText("http://id.loc.gov/ontologies/bibframe/Title (5)")
+    )
 
-    fireEvent.click(screen.getByText('Filter by class'))
-    fireEvent.click(screen.getByText('Clear filter'))
-
-    expect(mockGetSearchResults).toHaveBeenLastCalledWith('twain', {
-      resultsPerPage: 10,
-      startOfRange: 0,
-      sortField: undefined,
-      sortOrder: undefined,
-      typeFilter: undefined,
-    })
+    // all checked (includes Select/Deselect All)
+    expect(container.querySelectorAll("input:checked")).toHaveLength(5)
   })
 })

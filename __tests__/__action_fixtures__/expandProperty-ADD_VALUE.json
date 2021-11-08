@@ -11,9 +11,13 @@
         "propertyTemplateKey": "resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property1",
         "valueKeys": null,
         "show": true,
-        "errors": [],
+        "showNav": false,
         "descUriOrLiteralValueKeys": [],
         "descWithErrorPropertyKeys": [],
+        "labels": [
+          "Uber template1",
+          "Uber template1, property1"
+        ],
         "subject": {
           "key": "ljAblGiBW",
           "uri": null,
@@ -25,19 +29,28 @@
             "v1o90QO1Qx"
           ],
           "changed": false,
+          "showNav": false,
           "bfAdminMetadataRefs": [],
           "bfInstanceRefs": [],
           "bfItemRefs": [],
           "bfWorkRefs": [],
           "group": null,
+          "editGroups": [],
           "descUriOrLiteralValueKeys": [],
           "descWithErrorPropertyKeys": [],
+          "labels": [
+            "Uber template1"
+          ],
           "subjectTemplate": {
             "key": "resourceTemplate:testing:uber1",
             "id": "resourceTemplate:testing:uber1",
             "class": "http://id.loc.gov/ontologies/bibframe/Uber1",
             "label": "Uber template1",
             "remark": "Template for testing purposes.",
+            "group": "stanford",
+            "editGroups": [
+              "cornell"
+            ],
             "propertyTemplateKeys": [
               "resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property1"
             ]
@@ -50,6 +63,7 @@
           "uri": "http://id.loc.gov/ontologies/bibframe/uber/template1/property1",
           "required": false,
           "repeatable": true,
+          "immutable": false,
           "defaults": [],
           "remark": "Nested, repeatable resource template.",
           "remarkUrl": null,
@@ -91,7 +105,9 @@
               "required": false,
               "repeatable": true,
               "ordered": false,
+              "immutable": false,
               "remark": "A repeatable literal",
+              "remarkUrlLabel": null,
               "remarkUrl": null,
               "defaults": [],
               "valueSubjectTemplateKeys": [],
@@ -99,6 +115,10 @@
               "type": "literal",
               "component": "InputLiteral"
             }
+          ],
+          "group": "stanford",
+          "editGroups": [
+            "cornell"
           ]
         },
         "properties": [
@@ -108,7 +128,8 @@
             "show": false
           }
         ]
-      }
+      },
+      "component": null
     }
   }
 }

@@ -1,98 +1,110 @@
 // Copyright 2019 Stanford University see LICENSE for license
 
 /* eslint node/no-unpublished-require: ["off"] */
-const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require("path")
+const webpack = require("webpack")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 
 module.exports = {
-  entry: './src/index.js',
+  entry: "./src/index.js",
   module: {
     noParse: /bad_json/,
     rules: [
       {
         test: /\.(js|jsx)$/,
-        include: path.resolve(__dirname, './src'),
+        include: path.resolve(__dirname, "./src"),
         exclude: /node_modules/,
-        use: ['babel-loader'],
+        use: ["babel-loader"],
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.(scss)$/,
         use: [
-          // Creates `style` nodes from JS strings
-          'style-loader',
-          // Translates CSS into CommonJS
-          'css-loader',
-          // Compiles Sass to CSS
-          'sass-loader',
+          {
+            // inject CSS to page
+            loader: "style-loader",
+          },
+          {
+            // translates CSS into CommonJS modules
+            loader: "css-loader",
+          },
+          {
+            // Run postcss actions
+            loader: "postcss-loader",
+            options: {
+              // `postcssOptions` is needed for postcss 8.x;
+              // if you use postcss 7.x skip the key
+              postcssOptions: {
+                // postcss plugins, can be exported to postcss.config.js
+                plugins() {
+                  return [require("autoprefixer")]
+                },
+              },
+            },
+          },
+          {
+            // compiles Sass to CSS
+            loader: "sass-loader",
+          },
         ],
       },
       {
-        test: /\.(png|jpg|gif)$/,
-        use: [
-          'file-loader',
-        ],
-      },
-      {
-        parser: {
-          amd: false,
-        },
+        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+        // More information here https://webpack.js.org/guides/asset-modules/
+        type: "asset",
       },
     ],
   },
-  node: {
-    fs: 'empty',
-  },
   resolve: {
-    extensions: ['*', '.js', '.jsx'],
+    extensions: ["*", ".js", ".jsx"],
+    fallback: {
+      fs: false,
+      stream: require.resolve("stream-browserify"),
+      crypto: require.resolve("crypto-browserify"),
+    },
   },
   output: {
-    path: path.join(__dirname, '/dist'),
-    publicPath: '/dist/',
-    filename: 'bundle.js',
+    path: path.join(__dirname, "/dist"),
+    publicPath: "/dist/",
+    filename: "bundle.js",
   },
   plugins: [
     new webpack.ProvidePlugin({
-      $: 'jquery',
-      jquery: 'jQuery',
-      'window.jQuery': 'jquery',
-      'window.$': 'jquery',
+      Buffer: ["buffer", "Buffer"],
+      process: "process/browser",
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve('./', 'index.html'),
-      filename: 'index.html',
+      template: "index.html",
+      filename: "index.html",
       hash: true,
     }),
-    new webpack.EnvironmentPlugin(
-      [
-        'USE_FIXTURES',
-        'SINOPIA_API_BASE_URL',
-        'SINOPIA_GROUP',
-        'SINOPIA_ENV',
-        'SINOPIA_URI',
-        'AWS_COGNITO_DOMAIN',
-        'COGNITO_CLIENT_ID',
-        'COGNITO_USER_POOL_ID',
-        'INDEX_URL',
-        'SEARCH_HOST',
-        'EXPORT_BUCKET_URL',
-        'HONEYBADGER_API_KEY',
-        'HONEYBADGER_REVISION',
-      ],
-    ),
+    new webpack.EnvironmentPlugin({
+      USE_FIXTURES: null,
+      SINOPIA_API_BASE_URL: null,
+      SINOPIA_GROUP: null,
+      SINOPIA_ENV: null,
+      SINOPIA_URI: null,
+      AWS_COGNITO_DOMAIN: null,
+      COGNITO_CLIENT_ID: null,
+      COGNITO_USER_POOL_ID: null,
+      INDEX_URL: null,
+      SEARCH_HOST: null,
+      EXPORT_BUCKET_URL: null,
+      HONEYBADGER_API_KEY: null,
+      HONEYBADGER_REVISION: null,
+    }),
   ],
-  devtool: 'source-map',
+  devtool: "source-map",
   devServer: {
+    static: "./dist",
     historyApiFallback: true,
     hot: true,
     port: 8888,
     proxy: {
-      '/api/search': 'http://localhost:8000',
+      "/api/search": "http://localhost:8000",
     },
   },
 }

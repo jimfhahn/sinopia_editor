@@ -1,6 +1,11 @@
 // Copyright 2018, 2019 Stanford University see LICENSE for license
-import _ from 'lodash'
-import { selectSubjectTemplate, selectPropertyTemplate } from 'selectors/templates'
+import _ from "lodash"
+import {
+  selectSubjectTemplate,
+  selectPropertyTemplate,
+} from "selectors/templates"
+import { selectLanguageLabel } from "selectors/languages"
+import Config from "Config"
 
 // Always use selectNormSubject/Property/Value in components.
 // selectSubject/Property/Value can be used in actionCreators.
@@ -11,8 +16,13 @@ export const selectSubject = (state, key) => {
   if (_.isEmpty(subject)) return null
 
   const newSubject = { ...subject }
-  newSubject.subjectTemplate = selectSubjectTemplate(state, newSubject.subjectTemplateKey)
-  newSubject.properties = newSubject.propertyKeys.map((propertyKey) => selectNormProperty(state, propertyKey))
+  newSubject.subjectTemplate = selectSubjectTemplate(
+    state,
+    newSubject.subjectTemplateKey
+  )
+  newSubject.properties = newSubject.propertyKeys.map((propertyKey) =>
+    selectNormProperty(state, propertyKey)
+  )
   return newSubject
 }
 
@@ -22,10 +32,16 @@ export const selectProperty = (state, key) => {
 
   const newProperty = { ...property }
   const newSubject = selectNormSubject(state, newProperty.subjectKey)
-  newSubject.subjectTemplate = selectSubjectTemplate(state, newSubject.subjectTemplateKey)
+  newSubject.subjectTemplate = selectSubjectTemplate(
+    state,
+    newSubject.subjectTemplateKey
+  )
 
   newProperty.subject = newSubject
-  newProperty.propertyTemplate = selectPropertyTemplate(state, newProperty.propertyTemplateKey)
+  newProperty.propertyTemplate = selectPropertyTemplate(
+    state,
+    newProperty.propertyTemplateKey
+  )
   newProperty.values = null
   if (property.valueKeys) {
     newProperty.values = newProperty.valueKeys.map((valueKey) => {
@@ -44,9 +60,14 @@ export const selectValue = (state, key) => {
   const newValue = { ...value }
   const property = selectNormProperty(state, newValue.propertyKey)
   const newProperty = { ...property }
-  newProperty.propertyTemplate = selectPropertyTemplate(state, newProperty.propertyTemplateKey)
+  newProperty.propertyTemplate = selectPropertyTemplate(
+    state,
+    newProperty.propertyTemplateKey
+  )
   newValue.property = newProperty
   newValue.valueSubject = selectSubject(state, newValue.valueSubjectKey)
+  if (newValue.lang)
+    newValue.langLabel = selectLanguageLabel(state, newValue.lang)
   return newValue
 }
 
@@ -58,15 +79,23 @@ export const selectNormValue = (state, key) => state.entities.values[key]
 
 export const selectCurrentResourceKey = (state) => state.editor.currentResource
 
-export const selectCurrentResourceIsReadOnly = (state) => state.editor.currentResourceIsReadOnly
+export const selectCurrentPreviewResourceKey = (state) =>
+  state.editor.currentPreviewResource
+
+export const selectCurrentDiffResourceKeys = (state) => state.editor.currentDiff
 
 export const selectFullSubject = (state, key) => {
   const subject = selectNormSubject(state, key)
   if (_.isEmpty(subject)) return null
 
   const newSubject = { ...subject }
-  newSubject.subjectTemplate = selectSubjectTemplate(state, newSubject.subjectTemplateKey)
-  newSubject.properties = newSubject.propertyKeys.map((propertyKey) => selectFullProperty(state, propertyKey, newSubject))
+  newSubject.subjectTemplate = selectSubjectTemplate(
+    state,
+    newSubject.subjectTemplateKey
+  )
+  newSubject.properties = newSubject.propertyKeys.map((propertyKey) =>
+    selectFullProperty(state, propertyKey, newSubject)
+  )
   return newSubject
 }
 
@@ -76,9 +105,15 @@ export const selectFullProperty = (state, key, subject) => {
 
   const newProperty = { ...property }
   newProperty.subject = subject
-  newProperty.propertyTemplate = selectPropertyTemplate(state, newProperty.propertyTemplateKey)
+  newProperty.propertyTemplate = selectPropertyTemplate(
+    state,
+    newProperty.propertyTemplateKey
+  )
   newProperty.values = null
-  if (property.valueKeys) newProperty.values = newProperty.valueKeys.map((valueKey) => selectFullValue(state, valueKey, newProperty))
+  if (property.valueKeys)
+    newProperty.values = newProperty.valueKeys.map((valueKey) =>
+      selectFullValue(state, valueKey, newProperty)
+    )
   return newProperty
 }
 
@@ -115,9 +150,51 @@ export const selectResourceUriMap = (state) => {
   return resourceUriMap
 }
 
-export const selectLastSave = (state, resourceKey) => state.editor.lastSave[resourceKey]
+export const selectLastSave = (state, resourceKey) =>
+  state.editor.lastSave[resourceKey]
 
 export const selectNormValues = (state, valueKeys) => {
   if (!valueKeys) return null
   return valueKeys.map((valueKey) => selectNormValue(state, valueKey))
 }
+
+export const selectResourceGroup = (state, resourceKey) =>
+  _.pick(selectNormSubject(state, resourceKey), ["group", "editGroups"])
+
+export const selectUri = (state, resourceKey) =>
+  state.entities.subjects[resourceKey]?.uri
+
+export const selectResourceId = (state, resourceKey) => {
+  const uri = selectUri(state, resourceKey)
+  if (!uri) return null
+
+  return uri.substr(`${Config.sinopiaApiBase}/resource/`.length)
+}
+
+export const selectSiblingValues = (state, valueKey) => {
+  const value = selectNormValue(state, valueKey)
+  const property = selectNormProperty(state, value?.propertyKey)
+  const valueSubject = selectNormSubject(state, value?.valueSubjectKey)
+  const values = selectNormValues(state, property?.valueKeys) || []
+
+  return values.filter((siblingValue) => {
+    const siblingValueSubject = selectNormSubject(
+      state,
+      siblingValue.valueSubjectKey
+    )
+    return (
+      siblingValueSubject.subjectTemplateKey === valueSubject.subjectTemplateKey
+    )
+  })
+}
+
+export const selectResourceLabel = (state, subjectKey) =>
+  selectNormSubject(state, subjectKey)?.label
+
+// Only select certain properties from a subject.
+// Note that this will return a unique object every time.
+export const selectPickSubject = (state, key, props) =>
+  _.pick(state.entities.subjects[key], props)
+
+export const selectVersions = (state, resourceKey) =>
+  state.entities.versions[resourceKey]

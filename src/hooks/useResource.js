@@ -1,75 +1,102 @@
-import { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { newResource, loadResource } from 'actionCreators/resources'
-import { selectErrors } from 'selectors/errors'
+import { useEffect, useState } from "react"
+import { useSelector, useDispatch } from "react-redux"
 import {
-  selectCurrentResourceKey, selectNormSubject, selectResourceUriMap,
-} from 'selectors/resources'
-import _ from 'lodash'
-import { showModal } from 'actions/modals'
-import { setCurrentResource } from 'actions/resources'
-import { useHistory } from 'react-router-dom'
+  newResource,
+  loadResourceForEditor,
+  loadResourceForPreview,
+} from "actionCreators/resources"
+import { selectErrors } from "selectors/errors"
+import {
+  selectCurrentResourceKey,
+  selectResourceUriMap,
+} from "selectors/resources"
+import _ from "lodash"
+import { showModal } from "actions/modals"
+import {
+  setCurrentResource,
+  setCurrentPreviewResource,
+} from "actions/resources"
+import { useHistory } from "react-router-dom"
 
-const useResource = (errorKey, errorRef) => {
+const useResource = (
+  errorKey,
+  { resourceTemplateId = null, resourceURI = null }
+) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const errors = useSelector((state) => selectErrors(state, errorKey))
   const resourceKey = useSelector((state) => selectCurrentResourceKey(state))
-  const resource = useSelector((state) => selectNormSubject(state, resourceKey))
-  // These are resources that are already open in editor
+  // These are resources that are already loaded
   const resourceUriMap = useSelector((state) => selectResourceUriMap(state))
 
   const [navigateEditor, setNavigateEditor] = useState(false)
+  const [status, setStatus] = useState("ready")
 
   useEffect(() => {
     // Forces a wait until the root resource has been set in state
-    if (navigateEditor && resource && _.isEmpty(errors)) {
-      if (navigateEditor === 'new') {
-        history.push(`/editor/${resource.subjectTemplateKey}`)
-      } else {
-        history.push('/editor')
-      }
-    } else if (!_.isEmpty(errors) && errorRef) {
-      window.scrollTo(0, errorRef.current.offsetTop)
+    if (navigateEditor && resourceKey && _.isEmpty(errors)) {
+      history.push("/editor")
     }
-  }, [navigateEditor, resource, history, errors, errorRef])
+  }, [navigateEditor, resourceKey, history, errors])
 
-  const handleNew = (resourceTemplateId, event) => {
+  const handleNew = (event) => {
     if (event) event.preventDefault()
+    setStatus("loading new")
     dispatch(newResource(resourceTemplateId, errorKey)).then((result) => {
-      if (result) setNavigateEditor('new')
+      setStatus("ready")
+      if (result) setNavigateEditor(true)
     })
   }
 
-  const handleCopy = (resourceURI, event) => {
+  const handleCopy = (event) => {
     if (event) event.preventDefault()
-    dispatch(loadResource(resourceURI, errorKey, true)).then((result) => {
-      if (result) setNavigateEditor('copy')
+    setStatus("loading copy")
+    dispatch(
+      loadResourceForEditor(resourceURI, errorKey, { asNewResource: true })
+    ).then((result) => {
+      setStatus("ready")
+      if (result) setNavigateEditor(true)
     })
   }
 
-  const handleEdit = (resourceURI, event) => {
+  const handleEdit = (event) => {
     if (event) event.preventDefault()
     // Check if already open
     if (resourceUriMap[resourceURI]) {
       dispatch(setCurrentResource(resourceUriMap[resourceURI]))
-      setNavigateEditor('edit')
+      setNavigateEditor(true)
     } else {
-      dispatch(loadResource(resourceURI, errorKey)).then((result) => {
-        if (result) setNavigateEditor('edit')
+      setStatus("loading edit")
+      dispatch(loadResourceForEditor(resourceURI, errorKey)).then((result) => {
+        setStatus("ready")
+        if (result) setNavigateEditor(true)
       })
     }
   }
 
-  const handleView = (resourceURI, event) => {
+  const handleView = (event) => {
     if (event) event.preventDefault()
-    dispatch(loadResource(resourceURI, errorKey, false, true)).then(() => {
-      dispatch(showModal('ViewResourceModal'))
-    })
+    if (resourceUriMap[resourceURI]) {
+      dispatch(setCurrentPreviewResource(resourceUriMap[resourceURI]))
+      dispatch(showModal("PreviewModal"))
+    } else {
+      setStatus("loading view")
+      dispatch(loadResourceForPreview(resourceURI, errorKey)).then(() => {
+        setStatus("ready")
+        dispatch(showModal("PreviewModal"))
+      })
+    }
   }
 
   return {
-    handleNew, handleCopy, handleEdit, handleView,
+    handleNew,
+    handleCopy,
+    handleEdit,
+    handleView,
+    isLoadingNew: status === "loading new",
+    isLoadingCopy: status === "loading copy",
+    isLoadingEdit: status === "loading edit",
+    isLoadingView: status === "loading view",
   }
 }
 

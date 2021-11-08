@@ -1,38 +1,38 @@
-import GraphBuilder from 'GraphBuilder'
+import GraphBuilder from "GraphBuilder"
 
-describe('GraphBuilder', () => {
-  describe('graph()', () => {
-    it('builds a graph for literals', () => {
+describe("GraphBuilder", () => {
+  describe("graph()", () => {
+    it("builds a graph for literals", () => {
       const resource = {
         subjectTemplate: {
-          id: 'resourceTemplate:testing:uber1',
-          class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
         },
         properties: [
           {
             propertyTemplate: {
-              uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property2',
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property2",
             },
             values: [
               // With lang
               {
-                literal: 'literal1',
-                lang: 'eng',
+                literal: "literal1",
+                lang: "eng",
                 uri: null,
                 // Value references its property.
                 property: {
                   propertyTemplate: {
-                    type: 'literal',
+                    type: "literal",
                   },
                 },
               },
               // Without lang
               {
-                literal: 'literal2',
+                literal: "literal2",
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'literal',
+                    type: "literal",
                   },
                 },
               },
@@ -48,36 +48,37 @@ describe('GraphBuilder', () => {
       expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
     })
 
-    it('builds a graph for uris', () => {
+    it("builds a graph for uris", () => {
       const resource = {
         subjectTemplate: {
-          id: 'resourceTemplate:testing:uber1',
-          class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
         },
         properties: [
           {
             propertyTemplate: {
-              uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property8',
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property8",
             },
             values: [
               // With label
               {
-                uri: 'http://sinopia.io/uri1',
-                label: 'URI1',
+                uri: "http://sinopia.io/uri1",
+                label: "URI1",
+                lang: "eng",
                 // Value references its property.
                 property: {
                   propertyTemplate: {
-                    type: 'uri',
+                    type: "uri",
                   },
                 },
               },
               // Without label
               {
-                uri: 'http://sinopia.io/uri2',
+                uri: "http://sinopia.io/uri2",
                 label: null,
                 property: {
                   propertyTemplate: {
-                    type: 'uri',
+                    type: "uri",
                   },
                 },
               },
@@ -90,46 +91,46 @@ describe('GraphBuilder', () => {
 <> <http://id.loc.gov/ontologies/bibframe/uber/template1/property8> <http://sinopia.io/uri2> .
 <> <http://sinopia.io/vocabulary/hasResourceTemplate> "resourceTemplate:testing:uber1" .
 <> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/bibframe/Uber1> .
-<http://sinopia.io/uri1> <http://www.w3.org/2000/01/rdf-schema#label> "URI1" .`
+<http://sinopia.io/uri1> <http://www.w3.org/2000/01/rdf-schema#label> "URI1"@eng .`
       expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
     })
 
-    it('builds a graph for nested resources', () => {
+    it("builds a graph for nested resources", () => {
       const resource = {
         subjectTemplate: {
-          id: 'resourceTemplate:testing:uber1',
-          class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
         },
         properties: [
           {
             propertyTemplate: {
-              uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property1",
             },
             values: [
               {
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'resource',
+                    type: "resource",
                   },
                 },
                 valueSubject: {
                   subjectTemplate: {
-                    class: 'http://id.loc.gov/ontologies/bibframe/Uber2',
+                    class: "http://id.loc.gov/ontologies/bibframe/Uber2",
                   },
                   properties: [
                     {
                       propertyTemplate: {
-                        uri: 'http://id.loc.gov/ontologies/bibframe/uber/template2/property1',
+                        uri: "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
                       },
                       values: [
                         {
-                          literal: 'literal3',
-                          lang: 'eng',
+                          literal: "literal3",
+                          lang: "eng",
                           uri: null,
                           property: {
                             propertyTemplate: {
-                              type: 'literal',
+                              type: "literal",
                             },
                           },
                         },
@@ -150,16 +151,16 @@ _:c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
       expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
     })
 
-    it('builds a graph for ordered resources', () => {
+    it("builds a graph for ordered resources", () => {
       const resource = {
         subjectTemplate: {
-          id: 'resourceTemplate:testing:uber1',
-          class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
         },
         properties: [
           {
             propertyTemplate: {
-              uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property19',
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property19",
               ordered: true,
             },
             values: [
@@ -167,17 +168,17 @@ _:c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'resource',
+                    type: "resource",
                   },
                 },
                 valueSubject: {
                   subjectTemplate: {
-                    class: 'http://id.loc.gov/ontologies/bibframe/Uber4',
+                    class: "http://id.loc.gov/ontologies/bibframe/Uber4",
                   },
                   properties: [
                     {
                       propertyTemplate: {
-                        uri: 'http://id.loc.gov/ontologies/bibframe/uber/template4/property1',
+                        uri: "http://id.loc.gov/ontologies/bibframe/uber/template4/property1",
                       },
                       values: null,
                     },
@@ -188,26 +189,26 @@ _:c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'resource',
+                    type: "resource",
                   },
                 },
                 valueSubject: {
                   subjectTemplate: {
-                    class: 'http://id.loc.gov/ontologies/bibframe/Uber4',
+                    class: "http://id.loc.gov/ontologies/bibframe/Uber4",
                   },
                   properties: [
                     {
                       propertyTemplate: {
-                        uri: 'http://id.loc.gov/ontologies/bibframe/uber/template4/property1',
+                        uri: "http://id.loc.gov/ontologies/bibframe/uber/template4/property1",
                       },
                       values: [
                         {
-                          literal: 'literal1',
-                          lang: 'eng',
+                          literal: "literal1",
+                          lang: "eng",
                           uri: null,
                           property: {
                             propertyTemplate: {
-                              type: 'literal',
+                              type: "literal",
                             },
                           },
                         },
@@ -220,26 +221,26 @@ _:c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'resource',
+                    type: "resource",
                   },
                 },
                 valueSubject: {
                   subjectTemplate: {
-                    class: 'http://id.loc.gov/ontologies/bibframe/Uber4',
+                    class: "http://id.loc.gov/ontologies/bibframe/Uber4",
                   },
                   properties: [
                     {
                       propertyTemplate: {
-                        uri: 'http://id.loc.gov/ontologies/bibframe/uber/template4/property1',
+                        uri: "http://id.loc.gov/ontologies/bibframe/uber/template4/property1",
                       },
                       values: [
                         {
-                          literal: 'literal2',
-                          lang: 'eng',
+                          literal: "literal2",
+                          lang: "eng",
                           uri: null,
                           property: {
                             propertyTemplate: {
-                              type: 'literal',
+                              type: "literal",
                             },
                           },
                         },
@@ -252,17 +253,17 @@ _:c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'resource',
+                    type: "resource",
                   },
                 },
                 valueSubject: {
                   subjectTemplate: {
-                    class: 'http://id.loc.gov/ontologies/bibframe/Uber4',
+                    class: "http://id.loc.gov/ontologies/bibframe/Uber4",
                   },
                   properties: [
                     {
                       propertyTemplate: {
-                        uri: 'http://id.loc.gov/ontologies/bibframe/uber/template4/property1',
+                        uri: "http://id.loc.gov/ontologies/bibframe/uber/template4/property1",
                       },
                       values: null,
                     },
@@ -287,11 +288,11 @@ _:c14n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
       expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
     })
 
-    it('builds a graph ignoring null values', () => {
+    it("builds a graph ignoring null values", () => {
       const resource = {
         subjectTemplate: {
-          id: 'resourceTemplate:testing:uber1',
-          class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
         },
         properties: [
           {
@@ -304,33 +305,33 @@ _:c14n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
       expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
     })
 
-    it('builds a graph ignoring empty nested resources', () => {
+    it("builds a graph ignoring empty nested resources", () => {
       const resource = {
         subjectTemplate: {
-          id: 'resourceTemplate:testing:uber1',
-          class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
         },
         properties: [
           {
             propertyTemplate: {
-              uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property1",
             },
             values: [
               {
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'resource',
+                    type: "resource",
                   },
                 },
                 valueSubject: {
                   subjectTemplate: {
-                    class: 'http://id.loc.gov/ontologies/bibframe/Uber2',
+                    class: "http://id.loc.gov/ontologies/bibframe/Uber2",
                   },
                   properties: [
                     {
                       propertyTemplate: {
-                        uri: 'http://id.loc.gov/ontologies/bibframe/uber/template2/property1',
+                        uri: "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
                       },
                       values: [],
                     },
@@ -346,44 +347,133 @@ _:c14n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
       expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
     })
 
-    it('builds a graph for suppressible nested resource with uri', () => {
+    it("builds a graph ignoring empty literals", () => {
       const resource = {
         subjectTemplate: {
-          id: 'resourceTemplate:testing:uber1',
-          class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
         },
         properties: [
           {
             propertyTemplate: {
-              uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property2",
+            },
+            values: [
+              {
+                literal: "literal1",
+                lang: "eng",
+                uri: null,
+                // Value references its property.
+                property: {
+                  propertyTemplate: {
+                    type: "literal",
+                  },
+                },
+              },
+              // Empty
+              {
+                literal: "",
+                uri: null,
+                property: {
+                  propertyTemplate: {
+                    type: "literal",
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      }
+
+      const rdf = `<> <http://id.loc.gov/ontologies/bibframe/uber/template1/property2> "literal1"@eng .
+<> <http://sinopia.io/vocabulary/hasResourceTemplate> "resourceTemplate:testing:uber1" .
+<> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/bibframe/Uber1> .`
+      expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
+    })
+
+    it("builds a graph ignoring empty URIs", () => {
+      const resource = {
+        subjectTemplate: {
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
+        },
+        properties: [
+          {
+            propertyTemplate: {
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property8",
+            },
+            values: [
+              // With label
+              {
+                uri: "http://sinopia.io/uri1",
+                label: "URI1",
+                // Value references its property.
+                property: {
+                  propertyTemplate: {
+                    type: "uri",
+                  },
+                },
+              },
+              // Empty
+              {
+                uri: "",
+                label: null,
+                property: {
+                  propertyTemplate: {
+                    type: "uri",
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      }
+
+      const rdf = `<> <http://id.loc.gov/ontologies/bibframe/uber/template1/property8> <http://sinopia.io/uri1> .
+<> <http://sinopia.io/vocabulary/hasResourceTemplate> "resourceTemplate:testing:uber1" .
+<> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/bibframe/Uber1> .
+<http://sinopia.io/uri1> <http://www.w3.org/2000/01/rdf-schema#label> "URI1" .`
+      expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
+    })
+
+    it("builds a graph for suppressible nested resource with uri", () => {
+      const resource = {
+        subjectTemplate: {
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
+        },
+        properties: [
+          {
+            propertyTemplate: {
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property1",
             },
             values: [
               {
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'resource',
+                    type: "resource",
                   },
                 },
                 valueSubject: {
                   subjectTemplate: {
-                    class: 'http://id.loc.gov/ontologies/bibframe/Uber2',
+                    class: "http://id.loc.gov/ontologies/bibframe/Uber2",
                     suppressible: true,
                   },
                   properties: [
                     {
                       propertyTemplate: {
-                        uri: 'http://id.loc.gov/ontologies/bibframe/uber/template2/property1',
+                        uri: "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
                       },
                       values: [
                         {
-                          uri: 'http://sinopia.io/uri1',
-                          label: 'URI1',
+                          uri: "http://sinopia.io/uri1",
+                          label: "URI1",
                           literal: null,
                           lang: null,
                           property: {
                             propertyTemplate: {
-                              type: 'uri',
+                              type: "uri",
                             },
                           },
                         },
@@ -404,55 +494,55 @@ _:c14n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
       expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
     })
 
-    it('builds a graph for suppressible nested resource with multiple uris', () => {
+    it("builds a graph for suppressible nested resource with multiple uris", () => {
       const resource = {
         subjectTemplate: {
-          id: 'resourceTemplate:testing:uber1',
-          class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
         },
         properties: [
           {
             propertyTemplate: {
-              uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property1",
             },
             values: [
               {
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'resource',
+                    type: "resource",
                   },
                 },
                 valueSubject: {
                   subjectTemplate: {
-                    class: 'http://id.loc.gov/ontologies/bibframe/Uber2',
+                    class: "http://id.loc.gov/ontologies/bibframe/Uber2",
                     suppressible: true,
                   },
                   properties: [
                     {
                       propertyTemplate: {
-                        uri: 'http://id.loc.gov/ontologies/bibframe/uber/template2/property1',
+                        uri: "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
                       },
                       values: [
                         {
-                          uri: 'http://sinopia.io/uri1',
-                          label: 'URI1',
+                          uri: "http://sinopia.io/uri1",
+                          label: "URI1",
                           literal: null,
                           lang: null,
                           property: {
                             propertyTemplate: {
-                              type: 'uri',
+                              type: "uri",
                             },
                           },
                         },
                         {
-                          uri: 'http://sinopia.io/uri2',
-                          label: 'URI2',
+                          uri: "http://sinopia.io/uri2",
+                          label: "URI2",
                           literal: null,
                           lang: null,
                           property: {
                             propertyTemplate: {
-                              type: 'uri',
+                              type: "uri",
                             },
                           },
                         },
@@ -476,43 +566,43 @@ _:c14n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
       expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
     })
 
-    it('builds a graph for suppresible nested resource with literal', () => {
+    it("builds a graph for suppresible nested resource with literal", () => {
       const resource = {
         subjectTemplate: {
-          id: 'resourceTemplate:testing:uber1',
-          class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+          id: "resourceTemplate:testing:uber1",
+          class: "http://id.loc.gov/ontologies/bibframe/Uber1",
         },
         properties: [
           {
             propertyTemplate: {
-              uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
+              uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property1",
             },
             values: [
               {
                 uri: null,
                 property: {
                   propertyTemplate: {
-                    type: 'resource',
+                    type: "resource",
                   },
                 },
                 valueSubject: {
                   subjectTemplate: {
-                    class: 'http://id.loc.gov/ontologies/bibframe/Uber2',
+                    class: "http://id.loc.gov/ontologies/bibframe/Uber2",
                   },
                   properties: [
                     {
                       propertyTemplate: {
-                        uri: 'http://id.loc.gov/ontologies/bibframe/uber/template2/property1',
+                        uri: "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
                       },
                       values: [
                         {
                           uri: null,
                           label: null,
-                          literal: 'literal3',
-                          lang: 'eng',
+                          literal: "literal3",
+                          lang: "eng",
                           property: {
                             propertyTemplate: {
-                              type: 'uri',
+                              type: "uri",
                               suppresible: true,
                             },
                           },
@@ -535,43 +625,43 @@ _:c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
     })
   })
 
-  it('builds a graph for suppresible nested resource with multiple literal', () => {
+  it("builds a graph for suppresible nested resource with multiple literal", () => {
     const resource = {
       subjectTemplate: {
-        id: 'resourceTemplate:testing:uber1',
-        class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+        id: "resourceTemplate:testing:uber1",
+        class: "http://id.loc.gov/ontologies/bibframe/Uber1",
       },
       properties: [
         {
           propertyTemplate: {
-            uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
+            uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property1",
           },
           values: [
             {
               uri: null,
               property: {
                 propertyTemplate: {
-                  type: 'resource',
+                  type: "resource",
                 },
               },
               valueSubject: {
                 subjectTemplate: {
-                  class: 'http://id.loc.gov/ontologies/bibframe/Uber2',
+                  class: "http://id.loc.gov/ontologies/bibframe/Uber2",
                 },
                 properties: [
                   {
                     propertyTemplate: {
-                      uri: 'http://id.loc.gov/ontologies/bibframe/uber/template2/property1',
+                      uri: "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
                     },
                     values: [
                       {
                         uri: null,
                         label: null,
-                        literal: 'literal3',
-                        lang: 'eng',
+                        literal: "literal3",
+                        lang: "eng",
                         property: {
                           propertyTemplate: {
-                            type: 'uri',
+                            type: "uri",
                             suppresible: true,
                           },
                         },
@@ -579,11 +669,11 @@ _:c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
                       {
                         uri: null,
                         label: null,
-                        literal: 'literal4',
-                        lang: 'eng',
+                        literal: "literal4",
+                        lang: "eng",
                         property: {
                           propertyTemplate: {
-                            type: 'uri',
+                            type: "uri",
                             suppresible: true,
                           },
                         },
@@ -606,55 +696,55 @@ _:c14n0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ont
     expect(new GraphBuilder(resource).graph.toCanonical()).toMatch(rdf)
   })
 
-  it('builds a graph for suppressible nested resource with uri and literal', () => {
+  it("builds a graph for suppressible nested resource with uri and literal", () => {
     const resource = {
       subjectTemplate: {
-        id: 'resourceTemplate:testing:uber1',
-        class: 'http://id.loc.gov/ontologies/bibframe/Uber1',
+        id: "resourceTemplate:testing:uber1",
+        class: "http://id.loc.gov/ontologies/bibframe/Uber1",
       },
       properties: [
         {
           propertyTemplate: {
-            uri: 'http://id.loc.gov/ontologies/bibframe/uber/template1/property1',
+            uri: "http://id.loc.gov/ontologies/bibframe/uber/template1/property1",
           },
           values: [
             {
               uri: null,
               property: {
                 propertyTemplate: {
-                  type: 'resource',
+                  type: "resource",
                 },
               },
               valueSubject: {
                 subjectTemplate: {
-                  class: 'http://id.loc.gov/ontologies/bibframe/Uber2',
+                  class: "http://id.loc.gov/ontologies/bibframe/Uber2",
                   suppressible: true,
                 },
                 properties: [
                   {
                     propertyTemplate: {
-                      uri: 'http://id.loc.gov/ontologies/bibframe/uber/template2/property1',
+                      uri: "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
                     },
                     values: [
                       {
-                        uri: 'http://sinopia.io/uri1',
-                        label: 'URI1',
+                        uri: "http://sinopia.io/uri1",
+                        label: "URI1",
                         literal: null,
                         lang: null,
                         property: {
                           propertyTemplate: {
-                            type: 'uri',
+                            type: "uri",
                           },
                         },
                       },
                       {
                         uri: null,
                         label: null,
-                        literal: 'literal3',
-                        lang: 'eng',
+                        literal: "literal3",
+                        lang: "eng",
                         property: {
                           propertyTemplate: {
-                            type: 'uri',
+                            type: "uri",
                             suppresible: true,
                           },
                         },

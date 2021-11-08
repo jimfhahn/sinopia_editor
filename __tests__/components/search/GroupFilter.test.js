@@ -1,153 +1,184 @@
-import React from 'react'
-import GroupFilter from 'components/search/GroupFilter'
-import { createStore, renderComponent } from 'testUtils'
-import { createState } from 'stateUtils'
-import { fireEvent, waitFor, screen } from '@testing-library/react'
-import * as server from 'sinopiaSearch'
-import * as sinopiaApi from 'sinopiaApi'
+import React from "react"
+import GroupFilter from "components/search/GroupFilter"
+import { createStore, renderComponent } from "testUtils"
+import { createState } from "stateUtils"
+import { fireEvent, waitFor, screen } from "@testing-library/react"
+import * as server from "sinopiaSearch"
+import * as sinopiaApi from "sinopiaApi"
 
-describe('<GroupFilter />', () => {
+describe("<GroupFilter />", () => {
   const facetResults = {
     groups: [
       {
-        key: 'stanford',
+        key: "stanford",
         doc_count: 5,
       },
       {
-        key: 'cornell',
+        key: "cornell",
         doc_count: 4,
       },
       {
-        key: 'yale',
+        key: "yale",
         doc_count: 1,
       },
       {
-        key: 'princeton',
+        key: "princeton",
         doc_count: 1,
       },
     ],
   }
 
-  jest.spyOn(sinopiaApi, 'putUserHistory').mockResolvedValue()
+  jest.spyOn(sinopiaApi, "putUserHistory").mockResolvedValue()
 
   const createInitialState = () => {
     const state = createState()
     state.search.resource = {
       facetResults,
-      query: 'twain',
+      query: "twain",
     }
     return state
   }
 
-  it('does not render when no facet results', () => {
+  it("does not render when no facet results", () => {
     renderComponent(<GroupFilter />)
 
-    expect(screen.queryByText('Filter by institution')).not.toBeInTheDocument()
+    expect(screen.queryByText("Filter by group")).not.toBeInTheDocument()
   })
 
-  it('renders when results', () => {
+  it("renders when results", () => {
     const mockGetSearchResults = jest.fn()
-    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([{}, undefined])
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      undefined,
+    ])
 
     const store = createStore(createInitialState())
     const { container } = renderComponent(<GroupFilter />, store)
 
-    expect(screen.getByText('Filter by institution')).toBeInTheDocument()
-    expect(screen.getByText('Stanford University (5)')).toBeInTheDocument()
-    expect(screen.getByText('Princeton University (1)')).toBeInTheDocument()
+    expect(screen.getByText("Filter by group")).toBeInTheDocument()
+    expect(screen.getByText("Stanford University (5)")).toBeInTheDocument()
+    expect(screen.getByText("Princeton University (1)")).toBeInTheDocument()
 
     // Everything checked
-    expect(container.querySelectorAll('input:checked')).toHaveLength(4)
+    expect(container.querySelectorAll("input:checked")).toHaveLength(5)
   })
 
-  it('allows changing filters by unselecting', async () => {
+  it("allows changing filters by unselecting", async () => {
     const mockGetSearchResults = jest.fn()
-    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([{}, undefined])
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      undefined,
+    ])
 
     const store = createStore(createInitialState())
     const { container } = renderComponent(<GroupFilter />, store)
 
-    expect(container.querySelector('div.show')).not.toBeInTheDocument()
-    fireEvent.click(screen.getByText('Filter by institution'))
-    expect(container.querySelector('div.show')).toBeInTheDocument()
-    fireEvent.click(screen.getByText('Stanford University (5)'))
+    expect(container.querySelector(".show")).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText("Filter by group"))
+    expect(container.querySelector(".show")).toBeInTheDocument()
+    fireEvent.click(screen.getByText("Stanford University (5)"))
 
-    // 3 checked
-    expect(container.querySelectorAll('input:checked').length).toBe(3)
+    // 3 checked with unselect (also clears Select/Deselect All)
+    expect(container.querySelectorAll("input:checked").length).toBe(3)
 
     // Apply filter
-    fireEvent.click(screen.getByText('Go'))
+    fireEvent.click(screen.getByText("Go"))
 
-    await waitFor(() => expect(container.querySelector('div.show')).not.toBeInTheDocument())
+    await waitFor(() =>
+      expect(container.querySelector(".show")).not.toBeInTheDocument()
+    )
 
-    expect(mockGetSearchResults).toHaveBeenCalledWith('twain', {
+    expect(mockGetSearchResults).toHaveBeenCalledWith("twain", {
       resultsPerPage: 10,
       startOfRange: 0,
       sortField: undefined,
       sortOrder: undefined,
-      groupFilter: [
-        'cornell',
-        'yale',
-        'princeton',
-      ],
+      groupFilter: ["cornell", "yale", "princeton"],
     })
   })
 
-  it('allows selecting only', async () => {
+  it("allows selecting / deselecting all", async () => {
     const mockGetSearchResults = jest.fn()
-    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([{}, undefined])
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      undefined,
+    ])
 
     const store = createStore(createInitialState())
     const { container } = renderComponent(<GroupFilter />, store)
 
-    fireEvent.click(screen.getByText('Filter by institution'))
-    fireEvent.click(screen.getAllByText('Only')[0])
+    fireEvent.click(screen.getByText("Filter by group"))
+    // Deselect all
+    fireEvent.click(screen.getByText("Select/Deselect all"))
 
-    // 3 checked
-    expect(container.querySelectorAll('input:checked')).toHaveLength(1)
+    // none checked
+    expect(container.querySelectorAll("input:checked")).toHaveLength(0)
 
-    // Apply filter
-    fireEvent.click(screen.getByText('Go'))
+    // Select all
+    fireEvent.click(screen.getByText("Select/Deselect all"))
 
-    await waitFor(() => expect(container.querySelector('div.show')).not.toBeInTheDocument())
-
-    expect(mockGetSearchResults).toHaveBeenCalledWith('twain', {
-      resultsPerPage: 10,
-      startOfRange: 0,
-      sortField: undefined,
-      sortOrder: undefined,
-      groupFilter: [
-        'stanford',
-      ],
-    })
+    // all checked
+    expect(container.querySelectorAll("input:checked")).toHaveLength(5)
   })
 
-  it('allows clearing filters', async () => {
+  it("allows clearing filters", async () => {
     const mockGetSearchResults = jest.fn()
-    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([{}, facetResults])
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      facetResults,
+    ])
 
     const store = createStore(createInitialState())
     const { container } = renderComponent(<GroupFilter />, store)
-    fireEvent.click(screen.getByText('Filter by institution'))
-    fireEvent.click(screen.getByText('Stanford University (5)'))
+    fireEvent.click(screen.getByText("Filter by group"))
+    fireEvent.click(screen.getByText("Stanford University (5)"))
 
-    // 3 checked
-    expect(container.querySelectorAll('input:checked').length).toBe(3)
+    // 3 checked with deselect (also clears Select/Deselect All)
+    expect(container.querySelectorAll("input:checked").length).toBe(3)
 
     // Apply filter
-    fireEvent.click(screen.getByText('Go'))
+    fireEvent.click(screen.getByText("Go"))
 
-    await waitFor(() => expect(container.querySelector('div.show')).not.toBeInTheDocument())
+    await waitFor(() =>
+      expect(container.querySelector(".show")).not.toBeInTheDocument()
+    )
 
-    fireEvent.click(screen.getByText('Filter by institution'))
-    fireEvent.click(screen.getByText('Clear filter'))
+    fireEvent.click(screen.getByText("Filter by group"))
+    fireEvent.click(screen.getByText("Clear filter"))
 
-    expect(mockGetSearchResults).toHaveBeenLastCalledWith('twain', {
+    expect(mockGetSearchResults).toHaveBeenLastCalledWith("twain", {
       resultsPerPage: 10,
       startOfRange: 0,
       sortField: undefined,
       sortOrder: undefined,
-      groupFilter: undefined,
+      groupFilter: null,
     })
+  })
+
+  it("allows reselecting cleared filters before using them", async () => {
+    const mockGetSearchResults = jest.fn()
+    server.getSearchResultsWithFacets = mockGetSearchResults.mockResolvedValue([
+      {},
+      facetResults,
+    ])
+
+    const store = createStore(createInitialState())
+    const { container } = renderComponent(<GroupFilter />, store)
+
+    fireEvent.click(screen.getByText("Filter by group"))
+    // all checked
+    expect(container.querySelectorAll("input:checked")).toHaveLength(5)
+
+    // Deselect individual filter
+    fireEvent.click(screen.getByText("Stanford University (5)"))
+
+    // 3 checked with deselect (also clears Select/Deselect All)
+    expect(container.querySelectorAll("input:checked")).toHaveLength(3)
+
+    // Reselect individual filter
+    fireEvent.click(screen.getByText("Stanford University (5)"))
+
+    // all checked (includes Select/Deselect All)
+    expect(container.querySelectorAll("input:checked")).toHaveLength(5)
   })
 })

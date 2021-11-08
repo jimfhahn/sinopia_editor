@@ -1,29 +1,29 @@
 // Copyright 2019 Stanford University see LICENSE for license
 
-import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState, useEffect } from "react"
+import { useDispatch } from "react-redux"
 import {
-  datasetFromRdf, findRootResourceTemplateId, hasQuadsForRootResourceTemplateId,
-} from 'utilities/Utilities'
-import useRdfResource from 'hooks/useRdfResource'
-import { clearErrors, addError } from 'actions/errors'
-import { showModal } from 'actions/modals'
-import ResourceTemplateChoiceModal from '../ResourceTemplateChoiceModal'
-import Alerts from '../Alerts'
+  datasetFromRdf,
+  findRootResourceTemplateId,
+  hasQuadsForRootResourceTemplateId,
+} from "utilities/Utilities"
+import useRdfResource from "hooks/useRdfResource"
+import { clearErrors, addError } from "actions/errors"
+import { showModal } from "actions/modals"
+import ResourceTemplateChoiceModal from "../ResourceTemplateChoiceModal"
+import useAlerts from "hooks/useAlerts"
 
-import _ from 'lodash'
-
-// Errors from retrieving a resource from this page.
-export const loadResourceByRDFErrorKey = 'loadrdfresource'
+import _ from "lodash"
 
 const LoadByRDFForm = () => {
   const dispatch = useDispatch()
+  const errorKey = useAlerts()
 
-  const [baseURI, setBaseURI] = useState('')
-  const [rdf, setRdf] = useState('')
+  const [baseURI, setBaseURI] = useState("")
+  const [rdf, setRdf] = useState("")
   const [dataset, setDataset] = useState(false)
-  const [resourceTemplateId, setResourceTemplateId] = useState('')
-  useRdfResource(dataset, baseURI, resourceTemplateId, loadResourceByRDFErrorKey)
+  const [resourceTemplateId, setResourceTemplateId] = useState("")
+  useRdfResource(dataset, baseURI, resourceTemplateId, errorKey)
 
   // Passed into resource template chooser to allow it to pass back selected resource template id.
   const chooseResourceTemplate = (resourceTemplateId) => {
@@ -34,11 +34,11 @@ const LoadByRDFForm = () => {
     // Clear resource template id so that useRdfResource doesn't trigger with previous resource template id.
     setResourceTemplateId(null)
     // Clear errors
-    if (!dataset) dispatch(clearErrors(loadResourceByRDFErrorKey))
-  }, [dispatch, dataset])
+    if (!dataset) dispatch(clearErrors(errorKey))
+  }, [dispatch, dataset, errorKey])
 
   const changeRdf = (event) => {
-    dispatch(clearErrors(loadResourceByRDFErrorKey))
+    dispatch(clearErrors(errorKey))
     setRdf(event.target.value)
     // This will get set on submit.
     setDataset(false)
@@ -48,26 +48,31 @@ const LoadByRDFForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     setDataset(false)
-    dispatch(clearErrors(loadResourceByRDFErrorKey))
+    dispatch(clearErrors(errorKey))
     // Try parsing
-    datasetFromRdf(rdf).then((newDataset) => {
-      // Determine if base URI must be provided.
-      if (!hasQuadsForRootResourceTemplateId(baseURI, newDataset)) {
-        dispatch(addError(loadResourceByRDFErrorKey, 'Base URI must be provided.'))
-        return
-      }
+    datasetFromRdf(rdf)
+      .then((newDataset) => {
+        // Determine if base URI must be provided.
+        if (!hasQuadsForRootResourceTemplateId(baseURI, newDataset)) {
+          dispatch(addError(errorKey, "Base URI must be provided."))
+          return
+        }
 
-      // Determine if need to ask for resource template id.
-      const resourceTemplateId = findRootResourceTemplateId(baseURI, newDataset)
-      if (resourceTemplateId) {
-        setResourceTemplateId(resourceTemplateId)
-      } else {
-        dispatch(showModal('ResourceTemplateChoiceModal'))
-      }
-      setDataset(newDataset)
-    }).catch((err) => {
-      dispatch(addError(loadResourceByRDFErrorKey, `Error parsing: ${err}`))
-    })
+        // Determine if need to ask for resource template id.
+        const resourceTemplateId = findRootResourceTemplateId(
+          baseURI,
+          newDataset
+        )
+        if (resourceTemplateId) {
+          setResourceTemplateId(resourceTemplateId)
+        } else {
+          dispatch(showModal("ResourceTemplateChoiceModal"))
+        }
+        setDataset(newDataset)
+      })
+      .catch((err) => {
+        dispatch(addError(errorKey, `Error parsing: ${err}`))
+      })
   }
 
   const rdfPlaceHolder = `For example:
@@ -76,29 +81,53 @@ const LoadByRDFForm = () => {
 <> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://id.loc.gov/ontologies/bibframe/Title> .
   `
 
-  const baseURIPlaceholder = 'For example: https://api.sinopia.io/resource/e111a712-5a45-4c2a-9201-289b98d7452e.'
+  const baseURIPlaceholder =
+    "For example: https://api.sinopia.io/resource/e111a712-5a45-4c2a-9201-289b98d7452e."
 
   return (
     <div>
       <h3>Load RDF into Editor</h3>
-      <Alerts errorKey={loadResourceByRDFErrorKey} />
-
       <form id="loadForm" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="resourceTextArea">RDF</label>
-          <textarea className="form-control" id="resourceTextArea" rows="15" value={rdf}
-                    onChange={(event) => changeRdf(event)} placeholder={rdfPlaceHolder}></textarea>
-          <p className="text-muted">Accepts JSON-LD, Turtle, TriG, N-Triples, N-Quads, and Notation3 (N3).</p>
+        <div className="mb-3">
+          <label htmlFor="resourceTextArea">
+            RDF (Accepts JSON-LD, Turtle, TriG, N-Triples, N-Quads, and
+            Notation3 (N3))
+          </label>
+          <textarea
+            className="form-control"
+            id="resourceTextArea"
+            rows="15"
+            value={rdf}
+            onChange={(event) => changeRdf(event)}
+            placeholder={rdfPlaceHolder}
+          ></textarea>
+          <p />
         </div>
-        <div className="form-group">
-          <label htmlFor="uriInput">Base URI</label>
-          <input type="url" className="form-control" id="uriInput" value={baseURI}
-                 onChange={(event) => setBaseURI(event.target.value)}
-                 placeholder={baseURIPlaceholder} />
-          <p className="text-muted">Omit brackets. If base URI is &lt;&gt;, leave blank.</p>
+        <div className="mb-3">
+          <label htmlFor="uriInput">
+            Base URI (Omit brackets. If base URI is &lt;&gt;, leave blank.)
+          </label>
+          <input
+            type="url"
+            className="form-control"
+            id="uriInput"
+            value={baseURI}
+            onChange={(event) => setBaseURI(event.target.value)}
+            placeholder={baseURIPlaceholder}
+          />
+          <p />
         </div>
-        <button type="submit" disabled={ _.isEmpty(rdf) } className="btn btn-primary">Submit</button>
-        <p className="text-muted">This will create a new resource that can be saved in Sinopia.</p>
+        <p className="text-muted">
+          Clicking &ldquo;Submit&rdquo; will create a new resource that can be
+          saved in Sinopia.
+        </p>
+        <button
+          type="submit"
+          disabled={_.isEmpty(rdf)}
+          className="btn btn-primary"
+        >
+          Submit
+        </button>
       </form>
       <ResourceTemplateChoiceModal choose={chooseResourceTemplate} />
     </div>

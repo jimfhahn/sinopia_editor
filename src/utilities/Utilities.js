@@ -1,33 +1,26 @@
 // Copyright 2018, 2019 Stanford University see LICENSE for license
 
-import N3Parser from 'n3/lib/N3Parser'
-import rdf from 'rdf-ext'
-import _ from 'lodash'
-import Config from 'Config'
-import CryptoJS from 'crypto-js'
-import { JsonLdParser } from 'jsonld-streaming-parser'
-import { Writer as N3Writer } from 'n3'
+import N3Parser from "n3/lib/N3Parser"
+import rdf from "rdf-ext"
+import _ from "lodash"
+import CryptoJS from "crypto-js"
+import { JsonLdParser } from "jsonld-streaming-parser"
+import { Writer as N3Writer } from "n3"
 
-const concatStream = require('concat-stream')
-const Readable = require('stream').Readable
-const SerializerJsonld = require('@rdfjs/serializer-jsonld-ext')
+const concatStream = require("concat-stream")
+const Readable = require("stream").Readable
+const SerializerJsonld = require("@rdfjs/serializer-jsonld-ext")
 
-export const defaultLanguageId = 'eng'
+export const defaultLanguageId = "eng"
 
-export const isResourceWithValueTemplateRef = (property) => property?.type === 'resource'
-    && property?.valueConstraint?.valueTemplateRefs?.length > 0
-
-export const groupName = (uri) => {
-  const groupSlug = uri.split('/')[4]
-  return groupNameFromGroup(groupSlug)
-}
-
-export const groupNameFromGroup = (group) => Config.groupsInSinopia[group] || 'Unknown'
+export const isResourceWithValueTemplateRef = (property) =>
+  property?.type === "resource" &&
+  property?.valueConstraint?.valueTemplateRefs?.length > 0
 
 export const resourceToName = (uri) => {
   if (!_.isString(uri)) return undefined
 
-  return uri.substr(uri.lastIndexOf('/') + 1)
+  return uri.substr(uri.lastIndexOf("/") + 1)
 }
 
 export const isValidURI = (value) => {
@@ -40,16 +33,19 @@ export const isValidURI = (value) => {
   }
 }
 
+export const isHttp = (uri) =>
+  _.startsWith(uri, "http://") || _.startsWith(uri, "https://")
+
 /**
  * Loads N3 into a dataset.
  * @param {string} data that is the N3
  * @return {Promise<rdf.Dataset>} a promise that resolves to the loaded dataset
  */
-export const datasetFromN3 = (data) => new Promise((resolve, reject) => {
-  const parser = new N3Parser({ factory: rdf })
-  const dataset = rdf.dataset()
-  parser.parse(data,
-    (err, quad) => {
+export const datasetFromN3 = (data) =>
+  new Promise((resolve, reject) => {
+    const parser = new N3Parser({ factory: rdf })
+    const dataset = rdf.dataset()
+    parser.parse(data, (err, quad) => {
       if (err) {
         reject(err)
       }
@@ -61,19 +57,22 @@ export const datasetFromN3 = (data) => new Promise((resolve, reject) => {
         resolve(dataset)
       }
     })
-})
-
-export const n3FromDataset = (dataset, format) => new Promise((resolve, reject) => {
-  const writer = new N3Writer({ format: format === 'n-triples' ? 'N-Triples' : undefined })
-  writer.addQuads(dataset.toArray())
-  writer.end((error, result) => {
-    if (error) {
-      reject(error)
-    } else {
-      resolve(result)
-    }
   })
-})
+
+export const n3FromDataset = (dataset, format) =>
+  new Promise((resolve, reject) => {
+    const writer = new N3Writer({
+      format: format === "n-triples" ? "N-Triples" : undefined,
+    })
+    writer.addQuads(dataset.toArray())
+    writer.end((error, result) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve(result)
+      }
+    })
+  })
 
 export const jsonldFromDataset = (dataset) => {
   const serializerJsonld = new SerializerJsonld({ expand: true })
@@ -83,7 +82,7 @@ export const jsonldFromDataset = (dataset) => {
   return new Promise((resolve, reject) => {
     output.pipe(concatStream((content) => resolve(content)))
 
-    output.on('error', (err) => reject(err))
+    output.on("error", (err) => reject(err))
   })
 }
 
@@ -100,22 +99,25 @@ export const datasetFromJsonld = (jsonld) => {
   const output = parserJsonld.import(input)
   const dataset = rdf.dataset()
 
-  output.on('data', (quad) => {
+  output.on("data", (quad) => {
     dataset.add(quad)
   })
 
   return new Promise((resolve, reject) => {
-    output.on('end', resolve)
-    output.on('error', reject)
-  })
-    .then(() => dataset)
+    output.on("end", resolve)
+    output.on("error", reject)
+  }).then(() => dataset)
 }
-
 
 export const generateMD5 = (message) => CryptoJS.MD5(message).toString()
 
 export const findRootResourceTemplateId = (resourceURI, dataset) => {
-  const rtQuads = dataset.match(rdf.namedNode(resourceURI), rdf.namedNode('http://sinopia.io/vocabulary/hasResourceTemplate')).toArray()
+  const rtQuads = dataset
+    .match(
+      rdf.namedNode(resourceURI),
+      rdf.namedNode("http://sinopia.io/vocabulary/hasResourceTemplate")
+    )
+    .toArray()
   if (rtQuads.length !== 1) {
     return null
   }
@@ -136,4 +138,21 @@ export const datasetFromRdf = (rdf) => {
     return datasetFromN3(rdf)
   }
   return datasetFromJsonld(json)
+}
+
+export const emptyValue = (value) =>
+  !value.literal && !value.uri && !value.subjectValueKey
+
+export const isInViewport = (elem) => {
+  // Adapted from https://gomakethings.com/how-to-test-if-an-element-is-in-the-viewport-with-vanilla-javascript/
+  if (!elem) return false
+  const bounding = elem.getBoundingClientRect()
+  return (
+    bounding.top >= 0 &&
+    bounding.left >= 0 &&
+    bounding.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) &&
+    bounding.right <=
+      (window.innerWidth || document.documentElement.clientWidth)
+  )
 }

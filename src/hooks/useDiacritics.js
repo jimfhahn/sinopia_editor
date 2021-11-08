@@ -1,18 +1,19 @@
-import { useState } from 'react'
+import { useState } from "react"
 
-const useDiacritics = (inputRef, inputId, diacriticsId) => {
+const useDiacritics = (
+  inputRef,
+  inputId,
+  diacriticsId,
+  diacriticsBtnId,
+  defaultContent
+) => {
   const [showDiacritics, setShowDiacritics] = useState(false)
-  const [currentContent, setCurrentContent] = useState('')
+  const [currentContent, setCurrentContent] = useState(defaultContent)
   const [currentPosition, setCurrentPosition] = useState(0)
 
   const handleKeyDownDiacritics = (event) => {
     // Handle any position changing
-    setCurrentPosition(event.target.selectionStart)
-  }
-
-  const clearContent = () => {
-    setCurrentContent('')
-    setCurrentPosition(0)
+    setCurrentPosition(event.target.selectionStart + 1)
   }
 
   const handleChangeDiacritics = (event) => {
@@ -26,6 +27,7 @@ const useDiacritics = (inputRef, inputId, diacriticsId) => {
       return false
     }
     if (focusIn(event, inputId)) return false
+    if (focusIn(event, diacriticsBtnId)) return false
 
     setShowDiacritics(false)
 
@@ -57,15 +59,19 @@ const useDiacritics = (inputRef, inputId, diacriticsId) => {
   }
 
   const handleAddCharacter = (character) => {
-    setCurrentContent(currentContent.slice(0, currentPosition) + character + currentContent.slice(currentPosition))
+    setCurrentContent(
+      currentContent.slice(0, currentPosition) +
+        character +
+        currentContent.slice(currentPosition)
+    )
     setCurrentPosition(currentPosition + 1)
   }
 
-  const handleClickDiacritics = () => setCurrentPosition(inputRef.current.selectionStart)
-
+  const handleClickDiacritics = () => {
+    setCurrentPosition(inputRef.current.selectionStart)
+  }
 
   return {
-    clearContent,
     handleKeyDownDiacritics,
     handleChangeDiacritics,
     handleBlurDiacritics,
@@ -74,9 +80,6 @@ const useDiacritics = (inputRef, inputId, diacriticsId) => {
     handleAddCharacter,
     handleClickDiacritics,
     currentContent,
-    setCurrentContent,
-    currentPosition,
-    setCurrentPosition,
     showDiacritics,
   }
 }

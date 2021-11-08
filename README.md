@@ -1,6 +1,8 @@
 [![CircleCI](https://circleci.com/gh/LD4P/sinopia_editor.svg?style=svg)](https://circleci.com/gh/LD4P/sinopia_editor)
-[![Coverage Status](https://img.shields.io/coveralls/github/LD4P/sinopia_editor.svg)](https://coveralls.io/github/LD4P/sinopia_editor?branch=main)
+[![Test Coverage Code Climate](https://api.codeclimate.com/v1/badges/27fe0fcbf342d0bca13b/test_coverage)](https://codeclimate.com/github/LD4P/sinopia_editor/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/27fe0fcbf342d0bca13b/maintainability)](https://codeclimate.com/github/LD4P/sinopia_editor/maintainability)
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/ld4p/sinopia_editor?sort=semver)](https://hub.docker.com/repository/docker/ld4p/sinopia_editor/tags?page=1&ordering=last_updated)
+
 
 # Sinopia Linked Data Editor
 
@@ -29,10 +31,12 @@ You can use the ["n"](https://www.npmjs.com/package/n) node package management t
 COGNITO_TEST_USER_NAME='sinopia-devs+client-tester@lists.stanford.edu' # a test user we have on dev and stage
 COGNITO_TEST_USER_PASS='<get this from shared_configs or another developer>' # not committing the real value to a public repo
 COGNITO_ADMIN_PASSWORD='<get this from shared_configs or another developer>'
+DOCKER_AWS_ACCESS_KEY_ID='<get this from shared_configs or another developer>'
+DOCKER_AWS_SECRET_ACCESS_KEY='<get this from shared_configs or another developer>'
 ```
 
 ## Running the application
-To start all of the supporting services (ElasticSearch, Trellis, etc.):
+To start all of the supporting services (ElasticSearch, API, etc.):
 `docker-compose up -d`
 
 Note that this will bring up the sinopia-editor app on port 8000, but it will NOT be in a mode where
@@ -53,13 +57,28 @@ templates list page and fixture resources can be searched on by entering the res
 
 ## Developers
 
-### Linter for JavaScript
+### Linters for JavaScript
 
-To run eslint:
+There are two linters/formatters used in this project: eslint and prettier.
+They can be run together or individually.
+
+To run both:
+`npm run lint`
+
+To auto-fix errors in both (where possible):
+`npm run fix`
+
+To run just eslint:
 `npm run eslint`
 
-To automatically fix problems (where possible):
+To automatically fix just eslint problems (where possible):
 `npm run eslint-fix`
+
+To run just prettier:
+`npm run pretty`
+
+To automatically fix just prettier problems (where possible):
+`npm run pretty-fix`
 
 ### Unit, feature, and integration tests
 
@@ -68,11 +87,13 @@ Tests are written with jest and react-testing-library.
 To run all of the tests:
 `npm test`
 
-To run a single test file:
+To run a single test file (and see console messages):
 `npx jest __tests__/actionCreators/resources.test.js`
 
-To run a single test:
+To run a single test (and see console messages):
 `npx jest __tests__/actionCreators/resources.test.js -t "newResourceFromN3 loading a resource dispatches actions"`
+
+Or temporarily change the test description from `it("does something")` to `it.only("does something")` and run the single test file with `npx`.
 
 #### Adding new test fixtures
 If you have the docker environment running (and USE_FIXTURES env variable is false) you can use the `Load RDF tab`,
@@ -153,6 +174,24 @@ To proxy to development:
 
 Note that proxying to other environments may require additional Cognito configuration.
 
+### Base Templates and https://sinopia.io/vocabulary
+
+#### Base Templates
+
+Conceptually, the Sinopia Editor uses JSON "resource templates" to inform the editor code which widgets (React "components") need to be displayed in order to create resource RDF according to said "resource template."
+
+A "resource template" is comprised of one or more "property templates."  But the Sinopia Editor is _also used to create those JSON "property templates."_ Thus, there must be some initial JSON **base templates** to inform the editor code which widgets (React "components") need to be displayed in order to create the JSON corresponding to a valid property template.  A set of "start the world," "bootup templates", if you will.
+
+#### Where do Base Template JSON Files Live?
+
+**base templates** are in the `static/templates/` folder, and may themselves refer to files up a level in the `static/` folder.  The loading of the base templates is baked into the sinopia_editor code.
+
+Reiterating: the UI widgets displayed for a property template are driven by what is in the `static/` folder and its subfolders.  There is no additional deployment necessary.
+
+#### Updates to https://sinopia.io/vocabulary
+
+The sinopia_editor code displays the properties and classes prefixed "http://sinopia.io/vocabulary/" from a javascript object in `src/components/vocabulary/Vocab.js`.  If a new property is added to the Sinopia specific vocabulary (e.g. by adding to a base template), then that property should also be added to `src/components/vocabulary/Vocab.js`.  Changes to the documentation for these properties can be done as a pull request.
+
 ## State model
 
 ![Redux State ER Diagram](redux-state.svg)
@@ -160,15 +199,15 @@ Note that proxying to other environments may require additional Cognito configur
 ```
 {
   subjects: {
-    <subject key [shortid]>: {<subject>},
+    <subject key [nanoid]>: {<subject>},
     ...
   }
   properties: {
-    <property key [shortid]>: {<property>}
+    <property key [nanoid]>: {<property>}
     ...
   }
   values: {
-    <value key, [shortid]>: {<values>}
+    <value key, [nanoid]>: {<values>}
     ...
   },
   subjectTemplates: {
@@ -185,7 +224,7 @@ Note that proxying to other environments may require additional Cognito configur
 ### Subject model
 ```
 {
-  key: <shortid>
+  key: <nanoid>
   uri: <uri|null>
   subjectTemplateKey: <key of subject template>,
   -> subjectTemplate: {subjectTemplate}
@@ -196,6 +235,8 @@ Note that proxying to other environments may require additional Cognito configur
   descWithErrorPropertyKeys = [key of descendant property with an error, ...]
   valueSubjectOfKey: <if a nested subject, key of the value | null>
   -> properties: [{property}, ...]
+  labels = [labels of property/resource templates of self and ancestors, ...]
+  showNav: <true | false>
 }
 ```
 -> Added by selector, not stored in state.
@@ -204,6 +245,7 @@ The following are only in the resource subject (that is, the base subject).
 ```
 {
   group: <group that that resource belongs to>,
+  editGroups: [groups that can edit the resource],
   bfAdminMetadataRefs: [uri of referenced admin metadata resource, ...],
   bfWorkRefs: [uri of referenced Bibframe Work resource, ...],
   bfInstanceRefs: [uri of referenced Bibframe Instance resource, ...],
@@ -223,25 +265,30 @@ The following are only in the resource subject (that is, the base subject).
   remark: <remark>,
   date: <date>,
   suppressible: <true | false>,
-  propertyKeys: [key of property templates, ...]
+  propertyKeys: [key of property templates, ...],
+  group: <group that that template belongs to>,
+  editGroups: [groups that can edit the template],
+
 }
 ```
 
 ### Property model
 ```
 {
-  key: <shortid>,
+  key: <nanoid>,
   subjectKey: <key of subject>,
   -> subject: {<subject>}
   propertyTemplateKey: <key of property template>,
   -> propertyTemplate: {<propertyTemplate>},
   valueKeys: [key of value, ...] | null (if not expanded)
   -> values: [{value},...]
-  toggleOpen: <true | false>
+  show: <true | false>
+  showNav: <true | false>
   rootResourceKey: <key of root resource that this property is descendant of>
   rootPropertyKey: <key of root property that this subject is part of; for root property is own key>
   descUriOrLiteralValueKeys = [key of descendant uri or literal Value, ...]
   descWithErrorPropertyKeys = [key of descendant or self Property with an error, ...]
+  labels = [labels of property/resource templates of self and ancestors, ...]
 }
 ```
 -> Added by selector, not stored in state.
@@ -256,11 +303,13 @@ The following are only in the resource subject (that is, the base subject).
   required: <true | false>
   repeatable: <true | false>
   ordered: <true | false>
+  immutable: <true | false> (property cannot be changed after resource has been saved)
   defaults: [{literal: <literal>, lang: <lang>}, {uri: <uri>, label: <label>},...]
   remark: <remark>,
   remarkUrl: <remark url, e.g., "http://access.rdatoolkit.org/2.13.html">
+  remarkUrlLabel: <a descriptive label about the remark url, e.g., "Title Proper">
   type: <resource | uri | literal>,
-  component: <InputLookupSinopia | InputLookupQA | InputListLOC | InputLiteral | InputURI>,
+  component: <InputLookup | InputLookupQA | InputList | InputLiteral | InputURI>,
   valueSubjectTemplateKeys: [<subject template keys>]
   authorities: [{authority}, ...]
 
@@ -281,18 +330,21 @@ The following are only in the resource subject (that is, the base subject).
 ### Value model
 ```
 {
-  key: <shortid>,
+  key: <nanoid>,
   propertyKey: <key of property>,
   -> property: {<property>},
   literal: <literal>,
-  lang: <language for literal>,
+  lang: <language for literal or URI label>,
+  -> langLabel: <label for language>,
   uri: <uri>,
   label: <label for uri>,
   valueSubjectKey: <key for subject for a nested resource>,
   -> valueSubject: {<subject>}
--> index: <1 based index of the value (relative to siblings)>
+  -> index: <1 based index of the value (relative to siblings)>
   rootResourceKey: <key of root resource that this property is descendant of>
   rootPropertyKey: <key of root property that this subject is part of>
+  component: <InputLiteralValue | InputURIValue | InputLookupValue | InputListValue>,
+  errors: [validation errors, ...]
 }
 ```
 -> Added by selector, not stored in state.

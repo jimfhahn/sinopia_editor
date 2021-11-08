@@ -1,15 +1,23 @@
 // Copyright 2019 Stanford University see LICENSE for license
 
-import React from 'react'
-import PropTypes from 'prop-types'
-import Header from '../Header'
-import LoadByRDFForm from './LoadByRDFForm'
+import React from "react"
+import PropTypes from "prop-types"
+import Header from "../Header"
+import LoadByRDFForm from "./LoadByRDFForm"
+import AlertsContextProvider from "components/alerts/AlertsContextProvider"
+import ContextAlert from "components/alerts/ContextAlert"
+
+// Errors from loading a resource by RDF.
+const loadResourceByRDFErrorKey = "loadrdfresource"
 
 const LoadResource = (props) => (
-  <div id="loadResource">
-    <Header triggerEditorMenu={props.triggerHandleOffsetMenu}/>
-    <LoadByRDFForm {...props} />
-  </div>
+  <AlertsContextProvider value={loadResourceByRDFErrorKey}>
+    <div id="loadResource">
+      <Header triggerEditorMenu={props.triggerHandleOffsetMenu} />
+      <ContextAlert />
+      <LoadByRDFForm {...props} />
+    </div>
+  </AlertsContextProvider>
 )
 
 LoadResource.propTypes = {

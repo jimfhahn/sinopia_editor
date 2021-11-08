@@ -1,76 +1,98 @@
 // Copyright 2019 Stanford University see LICENSE for license
 
-import React from 'react'
-import PropTypes from 'prop-types'
-import PropertyLabel from './PropertyLabel'
-import PropertyLabelInfo from './PropertyLabelInfo'
-import PropertyComponent from './PropertyComponent'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { bindActionCreators } from 'redux'
-import { connect, useSelector } from 'react-redux'
-import { resourceEditErrorKey } from '../Editor'
-import { expandProperty, contractProperty } from 'actionCreators/resources'
-import { selectNormProperty, selectCurrentResourceKey, selectCurrentResourceIsReadOnly } from 'selectors/resources'
-import { selectPropertyTemplate } from 'selectors/templates'
-import useNavigableComponent from 'hooks/useNavigableComponent'
-import shortid from 'shortid'
+import React from "react"
+import { useSelector, useDispatch } from "react-redux"
+import PropTypes from "prop-types"
+import PropertyLabel from "./PropertyLabel"
+import PropertyLabelInfo from "./PropertyLabelInfo"
+import PropertyComponent from "./PropertyComponent"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons"
+import { expandProperty, contractProperty } from "actionCreators/resources"
+import { selectNormProperty } from "selectors/resources"
+import { selectPropertyTemplate } from "selectors/templates"
+import useNavTarget from "hooks/useNavTarget"
+import useAlerts from "hooks/useAlerts"
+import _ from "lodash"
 
-const PanelProperty = (props) => {
+const PanelProperty = ({ propertyKey, readOnly, id, isTemplate }) => {
+  const dispatch = useDispatch()
+  const errorKey = useAlerts()
+  const property = useSelector((state) =>
+    selectNormProperty(state, propertyKey)
+  )
+  const propertyTemplate = useSelector((state) =>
+    selectPropertyTemplate(state, property?.propertyTemplateKey)
+  )
+
   // Null values indicates that can be added.
-  const isAdd = !props.property.valueKeys
-  const isRequired = props.propertyTemplate.required
-  const nbsp = '\u00A0'
+  const isAdd = !property.valueKeys
+  const isRequired = propertyTemplate.required
+  const nbsp = "\u00A0"
   const trashIcon = faTrashAlt
-  const [navEl, navClickHandler] = useNavigableComponent(props.resourceKey, props.propertyKey, props.propertyKey)
-  const readOnly = useSelector((state) => selectCurrentResourceIsReadOnly(state))
-  const isTemplate = props.isTemplate
-  const cardClassName = ['card']
+  const { handleNavTargetClick, navTargetId } = useNavTarget(property)
+
+  const cardClassName = ["card"]
 
   if (isTemplate) {
-    cardClassName.push('template')
+    cardClassName.push("template")
   }
 
-
-  // used to associate the PropertyComponent field to be labeled with the PropertyLabel
-  const propertyLabelId = `labelled-by-${shortid.generate()}`
+  // On preview, don't display empty properties.
+  if (readOnly && _.isEmpty(property.descUriOrLiteralValueKeys)) return null
 
   // onClick is to support left navigation, so ignoring jsx-ally seems reasonable.
   /* eslint-disable jsx-a11y/click-events-have-key-events */
   /* eslint-disable jsx-a11y/no-static-element-interactions */
   return (
-    <div ref={navEl} onClick={navClickHandler}>
-      <div className={cardClassName.join(' ')} data-testid={cardClassName[1]} data-label={ props.propertyTemplate.label } style={{ marginBottom: '1em' }}>
-        <div className="card-header prop-heading">
-          <h5 className="card-title">
-            <PropertyLabel forId={propertyLabelId} propertyTemplate={ props.propertyTemplate } />
-            <PropertyLabelInfo propertyTemplate={ props.propertyTemplate } />{nbsp}
-            { isAdd && !readOnly && (
+    <div onClick={handleNavTargetClick} id={navTargetId}>
+      <div
+        className={cardClassName.join(" ")}
+        data-testid={cardClassName[1]}
+        data-label={propertyTemplate.label}
+        style={{ marginBottom: "1em" }}
+      >
+        <div className="prop-heading">
+          <h5>
+            <PropertyLabel
+              required={propertyTemplate.required}
+              label={propertyTemplate.label}
+            />
+            <PropertyLabelInfo propertyTemplate={propertyTemplate} />
+            {nbsp}
+            {isAdd && !readOnly && (
               <button
-                  type="button"
-                  className="btn btn-sm btn-add btn-add-instance pull-right"
-                  onClick={() => props.expandProperty(props.property.key, resourceEditErrorKey(props.resourceKey))}
-                  aria-label={`Add ${props.propertyTemplate.label}`}
-                  data-testid={`Add ${props.propertyTemplate.label}`}
-                  data-id={props.property.key}>
+                type="button"
+                className="btn btn-sm btn-add btn-link pull-right"
+                onClick={() => dispatch(expandProperty(property.key, errorKey))}
+                aria-label={`Add ${propertyTemplate.label}`}
+                data-testid={`Add ${propertyTemplate.label}`}
+                data-id={property.key}
+              >
                 + Add
               </button>
             )}
-            { !isAdd && !isRequired && !readOnly && (
-              <button type="button"
-                      className="btn btn-sm btn-remove pull-right"
-                      aria-label={`Remove ${props.propertyTemplate.label}`}
-                      data-testid={`Remove ${props.propertyTemplate.label}`}
-                      onClick={() => props.contractProperty(props.property.key)}
-                      data-id={props.id}>
-                <FontAwesomeIcon className="fa-inverse trash-icon" icon={trashIcon} />
+            {!isAdd && !isRequired && !readOnly && (
+              <button
+                type="button"
+                className="btn btn-sm btn-remove pull-right"
+                aria-label={`Remove ${propertyTemplate.label}`}
+                data-testid={`Remove ${propertyTemplate.label}`}
+                onClick={() => dispatch(contractProperty(property.key))}
+                data-id={id}
+              >
+                <FontAwesomeIcon className="trash-icon" icon={trashIcon} />
               </button>
             )}
           </h5>
         </div>
-        { !isAdd && (
-          <div className="card-body panel-property">
-            <PropertyComponent propertyLabelId={propertyLabelId} property={ props.property } propertyTemplate={ props.propertyTemplate } />
+        {!isAdd && (
+          <div className="panel-property">
+            <PropertyComponent
+              property={property}
+              propertyTemplate={propertyTemplate}
+              readOnly={readOnly}
+            />
           </div>
         )}
       </div>
@@ -79,26 +101,10 @@ const PanelProperty = (props) => {
 }
 
 PanelProperty.propTypes = {
-  float: PropTypes.number,
   id: PropTypes.string,
-  property: PropTypes.object,
-  propertyTemplate: PropTypes.object,
   propertyKey: PropTypes.string.isRequired,
-  expandProperty: PropTypes.func,
-  contractProperty: PropTypes.func,
-  resourceKey: PropTypes.string.isRequired,
   isTemplate: PropTypes.bool,
+  readOnly: PropTypes.bool.isRequired,
 }
 
-const mapStateToProps = (state, ourProps) => {
-  const property = selectNormProperty(state, ourProps.propertyKey)
-  return {
-    property,
-    propertyTemplate: selectPropertyTemplate(state, property?.propertyTemplateKey),
-    resourceKey: selectCurrentResourceKey(state),
-  }
-}
-
-const mapDispatchToProps = (dispatch) => bindActionCreators({ expandProperty, contractProperty }, dispatch)
-
-export default connect(mapStateToProps, mapDispatchToProps)(PanelProperty)
+export default PanelProperty

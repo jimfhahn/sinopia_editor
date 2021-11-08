@@ -480,6 +480,9 @@
     "http://sinopia.io/vocabulary/hasAuthority": [
       {
         "@id": "urn:ld4p:qa:agrovoc"
+      },
+      {
+        "@id": "urn:ld4p:qa:gettyaat"
       }
     ]
   },
@@ -1133,6 +1136,66 @@
     ]
   },
   {
+    "@id": "_:b74",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "rdfs label"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasRemark": [
+      {
+        "@value": "rdfs label"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
+      {
+        "@id": "http://www.w3.org/2000/01/rdf-schema#label"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/literal"
+      }
+    ]
+  },
+  {
+    "@id": "_:b75",
+    "@type": [
+      "http://sinopia.io/vocabulary/PropertyTemplate"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@value": "Uber template1, property22"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasRemark": [
+      {
+        "@value": "A non-repeatable, immutable literal."
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyUri": [
+      {
+        "@id": "http://id.loc.gov/ontologies/bibframe/uber/template1/property22"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyAttribute": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/required"
+      },
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyAttribute/immutable"
+      }
+    ],
+    "http://sinopia.io/vocabulary/hasPropertyType": [
+      {
+        "@id": "http://sinopia.io/vocabulary/propertyType/literal"
+      }
+    ]
+  },
+  {
     "@id": "_:b8",
     "@type": [
       "http://sinopia.io/vocabulary/PropertyTemplate"
@@ -1297,6 +1360,12 @@
           },
           {
             "@id": "_:b72"
+          },
+          {
+            "@id": "_:b74"
+          },
+          {
+            "@id": "_:b75"
           }
         ]
       }

@@ -39,7 +39,9 @@
         "resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/hasItem",
         "resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/itemOf",
         "resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property20",
-        "resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property21"
+        "resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property21",
+        "resourceTemplate:testing:uber1 > http://www.w3.org/2000/01/rdf-schema#label",
+        "resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property22"
       ],
       "propertyTemplates": [
         {
@@ -50,8 +52,10 @@
           "required": false,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "Multiple nested, repeatable resource templates.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [
             "resourceTemplate:testing:uber2",
@@ -69,8 +73,10 @@
           "required": false,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "A repeatable literal.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [],
@@ -85,8 +91,10 @@
           "required": false,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": "Multiple nested, non-repeatable resource templates.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [
             "resourceTemplate:testing:uber2",
@@ -104,8 +112,10 @@
           "required": true,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": "A non-repeatable literal.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [],
@@ -120,8 +130,10 @@
           "required": true,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": "A non-repeatable URI.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [],
@@ -136,8 +148,10 @@
           "required": true,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "A repeatable URI.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [],
@@ -152,8 +166,10 @@
           "required": false,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "A repeatable literal with defaults.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [
             {
               "literal": "Default literal1",
@@ -177,8 +193,10 @@
           "required": false,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "A repeatable URI with defaults.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [
             {
               "uri": "http://sinopia.io/defaultURI1",
@@ -202,8 +220,10 @@
           "required": true,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": null,
           "remarkUrl": "http://access.rdatoolkit.org/2.13.html",
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [],
@@ -218,8 +238,10 @@
           "required": true,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": "A non-repeatable LOC lookup.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -240,8 +262,10 @@
           "required": true,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "A repeatable LOC lookup.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -262,8 +286,10 @@
           "required": true,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": "A LOC lookup with multiple authorities.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -289,8 +315,10 @@
           "required": true,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": "A non-repeatable QA lookup.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -298,6 +326,13 @@
               "uri": "urn:ld4p:qa:agrovoc",
               "label": "AGROVOC (QA)",
               "authority": "agrovoc_ld4l_cache",
+              "subauthority": "",
+              "nonldLookup": false
+            },
+            {
+              "uri": "urn:ld4p:qa:gettyaat",
+              "label": "GETTY_AAT all terms (QA)",
+              "authority": "getty_aat_ld4l_cache",
               "subauthority": "",
               "nonldLookup": false
             }
@@ -313,8 +348,10 @@
           "required": true,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "A repeatable QA lookup.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -337,8 +374,10 @@
           "required": true,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": "A QA lookup with multiple authorities.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -368,8 +407,10 @@
           "required": true,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": "A non-repeatable Sinopia lookup.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -391,8 +432,10 @@
           "required": true,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "A repeatable Sinopia lookup.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -414,8 +457,10 @@
           "required": true,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "Mandatory nested resource templates.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [
             "resourceTemplate:testing:uber4"
@@ -432,8 +477,10 @@
           "required": false,
           "repeatable": true,
           "ordered": true,
+          "immutable": false,
           "remark": "Ordered nested resource templates.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [
             "resourceTemplate:testing:uber4"
@@ -450,8 +497,10 @@
           "required": false,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": null,
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -473,8 +522,10 @@
           "required": false,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": null,
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -496,8 +547,10 @@
           "required": false,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": null,
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -519,8 +572,10 @@
           "required": false,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": null,
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -542,8 +597,10 @@
           "required": false,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": null,
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [],
           "authorities": [
@@ -565,8 +622,10 @@
           "required": true,
           "repeatable": false,
           "ordered": false,
+          "immutable": false,
           "remark": "A required, repeatable literal with defaults.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [
             {
               "literal": "Default required literal1",
@@ -590,8 +649,10 @@
           "required": false,
           "repeatable": true,
           "ordered": false,
+          "immutable": false,
           "remark": "Nested, repeatable, suppressible resource template.",
           "remarkUrl": null,
+          "remarkUrlLabel": null,
           "defaults": [],
           "valueSubjectTemplateKeys": [
             "resourceTemplate:testing:uber5"
@@ -599,7 +660,47 @@
           "authorities": [],
           "type": "resource",
           "component": "NestedResource"
+        },
+        {
+          "key": "resourceTemplate:testing:uber1 > http://www.w3.org/2000/01/rdf-schema#label",
+          "subjectTemplateKey": "resourceTemplate:testing:uber1",
+          "label": "rdfs label",
+          "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+          "required": false,
+          "repeatable": false,
+          "ordered": false,
+          "immutable": false,
+          "remark": "rdfs label",
+          "remarkUrl": null,
+          "remarkUrlLabel": null,
+          "defaults": [],
+          "valueSubjectTemplateKeys": [],
+          "authorities": [],
+          "type": "literal",
+          "component": "InputLiteral"
+        },
+        {
+          "key": "resourceTemplate:testing:uber1 > http://id.loc.gov/ontologies/bibframe/uber/template1/property22",
+          "subjectTemplateKey": "resourceTemplate:testing:uber1",
+          "label": "Uber template1, property22",
+          "uri": "http://id.loc.gov/ontologies/bibframe/uber/template1/property22",
+          "required": true,
+          "repeatable": false,
+          "ordered": false,
+          "immutable": true,
+          "remark": "A non-repeatable, immutable literal.",
+          "remarkUrl": null,
+          "remarkUrlLabel": null,
+          "defaults": [],
+          "valueSubjectTemplateKeys": [],
+          "authorities": [],
+          "type": "literal",
+          "component": "InputLiteral"
         }
+      ],
+      "group": "stanford",
+      "editGroups": [
+        "cornell"
       ]
     },
     "properties": [
@@ -607,140 +708,7 @@
         "key": "abc1",
         "values": [
           {
-            "key": "abc58",
-            "literal": null,
-            "lang": null,
-            "uri": null,
-            "label": null,
-            "valueSubject": {
-              "key": "abc36",
-              "uri": null,
-              "subjectTemplate": {
-                "key": "resourceTemplate:testing:uber2",
-                "uri": "http://localhost:3000/resource/resourceTemplate:testing:uber2",
-                "id": "resourceTemplate:testing:uber2",
-                "class": "http://id.loc.gov/ontologies/bibframe/Uber2",
-                "label": "Uber template2",
-                "author": null,
-                "remark": "Template for testing purposes with single repeatable literal.",
-                "date": null,
-                "suppressible": false,
-                "propertyTemplateKeys": [
-                  "resourceTemplate:testing:uber2 > http://id.loc.gov/ontologies/bibframe/uber/template2/property1"
-                ],
-                "propertyTemplates": [
-                  {
-                    "key": "resourceTemplate:testing:uber2 > http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
-                    "subjectTemplateKey": "resourceTemplate:testing:uber2",
-                    "label": "Uber template2, property1",
-                    "uri": "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
-                    "required": false,
-                    "repeatable": true,
-                    "ordered": false,
-                    "remark": "A repeatable literal",
-                    "remarkUrl": null,
-                    "defaults": [],
-                    "valueSubjectTemplateKeys": [],
-                    "authorities": [],
-                    "type": "literal",
-                    "component": "InputLiteral"
-                  }
-                ]
-              },
-              "properties": [
-                {
-                  "key": "abc49",
-                  "values": null,
-                  "show": false
-                }
-              ]
-            }
-          },
-          {
-            "key": "abc61",
-            "literal": null,
-            "lang": null,
-            "uri": null,
-            "label": null,
-            "valueSubject": {
-              "key": "abc37",
-              "uri": null,
-              "subjectTemplate": {
-                "key": "resourceTemplate:testing:uber3",
-                "uri": "http://localhost:3000/resource/resourceTemplate:testing:uber3",
-                "id": "resourceTemplate:testing:uber3",
-                "class": "http://id.loc.gov/ontologies/bibframe/Uber3",
-                "label": "Uber template3",
-                "author": null,
-                "remark": "Template for testing purposes with multiple literal.",
-                "date": null,
-                "suppressible": false,
-                "propertyTemplateKeys": [
-                  "resourceTemplate:testing:uber3 > http://id.loc.gov/ontologies/bibframe/uber/template3/property1",
-                  "resourceTemplate:testing:uber3 > http://id.loc.gov/ontologies/bibframe/uber/template3/property2"
-                ],
-                "propertyTemplates": [
-                  {
-                    "key": "resourceTemplate:testing:uber3 > http://id.loc.gov/ontologies/bibframe/uber/template3/property1",
-                    "subjectTemplateKey": "resourceTemplate:testing:uber3",
-                    "label": "Uber template3, property1",
-                    "uri": "http://id.loc.gov/ontologies/bibframe/uber/template3/property1",
-                    "required": false,
-                    "repeatable": true,
-                    "ordered": false,
-                    "remark": "A literal",
-                    "remarkUrl": null,
-                    "defaults": [],
-                    "valueSubjectTemplateKeys": [],
-                    "authorities": [],
-                    "type": "literal",
-                    "component": "InputLiteral"
-                  },
-                  {
-                    "key": "resourceTemplate:testing:uber3 > http://id.loc.gov/ontologies/bibframe/uber/template3/property2",
-                    "subjectTemplateKey": "resourceTemplate:testing:uber3",
-                    "label": "Uber template3, property2",
-                    "uri": "http://id.loc.gov/ontologies/bibframe/uber/template3/property2",
-                    "required": false,
-                    "repeatable": true,
-                    "ordered": false,
-                    "remark": null,
-                    "remarkUrl": "http://access.rdatoolkit.org/1.0.html",
-                    "defaults": [],
-                    "valueSubjectTemplateKeys": [],
-                    "authorities": [],
-                    "type": "literal",
-                    "component": "InputLiteral"
-                  }
-                ]
-              },
-              "properties": [
-                {
-                  "key": "abc54",
-                  "values": null,
-                  "show": false
-                },
-                {
-                  "key": "abc55",
-                  "values": null,
-                  "show": false
-                }
-              ]
-            }
-          }
-        ],
-        "show": true
-      },
-      {
-        "key": "abc2",
-        "values": [],
-        "show": true
-      },
-      {
-        "key": "abc3",
-        "values": [
-          {
-            "key": "abc59",
+            "key": "abc60",
             "literal": null,
             "lang": null,
             "uri": null,
@@ -770,27 +738,34 @@
                     "required": false,
                     "repeatable": true,
                     "ordered": false,
+                    "immutable": false,
                     "remark": "A repeatable literal",
                     "remarkUrl": null,
+                    "remarkUrlLabel": null,
                     "defaults": [],
                     "valueSubjectTemplateKeys": [],
                     "authorities": [],
                     "type": "literal",
                     "component": "InputLiteral"
                   }
+                ],
+                "group": "stanford",
+                "editGroups": [
+                  "cornell"
                 ]
               },
               "properties": [
                 {
-                  "key": "abc50",
+                  "key": "abc51",
                   "values": null,
                   "show": false
                 }
               ]
-            }
+            },
+            "component": null
           },
           {
-            "key": "abc62",
+            "key": "abc63",
             "literal": null,
             "lang": null,
             "uri": null,
@@ -821,8 +796,10 @@
                     "required": false,
                     "repeatable": true,
                     "ordered": false,
+                    "immutable": false,
                     "remark": "A literal",
                     "remarkUrl": null,
+                    "remarkUrlLabel": null,
                     "defaults": [],
                     "valueSubjectTemplateKeys": [],
                     "authorities": [],
@@ -837,14 +814,20 @@
                     "required": false,
                     "repeatable": true,
                     "ordered": false,
+                    "immutable": false,
                     "remark": null,
                     "remarkUrl": "http://access.rdatoolkit.org/1.0.html",
+                    "remarkUrlLabel": null,
                     "defaults": [],
                     "valueSubjectTemplateKeys": [],
                     "authorities": [],
                     "type": "literal",
                     "component": "InputLiteral"
                   }
+                ],
+                "group": "stanford",
+                "editGroups": [
+                  "cornell"
                 ]
               },
               "properties": [
@@ -859,7 +842,157 @@
                   "show": false
                 }
               ]
-            }
+            },
+            "component": null
+          }
+        ],
+        "show": true
+      },
+      {
+        "key": "abc2",
+        "values": [],
+        "show": true
+      },
+      {
+        "key": "abc3",
+        "values": [
+          {
+            "key": "abc61",
+            "literal": null,
+            "lang": null,
+            "uri": null,
+            "label": null,
+            "valueSubject": {
+              "key": "abc40",
+              "uri": null,
+              "subjectTemplate": {
+                "key": "resourceTemplate:testing:uber2",
+                "uri": "http://localhost:3000/resource/resourceTemplate:testing:uber2",
+                "id": "resourceTemplate:testing:uber2",
+                "class": "http://id.loc.gov/ontologies/bibframe/Uber2",
+                "label": "Uber template2",
+                "author": null,
+                "remark": "Template for testing purposes with single repeatable literal.",
+                "date": null,
+                "suppressible": false,
+                "propertyTemplateKeys": [
+                  "resourceTemplate:testing:uber2 > http://id.loc.gov/ontologies/bibframe/uber/template2/property1"
+                ],
+                "propertyTemplates": [
+                  {
+                    "key": "resourceTemplate:testing:uber2 > http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
+                    "subjectTemplateKey": "resourceTemplate:testing:uber2",
+                    "label": "Uber template2, property1",
+                    "uri": "http://id.loc.gov/ontologies/bibframe/uber/template2/property1",
+                    "required": false,
+                    "repeatable": true,
+                    "ordered": false,
+                    "immutable": false,
+                    "remark": "A repeatable literal",
+                    "remarkUrl": null,
+                    "remarkUrlLabel": null,
+                    "defaults": [],
+                    "valueSubjectTemplateKeys": [],
+                    "authorities": [],
+                    "type": "literal",
+                    "component": "InputLiteral"
+                  }
+                ],
+                "group": "stanford",
+                "editGroups": [
+                  "cornell"
+                ]
+              },
+              "properties": [
+                {
+                  "key": "abc52",
+                  "values": null,
+                  "show": false
+                }
+              ]
+            },
+            "component": null
+          },
+          {
+            "key": "abc64",
+            "literal": null,
+            "lang": null,
+            "uri": null,
+            "label": null,
+            "valueSubject": {
+              "key": "abc41",
+              "uri": null,
+              "subjectTemplate": {
+                "key": "resourceTemplate:testing:uber3",
+                "uri": "http://localhost:3000/resource/resourceTemplate:testing:uber3",
+                "id": "resourceTemplate:testing:uber3",
+                "class": "http://id.loc.gov/ontologies/bibframe/Uber3",
+                "label": "Uber template3",
+                "author": null,
+                "remark": "Template for testing purposes with multiple literal.",
+                "date": null,
+                "suppressible": false,
+                "propertyTemplateKeys": [
+                  "resourceTemplate:testing:uber3 > http://id.loc.gov/ontologies/bibframe/uber/template3/property1",
+                  "resourceTemplate:testing:uber3 > http://id.loc.gov/ontologies/bibframe/uber/template3/property2"
+                ],
+                "propertyTemplates": [
+                  {
+                    "key": "resourceTemplate:testing:uber3 > http://id.loc.gov/ontologies/bibframe/uber/template3/property1",
+                    "subjectTemplateKey": "resourceTemplate:testing:uber3",
+                    "label": "Uber template3, property1",
+                    "uri": "http://id.loc.gov/ontologies/bibframe/uber/template3/property1",
+                    "required": false,
+                    "repeatable": true,
+                    "ordered": false,
+                    "immutable": false,
+                    "remark": "A literal",
+                    "remarkUrl": null,
+                    "remarkUrlLabel": null,
+                    "defaults": [],
+                    "valueSubjectTemplateKeys": [],
+                    "authorities": [],
+                    "type": "literal",
+                    "component": "InputLiteral"
+                  },
+                  {
+                    "key": "resourceTemplate:testing:uber3 > http://id.loc.gov/ontologies/bibframe/uber/template3/property2",
+                    "subjectTemplateKey": "resourceTemplate:testing:uber3",
+                    "label": "Uber template3, property2",
+                    "uri": "http://id.loc.gov/ontologies/bibframe/uber/template3/property2",
+                    "required": false,
+                    "repeatable": true,
+                    "ordered": false,
+                    "immutable": false,
+                    "remark": null,
+                    "remarkUrl": "http://access.rdatoolkit.org/1.0.html",
+                    "remarkUrlLabel": null,
+                    "defaults": [],
+                    "valueSubjectTemplateKeys": [],
+                    "authorities": [],
+                    "type": "literal",
+                    "component": "InputLiteral"
+                  }
+                ],
+                "group": "stanford",
+                "editGroups": [
+                  "cornell"
+                ]
+              },
+              "properties": [
+                {
+                  "key": "abc58",
+                  "values": null,
+                  "show": false
+                },
+                {
+                  "key": "abc59",
+                  "values": null,
+                  "show": false
+                }
+              ]
+            },
+            "component": null
           }
         ],
         "show": true
@@ -883,20 +1016,22 @@
         "key": "abc7",
         "values": [
           {
-            "key": "abc40",
+            "key": "abc42",
             "literal": "Default literal1",
             "lang": null,
             "uri": null,
             "label": null,
-            "valueSubject": null
+            "valueSubject": null,
+            "component": "InputLiteralValue"
           },
           {
-            "key": "abc41",
+            "key": "abc43",
             "literal": "Default literal2",
             "lang": null,
             "uri": null,
             "label": null,
-            "valueSubject": null
+            "valueSubject": null,
+            "component": "InputLiteralValue"
           }
         ],
         "show": true
@@ -905,20 +1040,22 @@
         "key": "abc10",
         "values": [
           {
-            "key": "abc42",
+            "key": "abc44",
             "literal": null,
-            "lang": null,
+            "lang": "eng",
             "uri": "http://sinopia.io/defaultURI1",
             "label": "Default URI1",
-            "valueSubject": null
+            "valueSubject": null,
+            "component": "InputURIValue"
           },
           {
-            "key": "abc43",
+            "key": "abc45",
             "literal": null,
-            "lang": null,
+            "lang": "eng",
             "uri": "http://sinopia.io/defaultURI2",
             "label": null,
-            "valueSubject": null
+            "valueSubject": null,
+            "component": "InputURIValue"
           }
         ],
         "show": true
@@ -972,13 +1109,13 @@
         "key": "abc22",
         "values": [
           {
-            "key": "abc63",
+            "key": "abc65",
             "literal": null,
             "lang": null,
             "uri": null,
             "label": null,
             "valueSubject": {
-              "key": "abc44",
+              "key": "abc46",
               "uri": null,
               "subjectTemplate": {
                 "key": "resourceTemplate:testing:uber4",
@@ -1002,24 +1139,31 @@
                     "required": true,
                     "repeatable": true,
                     "ordered": false,
+                    "immutable": false,
                     "remark": "A repeatable, required literal",
                     "remarkUrl": null,
+                    "remarkUrlLabel": null,
                     "defaults": [],
                     "valueSubjectTemplateKeys": [],
                     "authorities": [],
                     "type": "literal",
                     "component": "InputLiteral"
                   }
+                ],
+                "group": "stanford",
+                "editGroups": [
+                  "cornell"
                 ]
               },
               "properties": [
                 {
-                  "key": "abc51",
+                  "key": "abc53",
                   "values": [],
                   "show": true
                 }
               ]
-            }
+            },
+            "component": null
           }
         ],
         "show": true
@@ -1028,13 +1172,13 @@
         "key": "abc24",
         "values": [
           {
-            "key": "abc64",
+            "key": "abc66",
             "literal": null,
             "lang": null,
             "uri": null,
             "label": null,
             "valueSubject": {
-              "key": "abc45",
+              "key": "abc47",
               "uri": null,
               "subjectTemplate": {
                 "key": "resourceTemplate:testing:uber4",
@@ -1058,24 +1202,31 @@
                     "required": true,
                     "repeatable": true,
                     "ordered": false,
+                    "immutable": false,
                     "remark": "A repeatable, required literal",
                     "remarkUrl": null,
+                    "remarkUrlLabel": null,
                     "defaults": [],
                     "valueSubjectTemplateKeys": [],
                     "authorities": [],
                     "type": "literal",
                     "component": "InputLiteral"
                   }
+                ],
+                "group": "stanford",
+                "editGroups": [
+                  "cornell"
                 ]
               },
               "properties": [
                 {
-                  "key": "abc52",
+                  "key": "abc54",
                   "values": [],
                   "show": true
                 }
               ]
-            }
+            },
+            "component": null
           }
         ],
         "show": true
@@ -1109,20 +1260,22 @@
         "key": "abc30",
         "values": [
           {
-            "key": "abc46",
+            "key": "abc48",
             "literal": "Default required literal1",
             "lang": null,
             "uri": null,
             "label": null,
-            "valueSubject": null
+            "valueSubject": null,
+            "component": "InputLiteralValue"
           },
           {
-            "key": "abc47",
+            "key": "abc49",
             "literal": "Default required literal2",
             "lang": null,
             "uri": null,
             "label": null,
-            "valueSubject": null
+            "valueSubject": null,
+            "component": "InputLiteralValue"
           }
         ],
         "show": true
@@ -1131,13 +1284,13 @@
         "key": "abc33",
         "values": [
           {
-            "key": "abc60",
+            "key": "abc62",
             "literal": null,
             "lang": null,
             "uri": null,
             "label": null,
             "valueSubject": {
-              "key": "abc48",
+              "key": "abc50",
               "uri": null,
               "subjectTemplate": {
                 "key": "resourceTemplate:testing:uber5",
@@ -1161,26 +1314,43 @@
                     "required": false,
                     "repeatable": true,
                     "ordered": false,
+                    "immutable": false,
                     "remark": "A repeatable URI",
                     "remarkUrl": null,
+                    "remarkUrlLabel": null,
                     "defaults": [],
                     "valueSubjectTemplateKeys": [],
                     "authorities": [],
                     "type": "uri",
                     "component": "InputURI"
                   }
+                ],
+                "group": "stanford",
+                "editGroups": [
+                  "cornell"
                 ]
               },
               "properties": [
                 {
-                  "key": "abc53",
+                  "key": "abc55",
                   "values": null,
                   "show": false
                 }
               ]
-            }
+            },
+            "component": null
           }
         ],
+        "show": true
+      },
+      {
+        "key": "abc34",
+        "values": [],
+        "show": true
+      },
+      {
+        "key": "abc35",
+        "values": [],
         "show": true
       }
     ]
